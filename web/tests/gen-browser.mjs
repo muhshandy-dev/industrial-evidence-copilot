@@ -32,10 +32,11 @@ try {
   const tombol = page.locator(".mode-jawab button:visible").first();
   console.log("tombol:", await tombol.textContent());
   await tombol.click();
-  await page.waitForFunction(() => /Model siap|gagal dimuat/.test(document.querySelector(".mode-status")?.textContent ?? ""), null, { timeout: 30 * 60 * 1000 });
+  const t0Muat = Date.now();
+  await page.waitForSelector(".mode-jawab[data-model]", { timeout: 30 * 60 * 1000 });
   const status = await page.textContent(".mode-status");
-  console.log("status:", status);
-  assert.match(status, /Model siap/);
+  console.log(`status setelah ${((Date.now() - t0Muat) / 1000).toFixed(0)} detik:`, status);
+  assert.equal(await page.getAttribute(".mode-jawab", "data-model"), "siap");
   const t0 = Date.now();
   await page.fill("#pertanyaan", "Berapa lama batas waktu pengurus melaporkan kecelakaan kerja?");
   await page.press("#pertanyaan", "Enter");

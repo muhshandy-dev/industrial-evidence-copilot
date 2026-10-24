@@ -61,11 +61,13 @@ export function createModePanel() {
       tombol.hidden = true;
       tombolCpu.hidden = true;
       kemajuan.hidden = true;
+      el.dataset.model = "siap";
       status.textContent = perangkat === "webgpu" ? "Model siap. Pertanyaan berikutnya dijawab secara generatif." : `Model ${nama(MODEL_CPU)} siap di CPU. Pertanyaan berikutnya dijawab secara generatif; mohon bersabar, prosesnya lambat.`;
     } catch (err) {
       tombol.disabled = false;
       tombolCpu.disabled = false;
       kemajuan.hidden = true;
+      el.dataset.model = "gagal";
       status.textContent = `Model gagal dimuat (${err.message}). Jawaban tetap memakai kutipan langsung.`;
     }
   }
