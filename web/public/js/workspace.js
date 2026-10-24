@@ -1,20 +1,18 @@
 // Ruang kerja: sumber di kiri, tanya jawab di tengah, bukti di kanan.
 import { h, clear } from "./dom.js";
-import { Retriever, rankOrder, rrf } from "./retrieval.js";
+import { Retriever, rankOrder } from "./retrieval.js";
 import { extractAnswer } from "./answer.js";
 import { createReader } from "./reader.js";
-import { flip, wait, motionOn } from "./motion.js";
+import { wait, motionOn } from "./motion.js";
 
-const pct = (x) => `${Math.round(x * 100)}%`;
-const tingkat = (cov) => (cov >= 0.8 ? "tinggi" : cov >= 0.6 ? "sedang" : "rendah");
-const tingkatTeks = { tinggi: "Kecocokan istilah tinggi", sedang: "Kecocokan istilah sedang", rendah: "Kecocokan istilah rendah" };
+const num = (x) => x.toFixed(1).replace(".", ",");
 
 export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   const retriever = new Retriever(indeks);
   const idf = Object.fromEntries(Object.entries(indeks.bm25).map(([t, v]) => [t, v[0]]));
   const texts = korpus.chunk.map((c) => c.teks_cari || c.teks);
   const shownTexts = korpus.chunk.map((c) => c.teks);
-  const threshold = evaluasi?.ambang_jawab ?? 0.5;
+  const threshold = evaluasi.ambang_jawab;
   const active = new Set(korpus.dokumen.map((_, i) => i));
   const root = h("div", { class: "ruang", data: { fokus: "tanya" } });
   const readerBox = h("div", { class: "pane-isi", id: "pembaca" });
@@ -79,15 +77,12 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   main.dataset.ready = "ruang";
 
   /* Pencarian */
-  function rankings(query) {
+  function search(query) {
     const tokens = retriever.queryTokens(query);
-    const mask = korpus.chunk.map((c) => active.has(c.dok));
-    const apply = (s) => s.map((v, i) => (mask[i] ? v : -Infinity));
-    const b = apply(retriever.bm25(tokens));
-    const l = apply(retriever.lsa(tokens));
-    const f = apply(rrf([b, l], indeks.rrf_k));
-    const rank = (s) => { const r = new Map(); rankOrder(s).forEach((d, i) => r.set(d, i + 1)); return r; };
-    return { fused: rankOrder(f).filter((i) => mask[i]), bm: rank(b), ls: rank(l) };
+    const raw = retriever.scores(tokens);
+    const scores = raw.map((v, i) => (active.has(korpus.chunk[i].dok) ? v : -Infinity));
+    const ranked = rankOrder(scores).filter((i) => active.has(korpus.chunk[i].dok));
+    return { tokens, scores, ranked };
   }
 
   async function ask(raw) {
@@ -96,28 +91,26 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     busy = true; submit.disabled = true;
     empty.remove();
     setFokus("tanya");
-    const { fused, bm, ls } = rankings(q);
-    const ans = extractAnswer(q, fused, texts, idf, { threshold, useStem: indeks.pakai_stem, displayTexts: shownTexts });
+    const { tokens, scores, ranked } = search(q);
+    const topScore = ranked.length ? scores[ranked[0]] : 0;
+    const ans = extractAnswer(q, ranked, texts, idf, { topScore, threshold, useStem: indeks.pakai_stem, displayTexts: shownTexts });
     const card = h("article", { class: "jawaban masuk", "aria-label": "Jawaban" });
     thread.append(h("h3", { class: "pertanyaan masuk" }, q), card);
     card.scrollIntoView({ block: "nearest", behavior: motionOn() ? "smooth" : "auto" });
 
-    const top = fused.slice(0, 6);
-    const trace = buildTrace(top, bm, ls);
-    const level = tingkat(ans.coverage);
+    const top = ranked.slice(0, 6);
+    const trace = buildTrace(tokens, top, scores);
+    const lolos = !ans.abstain;
     card.append(h("div", { class: "jawaban-kepala" },
-      h("span", { class: "label-mode" }, ans.abstain ? "Tidak menjawab" : "Jawaban ekstraktif"),
-      h("span", {}, ans.abstain ? "Dasar tidak cukup" : `${ans.evidence.length} kutipan`),
-      h("span", { class: "keyakinan", data: { tingkat: level }, title: "Seberapa besar bobot istilah pertanyaan yang ditemukan di pasal teratas. Ini ukuran kecocokan kata, bukan peluang jawaban benar." },
-        tingkatTeks[level], " ", h("span", { class: "meter", "aria-hidden": "true" }, h("span", { class: "meter-isi" })), " ", pct(ans.coverage))));
-    const meter = card.querySelector(".meter-isi");
-    requestAnimationFrame(() => { meter.style.width = pct(ans.coverage); });
+      h("span", { class: "label-mode" }, lolos ? "Jawaban ekstraktif" : "Tidak menjawab"),
+      h("span", {}, lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup"),
+      h("span", { class: "keyakinan", data: { lolos: lolos ? "ya" : "tidak" }, title: "Skor BM25 pasal teratas dibandingkan ambang penolakan. Ini ukuran kecocokan kata, bukan peluang jawaban benar." },
+        `Skor ${num(topScore)} · ambang ${num(threshold)}`)));
 
     // 1. Jejak pencarian tampil lebih dulu supaya pengguna melihat apa yang dicari.
     card.append(trace.el);
-    await wait(trace.reorderDelay);
-    await trace.reorder();
-    await wait(700);
+    await trace.play();
+    await wait(500);
     trace.el.open = false; // setelah urutan terlihat, ringkas agar kutipan jawaban menjadi fokus
 
     // 2. Kutipan muncul satu per satu.
@@ -140,9 +133,15 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
         box.append(button);
         await wait(220);
       }
-      card.append(h("p", { class: "jawaban-kaki masuk" }, "Kalimat di atas disalin persis dari peraturan. Ini bukan nasihat hukum; periksa pasal lengkap dan peraturan turunannya."));
+      const lain = top.slice(1, 4);
+      if (lain.length) {
+        card.append(h("div", { class: "lain masuk" }, h("div", { class: "subjudul" }, "Pasal lain yang mirip (periksa bila jawaban di atas kurang tepat)"),
+          h("div", { class: "terdekat" }, lain.map((ci) => h("button", { type: "button", onclick: () => open(ci, []) },
+            h("span", {}, `${korpus.dokumen[korpus.chunk[ci].dok].judul}, ${korpus.chunk[ci].label}`), h("span", { class: "kode" }, "buka"))))));
+      }
+      card.append(h("p", { class: "jawaban-kaki masuk" }, "Kalimat di atas disalin persis dari peraturan. Sistem ini bisa keliru memilih pasal; angka dan batasnya ada di halaman Evaluasi. Ini bukan nasihat hukum."));
       const first = ans.evidence[0];
-      reader.show(first.chunk, { units: [first.unit], scroll: innerWidth > 1100 });
+      reader.show(first.chunk, { units: ans.evidence.map((e) => e.unit), scroll: innerWidth > 1100 });
     }
     busy = false; submit.disabled = false;
     card.dataset.selesai = "ya";
@@ -154,36 +153,40 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     setFokus("bukti");
   }
 
-  function buildTrace(top, bm, ls) {
-    const list = h("div", { class: "jejak-isi" });
-    const byBm = [...top].sort((a, b) => bm.get(a) - bm.get(b));
-    const rows = new Map();
-    top.forEach((ci, finalIdx) => {
+  // Jejak pencarian: urutan pasal menurut skor BM25 dan kontribusi tiap istilah, supaya terlihat
+  // kata mana yang membuat suatu pasal naik. Batang tumbuh berurutan dari peringkat 1.
+  function buildTrace(tokens, top, scores) {
+    const unik = [...new Set(tokens)];
+    const asing = unik.filter((t) => !(t in idf));
+    const max = top.length ? scores[top[0]] : 1;
+    const bars = [];
+    const rows = top.map((ci, i) => {
       const c = korpus.chunk[ci];
       const d = korpus.dokumen[c.dok];
-      rows.set(ci, h("div", { class: "jejak-baris", data: { dipilih: finalIdx < 3 ? "ya" : "tidak" } },
-        h("span", { class: "jejak-no" }, String(finalIdx + 1)),
+      const parts = retriever.explain(tokens, ci).filter((x) => x.part > 0).sort((a, b) => b.part - a.part);
+      const bar = h("span", { class: "jejak-isi-batang" });
+      bars.push([bar, max > 0 ? scores[ci] / max : 0]);
+      return h("li", { class: "jejak-baris", data: { dibaca: i === 0 ? "ya" : "tidak" } },
+        h("span", { class: "jejak-no" }, String(i + 1)),
         h("span", { class: "jejak-nama" }, `${d.judul}, ${c.label}`),
-        h("span", { class: "jejak-sumber", title: "Peringkat di BM25 dan LSA" }, `BM25 #${bm.get(ci)} · LSA #${ls.get(ci)}`),
-        h("span", { class: "jejak-lencana" }, finalIdx < 3 ? "dibaca" : "cadangan")));
+        h("span", { class: "jejak-skor" }, num(scores[ci])),
+        h("span", { class: "jejak-batang", "aria-hidden": "true" }, bar),
+        h("span", { class: "jejak-istilah" }, parts.map((x) => h("span", { class: "chip", title: `idf ${x.idf.toFixed(2)}, muncul ${x.tf}x di pasal ini` }, `${x.term} +${num(x.part)}`))));
     });
-    const place = (order) => {
-      clear(list);
-      list.append(h("div", { class: "jejak-judul" }, order === byBm ? "Urutan BM25 (kata kunci)" : "Urutan akhir (BM25 dan LSA digabung)"));
-      order.forEach((ci, i) => { rows.get(ci).querySelector(".jejak-no").textContent = String(i + 1); list.append(rows.get(ci)); });
-    };
-    const animate = motionOn() && byBm.some((c, i) => c !== top[i]);
-    place(animate ? byBm : top);
     const el = h("details", { class: "jejak", open: true },
-      h("summary", {}, "Jejak pencarian", h("span", { class: "jejak-sumber" }, `${top.length} pasal diperingkat`)),
-      list,
-      h("p", { class: "jejak-catatan" }, "Tiga pasal teratas dibaca untuk memilih kalimat jawaban. Pasal cadangan hanya ditampilkan."));
+      h("summary", {}, "Jejak pencarian", h("span", { class: "jejak-sumber" }, `${top.length} pasal teratas menurut skor BM25`)),
+      h("div", { class: "jejak-isi" },
+        asing.length ? h("p", { class: "jejak-catatan" }, `Istilah yang tidak ada di korpus dan tidak ikut menilai: ${asing.join(", ")}.`) : null,
+        h("ol", { class: "jejak-daftar" }, rows),
+        h("p", { class: "jejak-catatan" }, "Kutipan hanya diambil dari pasal peringkat 1. Angka kecil di tiap baris adalah sumbangan istilah pertanyaan pada skor pasal itu.")));
     return {
       el,
-      reorderDelay: animate ? 700 : 0,
-      async reorder() {
-        if (!animate) return;
-        await flip(list, () => place(top));
+      async play() {
+        for (const [bar, frac] of bars) {
+          requestAnimationFrame(() => { bar.style.width = `${Math.max(2, Math.round(frac * 100))}%`; });
+          await wait(90);
+        }
+        await wait(250);
       },
     };
   }

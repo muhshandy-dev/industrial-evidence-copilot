@@ -1813,5 +1813,4214 @@
    "top1": "permenaker-2-1982#pasal-11",
    "skor": 20.1688
   }
+ ],
+ "per_pertanyaan": [
+  {
+   "id": "q001",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": false,
+   "skor": 14.2498,
+   "cakupan": 0.5535,
+   "sitasi": [
+    "permenaker-8-2020#pasal-163",
+    "permenaker-8-2020#pasal-163"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-163"
+  },
+  {
+   "id": "q002",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 13.6043,
+   "cakupan": 0.6801,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-3"
+  },
+  {
+   "id": "q003",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 21.6531,
+   "cakupan": 0.6057,
+   "sitasi": [
+    "permenaker-2-1983#pasal-61",
+    "permenaker-2-1983#pasal-61"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-61",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q004",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.1875,
+   "cakupan": 0.8222,
+   "sitasi": [
+    "permenaker-37-2016#pasal-19",
+    "permenaker-37-2016#pasal-19"
+   ],
+   "unit": [
+    0,
+    4
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-19",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q005",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.0266,
+   "cakupan": 0.4554,
+   "sitasi": [
+    "permenaker-13-2025#pasal-8",
+    "permenaker-13-2025#pasal-8",
+    "permenaker-13-2025#pasal-8"
+   ],
+   "unit": [
+    0,
+    4,
+    5
+   ],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-8",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q006",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 8.3079,
+   "cakupan": 0.1946,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-12",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q007",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 11.1881,
+   "cakupan": 0.4145,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-4"
+  },
+  {
+   "id": "q008",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 28.4235,
+   "cakupan": 0.6805,
+   "sitasi": [
+    "permenaker-4-2025#pasal-8",
+    "permenaker-4-2025#pasal-8"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q009",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.2639,
+   "cakupan": 0.5032,
+   "sitasi": [
+    "permenaker-8-2010#pasal-5"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-5",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q010",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.9049,
+   "cakupan": 0.1942,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-13"
+  },
+  {
+   "id": "q011",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.5528,
+   "cakupan": 0.8445,
+   "sitasi": [
+    "permenaker-3-1998#pasal-2"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-2",
+   "sitasi_benar": true,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q012",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.0036,
+   "cakupan": 0.4049,
+   "sitasi": [
+    "permenaker-4-2025#pasal-12",
+    "permenaker-4-2025#pasal-12"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-12",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q013",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.0927,
+   "cakupan": 0.6759,
+   "sitasi": [
+    "permenaker-3-1998#pasal-2"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-2",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": false
+  },
+  {
+   "id": "q014",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 12.0905,
+   "cakupan": 0.2325,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-8",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q015",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 21.8685,
+   "cakupan": 0.7832,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-4"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-4",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q016",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 12.6138,
+   "cakupan": 0.2425,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-7"
+  },
+  {
+   "id": "q017",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 21.4532,
+   "cakupan": 0.6273,
+   "sitasi": [
+    "permenaker-26-2014#pasal-31"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-31",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q018",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.3564,
+   "cakupan": 0.5919,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-5",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q019",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.5888,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-4-2025#pasal-14"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-14",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q020",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 14.4263,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-15-2008#pasal-6"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-6",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q021",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 9.3596,
+   "cakupan": 0.4033,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-31"
+  },
+  {
+   "id": "q022",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 30.3907,
+   "cakupan": 0.5766,
+   "sitasi": [
+    "permenaker-3-1982#pasal-10"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1982#pasal-10",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q023",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.7601,
+   "cakupan": 0.4055,
+   "sitasi": [
+    "permenaker-11-2023#pasal-8"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q024",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 5.8984,
+   "cakupan": 0.3141,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-26"
+  },
+  {
+   "id": "q025",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.0636,
+   "cakupan": 0.3539,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-6",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q026",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.6962,
+   "cakupan": 0.3315,
+   "sitasi": [
+    "permenaker-8-2010#pasal-8",
+    "permenaker-8-2010#pasal-8"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q027",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 7.9147,
+   "cakupan": 1.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-6",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q028",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.0616,
+   "cakupan": 0.5825,
+   "sitasi": [
+    "permenaker-37-2016#pasal-51"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-51",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q029",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 4.7154,
+   "cakupan": 0.1525,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-7"
+  },
+  {
+   "id": "q030",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.2778,
+   "cakupan": 0.5571,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-17"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-17",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q031",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.5699,
+   "cakupan": 0.5191,
+   "sitasi": [
+    "permenaker-2-1982#pasal-6",
+    "permenaker-2-1982#pasal-6",
+    "permenaker-2-1982#pasal-6"
+   ],
+   "unit": [
+    1,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-6",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q032",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.8652,
+   "cakupan": 0.5503,
+   "sitasi": [
+    "permenaker-2-1982#pasal-12",
+    "permenaker-2-1982#pasal-12"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-12",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q033",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 7.2625,
+   "cakupan": 0.2601,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-11"
+  },
+  {
+   "id": "q034",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 4.4682,
+   "cakupan": 0.2338,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-61"
+  },
+  {
+   "id": "q035",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.9876,
+   "cakupan": 0.2185,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-72"
+  },
+  {
+   "id": "q036",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 34.9448,
+   "cakupan": 0.815,
+   "sitasi": [
+    "permenaker-37-2016#pasal-58"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-58",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q037",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 10.8091,
+   "cakupan": 0.5729,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-1",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q038",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 21.9125,
+   "cakupan": 0.705,
+   "sitasi": [
+    "permenaker-11-2023#pasal-22"
+   ],
+   "unit": [
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-22",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q039",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 27.8671,
+   "cakupan": 0.676,
+   "sitasi": [
+    "permenaker-37-2016#pasal-29",
+    "permenaker-37-2016#pasal-29",
+    "permenaker-37-2016#pasal-29"
+   ],
+   "unit": [
+    1,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-29",
+   "sitasi_benar": true,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q040",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.5548,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-3-1982#pasal-4",
+    "permenaker-3-1982#pasal-4"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1982#pasal-4",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q041",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 28.8461,
+   "cakupan": 0.661,
+   "sitasi": [
+    "permenaker-8-2020#pasal-84"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-84",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q042",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.2574,
+   "cakupan": 0.7396,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-3",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q043",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.0293,
+   "cakupan": 0.4758,
+   "sitasi": [
+    "permenaker-8-2020#pasal-177",
+    "permenaker-8-2020#pasal-177"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-177",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q044",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.3089,
+   "cakupan": 0.6142,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-3",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q045",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.5257,
+   "cakupan": 0.4265,
+   "sitasi": [
+    "uu-1-1970#pasal-17"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-17",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q046",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.0874,
+   "cakupan": 0.7091,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-5",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q047",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.7794,
+   "cakupan": 0.5491,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-15",
+    "kepmenaker-187-1999#pasal-15"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-15",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q048",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.7442,
+   "cakupan": 0.3379,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-81",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q049",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.2675,
+   "cakupan": 0.3896,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-49"
+  },
+  {
+   "id": "q050",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 10.3013,
+   "cakupan": 0.527,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-8",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q051",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 43.0263,
+   "cakupan": 0.6723,
+   "sitasi": [
+    "permenaker-13-2025#pasal-8",
+    "permenaker-13-2025#pasal-8",
+    "permenaker-13-2025#pasal-8"
+   ],
+   "unit": [
+    1,
+    4,
+    5
+   ],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q052",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 13.8805,
+   "cakupan": 0.5436,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-16"
+  },
+  {
+   "id": "q053",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.6599,
+   "cakupan": 0.7472,
+   "sitasi": [
+    "permenaker-8-2020#pasal-33"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-33",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q054",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.1149,
+   "cakupan": 0.7053,
+   "sitasi": [
+    "permenaker-15-2008#pasal-10"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-10",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q055",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.8732,
+   "cakupan": 0.3204,
+   "sitasi": [
+    "permenaker-2-1982#pasal-32"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-32",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q056",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 4.2323,
+   "cakupan": 0.1443,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-13"
+  },
+  {
+   "id": "q057",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.9579,
+   "cakupan": 0.7707,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-10",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q058",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.2087,
+   "cakupan": 0.6506,
+   "sitasi": [
+    "permenaker-26-2014#pasal-20"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-20",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q059",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.579,
+   "cakupan": 0.7859,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-2"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-2",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q060",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.3706,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-4-2025#pasal-9"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-9",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q061",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.716,
+   "cakupan": 0.5726,
+   "sitasi": [
+    "permenaker-4-2025#pasal-8",
+    "permenaker-4-2025#pasal-8"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-8",
+   "sitasi_benar": false,
+   "kunci_ada": true,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q062",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.1536,
+   "cakupan": 0.6984,
+   "sitasi": [
+    "permenaker-26-2014#pasal-30",
+    "permenaker-26-2014#pasal-30",
+    "permenaker-26-2014#pasal-30"
+   ],
+   "unit": [
+    0,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-30",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q063",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.8016,
+   "cakupan": 0.7464,
+   "sitasi": [
+    "permenaker-37-2016#pasal-28"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-28",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q064",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.8023,
+   "cakupan": 0.3093,
+   "sitasi": [
+    "permenaker-2-1983#pasal-85"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-85",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q065",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.3737,
+   "cakupan": 0.5021,
+   "sitasi": [
+    "permenaker-11-2023#pasal-15",
+    "permenaker-11-2023#pasal-15",
+    "permenaker-11-2023#pasal-15"
+   ],
+   "unit": [
+    0,
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-15",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q066",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.212,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-15-2008#pasal-8"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q067",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.1511,
+   "cakupan": 0.681,
+   "sitasi": [
+    "permenaker-37-2016#pasal-60"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-60",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q068",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 31.2144,
+   "cakupan": 0.8099,
+   "sitasi": [
+    "permenaker-8-2020#pasal-85"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-85",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q069",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 14.4708,
+   "cakupan": 0.4441,
+   "sitasi": [
+    "permenaker-2-1982#pasal-29",
+    "permenaker-2-1982#pasal-29"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-29",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q070",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 25.6581,
+   "cakupan": 0.5359,
+   "sitasi": [
+    "permenaker-3-1998#pasal-3"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q071",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.328,
+   "cakupan": 0.6931,
+   "sitasi": [
+    "permenaker-3-1998#pasal-4"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-4",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q072",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.4591,
+   "cakupan": 0.752,
+   "sitasi": [
+    "permenaker-15-2008#pasal-4"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-4",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q073",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.186,
+   "cakupan": 0.7504,
+   "sitasi": [
+    "permenaker-11-2023#pasal-19"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-19",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q074",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 31.3208,
+   "cakupan": 0.6092,
+   "sitasi": [
+    "permenaker-2-1983#pasal-39"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-39",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q075",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.8948,
+   "cakupan": 0.6433,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-21",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q076",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.6991,
+   "cakupan": 0.3137,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-1",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q077",
+   "split": "dev",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.7014,
+   "cakupan": 0.7428,
+   "sitasi": [
+    "permenaker-8-2020#pasal-127"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-127",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q078",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.3315,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-2-1983#pasal-45",
+    "permenaker-2-1983#pasal-45"
+   ],
+   "unit": [
+    2,
+    5
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-45",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q079",
+   "split": "dev",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 12.8486,
+   "cakupan": 0.7362,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-7",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q080",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 12.9973,
+   "cakupan": 1.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1982#pasal-2",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q081",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.9547,
+   "cakupan": 1.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-2",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q082",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 12.492,
+   "cakupan": 0.3841,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-11",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q083",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.7703,
+   "cakupan": 0.5154,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-8",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q084",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 18.4869,
+   "cakupan": 0.787,
+   "sitasi": [
+    "permenaker-4-2025#pasal-12",
+    "permenaker-4-2025#pasal-12"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-12",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q085",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.9345,
+   "cakupan": 0.2751,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-11"
+  },
+  {
+   "id": "q086",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 12.28,
+   "cakupan": 0.2339,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-80"
+  },
+  {
+   "id": "q087",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 7.7179,
+   "cakupan": 0.2902,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-48"
+  },
+  {
+   "id": "q088",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.4206,
+   "cakupan": 0.6629,
+   "sitasi": [
+    "uu-1-1970#pasal-15"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-15",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q089",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.8175,
+   "cakupan": 0.7043,
+   "sitasi": [
+    "permenaker-26-2014#pasal-26",
+    "permenaker-26-2014#pasal-26"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-26",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q090",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 37.1262,
+   "cakupan": 0.8287,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-14"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-14",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q091",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.7004,
+   "cakupan": 0.6536,
+   "sitasi": [
+    "permenaker-3-1982#pasal-3"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1982#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q092",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 7.8614,
+   "cakupan": 0.2841,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-77"
+  },
+  {
+   "id": "q093",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.4177,
+   "cakupan": 0.5257,
+   "sitasi": [
+    "permenaker-13-2025#pasal-6",
+    "permenaker-13-2025#pasal-6"
+   ],
+   "unit": [
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-6",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q094",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 9.3358,
+   "cakupan": 0.4065,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-106"
+  },
+  {
+   "id": "q095",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.0305,
+   "cakupan": 0.8334,
+   "sitasi": [
+    "permenaker-4-2025#pasal-13"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-13",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q096",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 25.2453,
+   "cakupan": 0.5442,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-16"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-16",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q097",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.5368,
+   "cakupan": 0.4296,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-19"
+  },
+  {
+   "id": "q098",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.8619,
+   "cakupan": 0.8276,
+   "sitasi": [
+    "permenaker-3-1998#pasal-7"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-7",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q099",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.7339,
+   "cakupan": 0.5659,
+   "sitasi": [
+    "permenaker-11-2023#pasal-12",
+    "permenaker-11-2023#pasal-12"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-12",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q100",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.3846,
+   "cakupan": 0.7654,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-52",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q101",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 25.8835,
+   "cakupan": 0.7744,
+   "sitasi": [
+    "permenaker-3-1998#pasal-6",
+    "permenaker-3-1998#pasal-6"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-6",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q102",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.6547,
+   "cakupan": 0.8744,
+   "sitasi": [
+    "permenaker-13-2025#pasal-10",
+    "permenaker-13-2025#pasal-10"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-10",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q103",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.9424,
+   "cakupan": 0.6617,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-16"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-16",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q104",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 27.3046,
+   "cakupan": 0.7667,
+   "sitasi": [
+    "permenaker-11-2023#pasal-24",
+    "permenaker-11-2023#pasal-24"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-24",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q105",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.0034,
+   "cakupan": 0.5796,
+   "sitasi": [
+    "permenaker-8-2020#pasal-26"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-26",
+   "sitasi_benar": true,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q106",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.668,
+   "cakupan": 0.4136,
+   "sitasi": [
+    "permenaker-26-2014#pasal-33"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-33",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q107",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 9.6893,
+   "cakupan": 0.3335,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-11"
+  },
+  {
+   "id": "q108",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 31.4161,
+   "cakupan": 0.6587,
+   "sitasi": [
+    "permenaker-2-1983#pasal-33",
+    "permenaker-2-1983#pasal-33",
+    "permenaker-2-1983#pasal-33"
+   ],
+   "unit": [
+    0,
+    1,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-33",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q109",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.4897,
+   "cakupan": 0.6437,
+   "sitasi": [
+    "permenaker-26-2014#pasal-29"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-29",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q110",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 32.2735,
+   "cakupan": 0.7803,
+   "sitasi": [
+    "permenaker-2-1983#pasal-35"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-35",
+   "sitasi_benar": false,
+   "kunci_ada": true,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q111",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 31.4604,
+   "cakupan": 0.6444,
+   "sitasi": [
+    "permenaker-11-2023#pasal-10"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-10",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q112",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.75,
+   "cakupan": 0.1458,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-110"
+  },
+  {
+   "id": "q113",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 29.0842,
+   "cakupan": 0.7685,
+   "sitasi": [
+    "permenaker-37-2016#pasal-63"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-63",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q114",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.9239,
+   "cakupan": 0.8339,
+   "sitasi": [
+    "permenaker-26-2014#pasal-8"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q115",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.4292,
+   "cakupan": 0.3686,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-18"
+  },
+  {
+   "id": "q116",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.6734,
+   "cakupan": 1.0,
+   "sitasi": [
+    "pp-50-2012#pasal-16",
+    "pp-50-2012#pasal-16"
+   ],
+   "unit": [
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-16",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q117",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 7.5076,
+   "cakupan": 0.2064,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-73"
+  },
+  {
+   "id": "q118",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 18.1095,
+   "cakupan": 0.6345,
+   "sitasi": [
+    "permenaker-8-2020#pasal-176"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-176",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q119",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.3265,
+   "cakupan": 0.3859,
+   "sitasi": [
+    "permenaker-3-1998#pasal-12"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-12",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q120",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 0.0,
+   "cakupan": 0.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-1"
+  },
+  {
+   "id": "q121",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.9036,
+   "cakupan": 0.4204,
+   "sitasi": [
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3"
+   ],
+   "unit": [
+    1,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q122",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 13.137,
+   "cakupan": 0.3647,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-40"
+  },
+  {
+   "id": "q123",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.0306,
+   "cakupan": 0.5359,
+   "sitasi": [
+    "permenaker-8-2020#pasal-144"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-144",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q124",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.9437,
+   "cakupan": 0.6697,
+   "sitasi": [
+    "permenaker-2-1982#pasal-30"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-30",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q125",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.3442,
+   "cakupan": 0.5762,
+   "sitasi": [
+    "permenaker-8-2020#pasal-171"
+   ],
+   "unit": [
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-171",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q126",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 12.3461,
+   "cakupan": 0.553,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-177",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q127",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.7481,
+   "cakupan": 0.4611,
+   "sitasi": [
+    "permenaker-11-2023#pasal-9"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-9",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q128",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.6037,
+   "cakupan": 0.5163,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-14"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-14",
+   "sitasi_benar": false,
+   "kunci_ada": true,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q129",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.3294,
+   "cakupan": 0.8312,
+   "sitasi": [
+    "permenaker-8-2010#pasal-2",
+    "permenaker-8-2010#pasal-2",
+    "permenaker-8-2010#pasal-2"
+   ],
+   "unit": [
+    0,
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-2",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q130",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.9814,
+   "cakupan": 0.5775,
+   "sitasi": [
+    "permenaker-11-2023#pasal-7",
+    "permenaker-11-2023#pasal-7"
+   ],
+   "unit": [
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-7",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q131",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 10.1486,
+   "cakupan": 0.28,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-1"
+  },
+  {
+   "id": "q132",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 27.2773,
+   "cakupan": 0.7797,
+   "sitasi": [
+    "permenaker-37-2016#pasal-73",
+    "permenaker-37-2016#pasal-73",
+    "permenaker-37-2016#pasal-73"
+   ],
+   "unit": [
+    0,
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-73",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q133",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.0799,
+   "cakupan": 0.61,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-19",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q134",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.6406,
+   "cakupan": 0.5565,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-9"
+  },
+  {
+   "id": "q135",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 14.471,
+   "cakupan": 0.5675,
+   "sitasi": [
+    "permenaker-37-2016#pasal-65"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-65",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q136",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.0918,
+   "cakupan": 0.4811,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-24",
+    "kepmenaker-187-1999#pasal-24"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-24",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q137",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.3942,
+   "cakupan": 0.6036,
+   "sitasi": [
+    "permenaker-37-2016#pasal-35"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-35",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q138",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.1049,
+   "cakupan": 0.3104,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-9",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q139",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.0562,
+   "cakupan": 0.634,
+   "sitasi": [
+    "permenaker-2-1983#pasal-35"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-35",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q140",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 12.7698,
+   "cakupan": 0.2969,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-2"
+  },
+  {
+   "id": "q141",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 11.1432,
+   "cakupan": 0.5045,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1982#pasal-5",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q142",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.2695,
+   "cakupan": 0.5278,
+   "sitasi": [
+    "permenaker-37-2016#pasal-75",
+    "permenaker-37-2016#pasal-75",
+    "permenaker-37-2016#pasal-75"
+   ],
+   "unit": [
+    0,
+    1,
+    8
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-75",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q143",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 28.4866,
+   "cakupan": 0.5812,
+   "sitasi": [
+    "permenaker-2-1983#pasal-37",
+    "permenaker-2-1983#pasal-37"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-37",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q144",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.0566,
+   "cakupan": 0.6411,
+   "sitasi": [
+    "permenaker-11-2023#pasal-17",
+    "permenaker-11-2023#pasal-17"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-17",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q145",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 10.5936,
+   "cakupan": 1.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-14",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q146",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 19.8105,
+   "cakupan": 0.8395,
+   "sitasi": [
+    "permenaker-2-1982#pasal-13"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-13",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q147",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 43.1081,
+   "cakupan": 0.7707,
+   "sitasi": [
+    "permenaker-4-2025#pasal-15",
+    "permenaker-4-2025#pasal-15"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-15",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q148",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.0326,
+   "cakupan": 0.2368,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-3",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q149",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 19.4111,
+   "cakupan": 1.0,
+   "sitasi": [
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q150",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 19.6145,
+   "cakupan": 0.4624,
+   "sitasi": [
+    "pp-50-2012#pasal-21"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-21",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q151",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.5573,
+   "cakupan": 0.1878,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-45"
+  },
+  {
+   "id": "q152",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 19.4731,
+   "cakupan": 0.5149,
+   "sitasi": [
+    "permenaker-26-2014#pasal-3",
+    "permenaker-26-2014#pasal-3"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-3",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q153",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.2706,
+   "cakupan": 1.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1982#pasal-6",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q154",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 16.4633,
+   "cakupan": 0.5556,
+   "sitasi": [
+    "permenaker-15-2008#pasal-2",
+    "permenaker-15-2008#pasal-2"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-2",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q155",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.7286,
+   "cakupan": 0.7329,
+   "sitasi": [
+    "permenaker-4-2025#pasal-12",
+    "permenaker-4-2025#pasal-12"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-12",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q156",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 34.3684,
+   "cakupan": 0.8385,
+   "sitasi": [
+    "permenaker-8-2020#pasal-33"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-33",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q157",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 13.1614,
+   "cakupan": 0.2435,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-15"
+  },
+  {
+   "id": "q158",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.3776,
+   "cakupan": 0.6531,
+   "sitasi": [
+    "permenaker-37-2016#pasal-87"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-87",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q159",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 27.0138,
+   "cakupan": 0.775,
+   "sitasi": [
+    "permenaker-13-2025#pasal-7",
+    "permenaker-13-2025#pasal-7"
+   ],
+   "unit": [
+    3,
+    6
+   ],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-7",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q160",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.0054,
+   "cakupan": 0.509,
+   "sitasi": [
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3"
+   ],
+   "unit": [
+    0,
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q161",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.5646,
+   "cakupan": 0.664,
+   "sitasi": [
+    "permenaker-8-2020#pasal-169",
+    "permenaker-8-2020#pasal-169"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-169",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q162",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 19.0343,
+   "cakupan": 0.4046,
+   "sitasi": [
+    "permenaker-8-2010#pasal-8",
+    "permenaker-8-2010#pasal-8"
+   ],
+   "unit": [
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q163",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.5563,
+   "cakupan": 0.4617,
+   "sitasi": [
+    "permenaker-15-2008#pasal-11"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-11",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q164",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 29.0951,
+   "cakupan": 0.7519,
+   "sitasi": [
+    "permenaker-26-2014#pasal-6",
+    "permenaker-26-2014#pasal-6",
+    "permenaker-26-2014#pasal-6"
+   ],
+   "unit": [
+    0,
+    2,
+    4
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-6",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q165",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 25.9554,
+   "cakupan": 0.7588,
+   "sitasi": [
+    "permenaker-3-1998#pasal-4",
+    "permenaker-3-1998#pasal-4"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-4",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q166",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.2706,
+   "cakupan": 0.5768,
+   "sitasi": [
+    "pp-50-2012#pasal-9",
+    "pp-50-2012#pasal-9",
+    "pp-50-2012#pasal-9"
+   ],
+   "unit": [
+    1,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-9",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q167",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 25.1798,
+   "cakupan": 0.6921,
+   "sitasi": [
+    "permenaker-8-2020#pasal-54"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-54",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q168",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 37.8825,
+   "cakupan": 0.7839,
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-7",
+    "kepmenaker-187-1999#pasal-7"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-7",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q169",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 12.3711,
+   "cakupan": 0.4849,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-56",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q170",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.4519,
+   "cakupan": 0.8145,
+   "sitasi": [
+    "pp-50-2012#pasal-7",
+    "pp-50-2012#pasal-7",
+    "pp-50-2012#pasal-7"
+   ],
+   "unit": [
+    0,
+    1,
+    7
+   ],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-7",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q171",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 10.1991,
+   "cakupan": 0.8842,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-2"
+  },
+  {
+   "id": "q172",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 26.0682,
+   "cakupan": 0.7619,
+   "sitasi": [
+    "permenaker-8-2020#pasal-175",
+    "permenaker-8-2020#pasal-175",
+    "permenaker-8-2020#pasal-175"
+   ],
+   "unit": [
+    1,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-175",
+   "sitasi_benar": false,
+   "kunci_ada": true,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q173",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.8255,
+   "cakupan": 0.5203,
+   "sitasi": [
+    "uu-1-1970#pasal-6",
+    "uu-1-1970#pasal-6"
+   ],
+   "unit": [
+    0,
+    2
+   ],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-6",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q174",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 18.4469,
+   "cakupan": 0.8547,
+   "sitasi": [
+    "permenaker-37-2016#pasal-82"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-82",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q175",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 41.4062,
+   "cakupan": 0.7976,
+   "sitasi": [
+    "permenaker-3-1998#pasal-8"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-8",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q176",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.6447,
+   "cakupan": 0.6419,
+   "sitasi": [
+    "permenaker-8-2010#pasal-3",
+    "permenaker-8-2010#pasal-3"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q177",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 12.5108,
+   "cakupan": 0.4297,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-42"
+  },
+  {
+   "id": "q178",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 23.7718,
+   "cakupan": 0.6192,
+   "sitasi": [
+    "permenaker-2-1982#pasal-10"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-10",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q179",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 21.5027,
+   "cakupan": 0.747,
+   "sitasi": [
+    "permenaker-4-2025#pasal-10",
+    "permenaker-4-2025#pasal-10"
+   ],
+   "unit": [
+    1,
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-4-2025#pasal-10",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q180",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 15.1036,
+   "cakupan": 0.5627,
+   "sitasi": [
+    "permenaker-11-2023#pasal-3"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-3",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q181",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 17.6164,
+   "cakupan": 0.7004,
+   "sitasi": [
+    "permenaker-13-2025#pasal-8",
+    "permenaker-13-2025#pasal-8"
+   ],
+   "unit": [
+    1,
+    5
+   ],
+   "verbatim": true,
+   "top1": "permenaker-13-2025#pasal-8",
+   "sitasi_benar": false,
+   "kunci_ada": true,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q182",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 19.0222,
+   "cakupan": 0.7341,
+   "sitasi": [
+    "permenaker-15-2008#pasal-5"
+   ],
+   "unit": [
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-5",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q183",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.2049,
+   "cakupan": 0.4479,
+   "sitasi": [
+    "permenaker-2-1983#pasal-69"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-69",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q184",
+   "split": "test",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 12.7062,
+   "cakupan": 0.413,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-1"
+  },
+  {
+   "id": "q185",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 25.4787,
+   "cakupan": 0.4689,
+   "sitasi": [
+    "permenaker-8-2010#pasal-2"
+   ],
+   "unit": [
+    2
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-2",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q186",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 29.9455,
+   "cakupan": 0.6717,
+   "sitasi": [
+    "permenaker-26-2014#pasal-27",
+    "permenaker-26-2014#pasal-27"
+   ],
+   "unit": [
+    0,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-27",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q187",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 28.6338,
+   "cakupan": 0.6734,
+   "sitasi": [
+    "permenaker-2-1982#pasal-31"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-31",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q188",
+   "split": "test",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 7.2392,
+   "cakupan": 0.2602,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-12"
+  },
+  {
+   "id": "q189",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 21.58,
+   "cakupan": 0.5895,
+   "sitasi": [
+    "permenaker-2-1983#pasal-57"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-57",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q190",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.4069,
+   "cakupan": 0.7358,
+   "sitasi": [
+    "uu-1-1970#pasal-13"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-13",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q191",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 10.1811,
+   "cakupan": 0.5218,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-21",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q192",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 22.1481,
+   "cakupan": 0.7395,
+   "sitasi": [
+    "permenaker-8-2020#pasal-163",
+    "permenaker-8-2020#pasal-163"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-163",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q193",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 24.0737,
+   "cakupan": 0.45,
+   "sitasi": [
+    "pp-50-2012#pasal-14",
+    "pp-50-2012#pasal-14",
+    "pp-50-2012#pasal-14"
+   ],
+   "unit": [
+    0,
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "pp-50-2012#pasal-14",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q194",
+   "split": "test",
+   "gaya": "parafrase",
+   "terjawab": true,
+   "menolak": true,
+   "skor": 13.6361,
+   "cakupan": 0.3653,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-2",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q195",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.1688,
+   "cakupan": 0.4642,
+   "sitasi": [
+    "permenaker-2-1982#pasal-11",
+    "permenaker-2-1982#pasal-11"
+   ],
+   "unit": [
+    0,
+    1
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-11",
+   "sitasi_benar": false,
+   "kunci_ada": false,
+   "benar": false,
+   "benar_ketat": false
+  },
+  {
+   "id": "q196",
+   "split": "test",
+   "gaya": "leksikal",
+   "terjawab": true,
+   "menolak": false,
+   "skor": 20.9005,
+   "cakupan": 0.7255,
+   "sitasi": [
+    "permenaker-11-2023#pasal-7",
+    "permenaker-11-2023#pasal-7"
+   ],
+   "unit": [
+    2,
+    3
+   ],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-7",
+   "sitasi_benar": true,
+   "kunci_ada": true,
+   "benar": true,
+   "benar_ketat": true
+  },
+  {
+   "id": "q197",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 10.294,
+   "cakupan": 0.1726,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-21"
+  },
+  {
+   "id": "q198",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.9651,
+   "cakupan": 0.3292,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-4"
+  },
+  {
+   "id": "q199",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 9.3343,
+   "cakupan": 0.186,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2010#pasal-3"
+  },
+  {
+   "id": "q200",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.7571,
+   "cakupan": 0.3029,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-12"
+  },
+  {
+   "id": "q201",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.5683,
+   "cakupan": 0.209,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1982#pasal-24"
+  },
+  {
+   "id": "q202",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 11.1881,
+   "cakupan": 0.3557,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-4"
+  },
+  {
+   "id": "q203",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 13.8665,
+   "cakupan": 0.5355,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-13"
+  },
+  {
+   "id": "q204",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 9.7466,
+   "cakupan": 0.3327,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-17"
+  },
+  {
+   "id": "q205",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 10.0992,
+   "cakupan": 0.5322,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-9"
+  },
+  {
+   "id": "q206",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 8.732,
+   "cakupan": 0.6349,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-172"
+  },
+  {
+   "id": "q207",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 10.1287,
+   "cakupan": 0.2098,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-88"
+  },
+  {
+   "id": "q208",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 11.7416,
+   "cakupan": 0.2364,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "kepmenaker-187-1999#pasal-15"
+  },
+  {
+   "id": "q209",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 11.1076,
+   "cakupan": 0.2284,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-26-2014#pasal-2"
+  },
+  {
+   "id": "q210",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 12.4211,
+   "cakupan": 0.4137,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-11-2023#pasal-24"
+  },
+  {
+   "id": "q211",
+   "split": "dev",
+   "gaya": "dekat",
+   "terjawab": false,
+   "menolak": false,
+   "skor": 15.3793,
+   "cakupan": 0.2917,
+   "sitasi": [
+    "permenaker-3-1998#pasal-12"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-12"
+  },
+  {
+   "id": "q212",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 5.7396,
+   "cakupan": 0.215,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-5"
+  },
+  {
+   "id": "q213",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.7973,
+   "cakupan": 0.3106,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-3-1998#pasal-4"
+  },
+  {
+   "id": "q214",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 0.0,
+   "cakupan": 0.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-1"
+  },
+  {
+   "id": "q215",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": false,
+   "skor": 18.1537,
+   "cakupan": 0.3697,
+   "sitasi": [
+    "permenaker-2-1983#pasal-25"
+   ],
+   "unit": [
+    0
+   ],
+   "verbatim": true,
+   "top1": "permenaker-2-1983#pasal-25"
+  },
+  {
+   "id": "q216",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 4.7154,
+   "cakupan": 0.1563,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-7"
+  },
+  {
+   "id": "q217",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 0.0,
+   "cakupan": 0.0,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-1"
+  },
+  {
+   "id": "q218",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 7.3404,
+   "cakupan": 0.2027,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-15-2008#pasal-6"
+  },
+  {
+   "id": "q219",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.5573,
+   "cakupan": 0.2576,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-37-2016#pasal-45"
+  },
+  {
+   "id": "q220",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 9.6009,
+   "cakupan": 0.2422,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "permenaker-8-2020#pasal-102"
+  },
+  {
+   "id": "q221",
+   "split": "dev",
+   "gaya": "luar",
+   "terjawab": false,
+   "menolak": true,
+   "skor": 6.9049,
+   "cakupan": 0.3006,
+   "sitasi": [],
+   "unit": [],
+   "verbatim": true,
+   "top1": "uu-1-1970#pasal-13"
+  }
  ]
 }

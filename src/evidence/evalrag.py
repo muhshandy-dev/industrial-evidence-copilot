@@ -188,6 +188,7 @@ def answer_all(corpus: Corpus, system: System, rows: list[dict], threshold: floa
             "skor": round(ans.score, 4),
             "cakupan": round(ans.coverage, 4),
             "sitasi": cited,
+            "unit": [e.unit_idx for e in ans.evidence],
             "verbatim": verbatim,
             "top1": ids[ranked[0]],
         }
@@ -367,6 +368,7 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "jawaban": ans_summary,
         "pembanding_jawaban": base,
         "kegagalan_test": failures(rows, recs, corpus),
+        "per_pertanyaan": recs,
     }
 
 

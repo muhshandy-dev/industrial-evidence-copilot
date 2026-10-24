@@ -92,6 +92,47 @@ def cmd_eval(_: argparse.Namespace) -> int:
     return 0
 
 
+CONTOH = [
+    "Berapa lama masa berlaku Lisensi K3 operator pesawat uap?",
+    "Siapa yang wajib melaporkan kecelakaan kerja?",
+    "Berapa umur minimal peserta ujian juru las?",
+    "Apa itu ruang terbatas?",
+    "Berapa tarif BPJS untuk jaminan kecelakaan kerja?",
+]
+
+
+def cmd_export(_: argparse.Namespace) -> int:
+    """Tulis data website dari korpus nyata dan hasil evaluasi; menolak bila tidak konsisten."""
+    import hashlib
+
+    from .corpus import Corpus
+    from .evalrag import build_systems
+    from .export_web import write_index
+
+    corpus_path = ROOT / "corpus" / "korpus.json"
+    results = json.loads((ROOT / "eval" / "results.json").read_text(encoding="utf-8"))
+    sha = hashlib.sha256(corpus_path.read_bytes()).hexdigest()
+    if results["korpus"]["sha256"] != sha:
+        print("eval/results.json dibuat dari korpus lain; jalankan `evidence eval` dulu.")
+        return 1
+    corpus = Corpus.read(corpus_path)
+    if corpus.asal != "nyata":
+        print("hanya korpus nyata yang boleh diekspor ke website.")
+        return 1
+    key = results["metode_dikirim"]
+    system = build_systems(corpus)[key]
+    out = ROOT / "web" / "public" / "data"
+    out.mkdir(parents=True, exist_ok=True)
+    corpus.write(out / "korpus.json")
+    size = write_index(system.retriever, out / "indeks.json")
+    ev = {**results, "ambang_jawab": results["ambang"]["terpilih"], "contoh": CONTOH}
+    (out / "evaluasi.json").write_text(
+        json.dumps(ev, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    )
+    print(f"ekspor {key}: indeks {size / 1e6:.2f} MB, ambang {ev['ambang_jawab']}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="evidence")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -108,6 +149,9 @@ def main(argv: list[str] | None = None) -> int:
     es.set_defaults(fn=cmd_evalset)
     sub.add_parser("eval", help="jalankan evaluasi lengkap -> eval/results.json").set_defaults(
         fn=cmd_eval
+    )
+    sub.add_parser("export", help="tulis data website (web/public/data)").set_defaults(
+        fn=cmd_export
     )
     args = ap.parse_args(argv)
     return args.fn(args)
