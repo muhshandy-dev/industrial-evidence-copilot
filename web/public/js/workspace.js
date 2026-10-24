@@ -100,6 +100,8 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     const topScore = ranked.length ? scores[ranked[0]] : 0;
     const ans = extractAnswer(q, ranked, texts, idf, { topScore, threshold, useStem: indeks.pakai_stem, displayTexts: shownTexts });
     const card = h("article", { class: "jawaban masuk", "aria-label": "Jawaban" });
+    // Mode akhir jawaban (dipakai uji): generatif, tolak_model, cadangan_ekstraktif,
+    // galat_model, tolak_gerbang, atau ekstraktif.
     thread.append(h("h3", { class: "pertanyaan masuk" }, q), card);
     card.scrollIntoView({ block: "nearest", behavior: motionOn() ? "smooth" : "auto" });
 
@@ -123,6 +125,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     trace.el.open = false; // setelah urutan terlihat, ringkas agar kutipan jawaban menjadi fokus
 
     // 2. Jawaban generatif, atau kutipan yang muncul satu per satu.
+    card.dataset.mode = generatif ? "generatif" : ans.abstain ? "tolak_gerbang" : "ekstraktif";
     if (generatif) {
       await jawabGeneratif(card, q, ranked, ans, top, kepala, ringkas);
     } else if (ans.abstain) {
@@ -160,6 +163,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     } catch (err) {
       tunggu.textContent = `Model gagal menjawab (${err.message}). Ditampilkan kutipan langsung.`;
       tulis.remove();
+      card.dataset.mode = "galat_model";
       kepala.textContent = "Kutipan cadangan";
       if (ans.abstain) card.append(tolakBox("Korpus ini tidak memuat dasar yang cukup untuk menjawab.", "Kutipan langsung juga menolak menjawab.", top));
       else await tampilkanKutipan(card, ans, top);
@@ -168,12 +172,14 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     tunggu.parentElement.remove();
     const hasil = periksa(bacaJawaban(mentah, pasal.length), pasal);
     if (hasil.status === "tolak") {
+      card.dataset.mode = "tolak_model";
       kepala.textContent = "Tidak menjawab";
       ringkas.textContent = "Model: kutipan tidak memuat jawaban";
       card.append(tolakBox("Pasal yang ditemukan tidak memuat jawaban pertanyaan ini.", "Model membaca pasal teratas dan menyatakan jawabannya tidak ada di sana. Coba istilah lain, atau periksa pasal terdekat di bawah.", top));
       return;
     }
     if (hasil.status === "tanpa_dasar") {
+      card.dataset.mode = "cadangan_ekstraktif";
       kepala.textContent = "Kutipan cadangan";
       ringkas.textContent = "Jawaban model tidak bersitasi";
       card.append(h("p", { class: "gen-catatan masuk" }, "Model tidak menghasilkan kalimat dengan sitasi yang dapat diperiksa, jadi jawabannya tidak ditampilkan. Berikut kutipan langsung dari pasal peringkat 1."));

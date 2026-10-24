@@ -38,15 +38,19 @@ try {
   console.log(`status setelah ${((Date.now() - t0Muat) / 1000).toFixed(0)} detik:`, status);
   assert.equal(await page.getAttribute(".mode-jawab", "data-model"), "siap");
   const t0 = Date.now();
-  await page.fill("#pertanyaan", "Berapa lama batas waktu pengurus melaporkan kecelakaan kerja?");
+  // Pertanyaan dengan skor jauh di atas ambang, supaya model benar-benar dipanggil.
+  await page.fill("#pertanyaan", "Berapa lama masa berlaku Lisensi K3 operator pesawat uap?");
   await page.press("#pertanyaan", "Enter");
   await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 30 * 60 * 1000 });
   console.log(`dijawab dalam ${((Date.now() - t0) / 1000).toFixed(0)} detik`);
   const kepala = await page.textContent(".jawaban-kepala");
   console.log("kepala:", kepala);
   console.log("isi:", (await page.textContent(".jawaban")).slice(0, 800));
-  assert.match(kepala, /Jawaban generatif|Tidak menjawab|Kutipan cadangan/);
-  if (/Jawaban generatif/.test(kepala)) assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat generatif tanpa sitasi");
+  const mode = await page.getAttribute(".jawaban[data-selesai=ya]", "data-mode");
+  console.log("mode:", mode);
+  // Model harus benar-benar berjalan: bukan ditolak gerbang dan bukan galat model.
+  assert.ok(["generatif", "tolak_model", "cadangan_ekstraktif"].includes(mode), `mode ${mode}`);
+  if (mode === "generatif") assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat generatif tanpa sitasi");
   assert.deepEqual(galat.filter((g) => /Content Security Policy|Refused to/.test(g)), [], "pelanggaran CSP");
   console.log("uji asap peramban generatif lolos");
 } finally {
