@@ -9,12 +9,13 @@ export const MODEL = {
   dtype: "q4f16",
   lisensi: "Apache-2.0",
 };
-// Model jalur CPU (WebAssembly). Model 1,5B gagal dimuat di memori WebAssembly (bad_alloc pada
-// uji Chromium), jadi perangkat tanpa WebGPU f16 memakai versi 0,5B yang dievaluasi terpisah.
+// Model jalur CPU (WebAssembly), dievaluasi terpisah. Uji Chromium: 1,5B gagal dimuat di memori
+// WebAssembly (bad_alloc); 0,5B q4f16 dimuat tetapi kehabisan memori pada prompt empat pasal;
+// 0,5B q4 (bobot 4-bit, aktivasi f32) menjawab prompt yang sama, jadi prompt situs tidak dipotong.
 export const MODEL_CPU = {
   id: "onnx-community/Qwen2.5-0.5B-Instruct",
   revision: "22942cb7d7ba4cc81bb4673549ca4d4614469b5e",
-  dtype: "q4f16",
+  dtype: "q4",
   lisensi: "Apache-2.0",
 };
 export const MODELS = { [MODEL.id]: MODEL, [MODEL_CPU.id]: MODEL_CPU };

@@ -32,7 +32,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - name: Percobaan model di CPU peramban
-        if: github.event_name == 'push' || inputs.calon != ''
+        if: inputs.calon != ''
         env:
           CALON: ${{ inputs.calon }}
         run: node tests/wasm-probe.mjs

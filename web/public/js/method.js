@@ -1,7 +1,7 @@
 // Halaman Cara kerja dan batas. Daftar dokumen dibaca dari data/korpus.json, bukan ditulis ulang di sini.
 import { clear, h } from "./dom.js";
 import { K_PASAL, MAX_TOKEN_BARU, MODEL, MODEL_CPU } from "./gen/prompt.js";
-import { PUSTAKA } from "./gen/runtime.js";
+import { PUSTAKA, UKURAN_UNDUHAN_MB } from "./gen/runtime.js";
 
 const namaModel = (m) => m.id.split("/")[1];
 
@@ -58,7 +58,7 @@ export function mountMethod(main, { korpus, evaluasi }) {
   const hosting = h("section", { "aria-labelledby": "m-host" },
     h("h2", { id: "m-host" }, "Hosting dan inferensi"),
     h("p", {}, "Situs ini sepenuhnya statis di Cloudflare Pages. Indeks dan korpus diunduh sekali ke peramban, lalu pencarian dihitung di sana. Tidak ada server aplikasi, tidak ada basis data, dan tidak ada API berbayar. Karena tidak ada server yang harus \"bangun\", tidak ada jeda mulai dingin seperti pada layanan gratis yang tidur saat sepi."),
-    h("p", {}, `Mode generatif juga berjalan di perangkat Anda. Setelah Anda menekan tombol muat, peramban mengunduh pustaka transformers.js versi ${PUSTAKA.versi} dari jsDelivr dan bobot model dari Hugging Face, pada versi yang dipatok. Kode pustaka diperiksa sidik SHA-256-nya sebelum dijalankan. Unduhan ini besar (sekitar 1,2 GB untuk GPU atau 500 MB untuk CPU) dan disimpan di peramban untuk kunjungan berikutnya. Pertanyaan Anda tidak dikirim ke server mana pun; yang diunduh hanya berkas model.`),
+    h("p", {}, `Mode generatif juga berjalan di perangkat Anda. Setelah Anda menekan tombol muat, peramban mengunduh pustaka transformers.js versi ${PUSTAKA.versi} dari jsDelivr dan bobot model dari Hugging Face, pada versi yang dipatok. Kode pustaka diperiksa sidik SHA-256-nya sebelum dijalankan. Unduhan ini besar (sekitar ${(UKURAN_UNDUHAN_MB.webgpu / 1000).toFixed(1).replace(".", ",")} GB untuk GPU atau ${UKURAN_UNDUHAN_MB.wasm} MB untuk CPU) dan disimpan di peramban untuk kunjungan berikutnya. Pertanyaan Anda tidak dikirim ke server mana pun; yang diunduh hanya berkas model.`),
     h("p", {}, "Pencarian di situs tetap BM25 dengan konteks. Model embedding dan reranker diuji secara offline di halaman Evaluasi, tetapi belum dipasang di situs karena embedding pertanyaan di peramban harus memakai bobot yang sama dengan evaluasi dan diuji kesamaannya lebih dulu."));
 
   const dokumen = h("section", { "aria-labelledby": "m-dok" },

@@ -21,8 +21,8 @@ export async function muatPustaka() {
   try { return await import(url); } finally { URL.revokeObjectURL(url); }
 }
 
-// Ukuran unduhan (model_q4f16.onnx dan tokenizer, dibulatkan) per jalur.
-export const UKURAN_UNDUHAN_MB = { webgpu: 1240, wasm: 500 };
+// Ukuran unduhan (berkas ONNX menurut dtype dan tokenizer, dibulatkan) per jalur.
+export const UKURAN_UNDUHAN_MB = { webgpu: 1240, wasm: 800 };
 
 let lib = null;
 let gen = null;

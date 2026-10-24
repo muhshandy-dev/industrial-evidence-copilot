@@ -42,6 +42,7 @@ SETS = ("dev", "test", "stress", "injeksi", "sealed")
 MODEL_UTAMA = "onnx-community/Qwen2.5-1.5B-Instruct"  # WebGPU
 MODEL_CPU = "onnx-community/Qwen2.5-0.5B-Instruct"  # jalur CPU (WebAssembly)
 DTYPE_UTAMA = "q4f16"
+DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt penuh
 # bertahan: prompt situs dengan model utama; polos: pembanding injeksi; bertahan-cpu: model CPU.
 KONFIGURASI = ("bertahan", "polos", "bertahan-cpu")
 

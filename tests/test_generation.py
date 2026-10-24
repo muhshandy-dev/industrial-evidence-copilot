@@ -10,7 +10,7 @@ def test_dtype_utama_sama_dengan_situs():
     js = (ROOT / "web/public/js/gen/prompt.js").read_text(encoding="utf-8")
     ids = re.findall(r'id: "([^"]+)"', js)
     assert ids[:2] == [G.MODEL_UTAMA, G.MODEL_CPU]
-    assert set(re.findall(r'dtype: "([^"]+)"', js)) == {G.DTYPE_UTAMA}
+    assert re.findall(r'dtype: "([^"]+)"', js)[:2] == [G.DTYPE_UTAMA, G.DTYPE_CPU]
     assert G.konfigurasi("bertahan", G.MODEL_UTAMA) == "bertahan"
     assert G.konfigurasi("bertahan", G.MODEL_CPU) == "bertahan-cpu"
 
