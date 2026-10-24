@@ -44,6 +44,21 @@ await jalan("pertanyaan yang ada dasarnya dijawab dengan kutipan dan pasal terbu
   await ctx.close();
 });
 
+await jalan("mode generatif tanpa WebGPU: alasan ditampilkan, tidak ada unduhan, jawaban tetap kutipan", async () => {
+  const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
+  await page.addInitScript(() => { Object.defineProperty(navigator, "gpu", { value: undefined, configurable: true }); });
+  await siap(page, "");
+  await page.check("input[name=mode-jawab][value=generatif]");
+  await page.waitForFunction(() => /tetap memakai kutipan langsung/.test(document.querySelector(".mode-status")?.textContent ?? ""));
+  assert.equal(await page.locator(".mode-jawab button").isVisible(), false, "tombol muat model tidak boleh muncul");
+  await page.fill("#pertanyaan", "Berapa umur minimal peserta ujian juru las?");
+  await page.press("#pertanyaan", "Enter");
+  await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 15000 });
+  assert.match(await page.textContent(".jawaban-kepala"), /Jawaban ekstraktif/);
+  assert.deepEqual(log.errors, []); assert.deepEqual(log.luar, []);
+  await ctx.close();
+});
+
 await jalan("pertanyaan di luar korpus ditolak", async () => {
   const { ctx, page } = await halaman({ reducedMotion: "reduce" });
   await siap(page, "");

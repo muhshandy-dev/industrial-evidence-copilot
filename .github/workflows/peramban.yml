@@ -1,0 +1,30 @@
+name: Peramban generatif
+
+# Uji asap mode generatif di Chromium sungguhan (unduh model dari Hugging Face, WebGPU
+# perangkat lunak di runner). Lambat, jadi tidak ikut CI biasa.
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/peramban.yml", "web/tests/gen-browser.mjs"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  peramban:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node tests/gen-browser.mjs

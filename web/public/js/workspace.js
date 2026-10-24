@@ -4,6 +4,9 @@ import { Retriever, rankOrder } from "./retrieval.js";
 import { extractAnswer } from "./answer.js";
 import { createReader } from "./reader.js";
 import { wait, motionOn } from "./motion.js";
+import { createModePanel } from "./gen/panel.js";
+import { bacaJawaban, pasalUntukPrompt, periksa, susunPesan, K_PASAL, MODEL } from "./gen/prompt.js";
+import { bangkitkan } from "./gen/runtime.js";
 
 const num = (x) => x.toFixed(1).replace(".", ",");
 
@@ -21,6 +24,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   const input = h("textarea", { id: "pertanyaan", rows: "2", maxlength: "400", placeholder: "Contoh: berapa lama batas waktu melaporkan kecelakaan kerja?", "aria-label": "Pertanyaan Anda" });
   const submit = h("button", { class: "tombol", type: "submit" }, "Cari bukti");
   let busy = false;
+  const modePanel = createModePanel();
 
   const setFokus = (f) => {
     root.dataset.fokus = f;
@@ -47,6 +51,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   const paneSumber = h("section", { class: "pane pane-sumber", "aria-labelledby": "h-sumber" },
     h("div", { class: "pane-kepala" }, h("h2", { id: "h-sumber" }, "Sumber"), h("span", { class: "hitung" }, `${korpus.dokumen.length} dokumen · ${korpus.chunk.length} pasal`)),
     h("div", { class: "pane-isi" },
+      modePanel.el,
       h("div", {}, h("div", { class: "subjudul" }, "Dokumen yang dicari"), docList),
       examples.length ? h("div", {}, h("div", { class: "subjudul" }, "Contoh pertanyaan"), h("div", { class: "contoh" }, examples)) : null,
       h("p", { class: "catatan" }, "Semua dokumen adalah peraturan perundang-undangan resmi. Daftar lengkap, sumber, dan dasar lisensinya ada di halaman Cara kerja dan batas.")));
@@ -99,11 +104,15 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     card.scrollIntoView({ block: "nearest", behavior: motionOn() ? "smooth" : "auto" });
 
     const top = ranked.slice(0, 6);
-    const trace = buildTrace(tokens, top, scores);
-    const lolos = !ans.abstain;
+    // Mode generatif memakai gerbang yang sama: di bawah ambang, model tidak dipanggil.
+    const generatif = modePanel.generatif() && topScore >= threshold;
+    const trace = buildTrace(tokens, top, scores, generatif);
+    const lolos = generatif || !ans.abstain;
+    const kepala = h("span", { class: "label-mode" }, generatif ? "Jawaban generatif" : lolos ? "Jawaban ekstraktif" : "Tidak menjawab");
+    const ringkas = h("span", {}, generatif ? `${MODEL.id.split("/")[1]}, di perangkat ini` : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
     card.append(h("div", { class: "jawaban-kepala" },
-      h("span", { class: "label-mode" }, lolos ? "Jawaban ekstraktif" : "Tidak menjawab"),
-      h("span", {}, lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup"),
+      kepala,
+      ringkas,
       h("span", { class: "keyakinan", data: { lolos: lolos ? "ya" : "tidak" }, title: "Skor BM25 pasal teratas dibandingkan ambang penolakan. Ini ukuran kecocokan kata, bukan peluang jawaban benar." },
         `Skor ${num(topScore)} · ambang ${num(threshold)}`)));
 
@@ -113,8 +122,10 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     await wait(500);
     trace.el.open = false; // setelah urutan terlihat, ringkas agar kutipan jawaban menjadi fokus
 
-    // 2. Kutipan muncul satu per satu.
-    if (ans.abstain) {
+    // 2. Jawaban generatif, atau kutipan yang muncul satu per satu.
+    if (generatif) {
+      await jawabGeneratif(card, q, ranked, ans, top, kepala, ringkas);
+    } else if (ans.abstain) {
       card.append(h("div", { class: "tolak masuk" },
         h("h3", {}, "Korpus ini tidak memuat dasar yang cukup untuk menjawab."),
         h("p", {}, "Sistem lebih baik menolak daripada menebak. Coba pakai istilah yang ada di peraturan, atau periksa apakah topiknya memang diatur di dokumen yang dipilih."),
@@ -122,6 +133,71 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
           h("div", { class: "terdekat" }, top.slice(0, 3).map((ci) => h("button", { type: "button", onclick: () => open(ci, []) },
             h("span", {}, `${korpus.dokumen[korpus.chunk[ci].dok].judul}, ${korpus.chunk[ci].label}`), h("span", { class: "kode" }, "buka"))))) : null));
     } else {
+      await tampilkanKutipan(card, ans, top);
+    }
+    busy = false; submit.disabled = false;
+    card.dataset.selesai = "ya";
+    thread.parentElement.scrollTo?.({ top: thread.parentElement.scrollHeight, behavior: motionOn() ? "smooth" : "auto" });
+  }
+
+  function tolakBox(judul, isi, top) {
+    return h("div", { class: "tolak masuk" },
+      h("h3", {}, judul),
+      h("p", {}, isi),
+      top.length ? h("div", {}, h("div", { class: "subjudul" }, "Pasal terdekat (belum tentu menjawab)"),
+        h("div", { class: "terdekat" }, top.slice(0, 3).map((ci) => h("button", { type: "button", onclick: () => open(ci, []) },
+          h("span", {}, `${korpus.dokumen[korpus.chunk[ci].dok].judul}, ${korpus.chunk[ci].label}`), h("span", { class: "kode" }, "buka"))))) : null);
+  }
+
+  async function jawabGeneratif(card, q, ranked, ans, top, kepala, ringkas) {
+    const pasal = pasalUntukPrompt(korpus, ranked);
+    const tulis = h("p", { class: "gen-mentah", "aria-hidden": "true" });
+    const tunggu = h("p", { class: "catatan gen-tunggu", role: "status" }, "Model sedang menulis jawaban dari pasal yang ditemukan…");
+    card.append(h("div", { class: "jawaban-isi" }, tunggu, tulis));
+    let mentah = "";
+    try {
+      mentah = await bangkitkan(susunPesan(q, pasal), (t) => { tulis.textContent += t; });
+    } catch (err) {
+      tunggu.textContent = `Model gagal menjawab (${err.message}). Ditampilkan kutipan langsung.`;
+      tulis.remove();
+      kepala.textContent = "Kutipan cadangan";
+      if (ans.abstain) card.append(tolakBox("Korpus ini tidak memuat dasar yang cukup untuk menjawab.", "Kutipan langsung juga menolak menjawab.", top));
+      else await tampilkanKutipan(card, ans, top);
+      return;
+    }
+    tunggu.parentElement.remove();
+    const hasil = periksa(bacaJawaban(mentah, pasal.length), pasal);
+    if (hasil.status === "tolak") {
+      kepala.textContent = "Tidak menjawab";
+      ringkas.textContent = "Model: kutipan tidak memuat jawaban";
+      card.append(tolakBox("Pasal yang ditemukan tidak memuat jawaban pertanyaan ini.", "Model membaca pasal teratas dan menyatakan jawabannya tidak ada di sana. Coba istilah lain, atau periksa pasal terdekat di bawah.", top));
+      return;
+    }
+    if (hasil.status === "tanpa_dasar") {
+      kepala.textContent = "Kutipan cadangan";
+      ringkas.textContent = "Jawaban model tidak bersitasi";
+      card.append(h("p", { class: "gen-catatan masuk" }, "Model tidak menghasilkan kalimat dengan sitasi yang dapat diperiksa, jadi jawabannya tidak ditampilkan. Berikut kutipan langsung dari pasal peringkat 1."));
+      if (ans.abstain) card.append(tolakBox("Kutipan langsung juga tidak menemukan kalimat yang cocok.", "Periksa pasal terdekat di bawah.", top));
+      else await tampilkanKutipan(card, ans, top);
+      return;
+    }
+    const box = h("div", { class: "jawaban-isi gen-isi" });
+    card.append(box);
+    for (const k of hasil.kalimat) {
+      box.append(h("p", { class: "gen-kalimat masuk" }, k.teks, " ",
+        ...k.sitasi.map((n) => h("button", { type: "button", class: "gen-sitasi", onclick: () => open(pasal[n - 1].chunk, []), "aria-label": `Buka sumber ${n}: ${pasal[n - 1].sumber}` }, `[${n}]`))));
+      await wait(160);
+    }
+    const dikutip = new Set(hasil.kalimat.flatMap((k) => k.sitasi));
+    card.append(h("ol", { class: "gen-sumber masuk" }, pasal.map((p) => h("li", { data: { dikutip: dikutip.has(p.n) ? "ya" : "tidak" } },
+      h("button", { type: "button", onclick: () => open(p.chunk, []) }, h("span", { class: "kode" }, `[${p.n}]`), h("span", {}, p.sumber))))));
+    const dibuang = hasil.dibuang.length ? ` ${hasil.dibuang.length} kalimat tanpa sitasi yang sah dibuang.` : "";
+    card.append(h("p", { class: "jawaban-kaki masuk" }, `Kalimat di atas ditulis oleh model bahasa dari pasal bernomor, bukan disalin. Model bisa keliru membaca atau merangkum; periksa pasal yang dirujuk.${dibuang} Ini bukan nasihat hukum.`));
+    reader.show(pasal[hasil.kalimat[0].sitasi[0] - 1].chunk, { scroll: innerWidth > 1100 });
+  }
+
+  async function tampilkanKutipan(card, ans, top) {
+    {
       const box = h("div", { class: "jawaban-isi" });
       card.append(box);
       for (let i = 0; i < ans.evidence.length; i++) {
@@ -143,9 +219,6 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
       const first = ans.evidence[0];
       reader.show(first.chunk, { units: ans.evidence.map((e) => e.unit), scroll: innerWidth > 1100 });
     }
-    busy = false; submit.disabled = false;
-    card.dataset.selesai = "ya";
-    thread.parentElement.scrollTo?.({ top: thread.parentElement.scrollHeight, behavior: motionOn() ? "smooth" : "auto" });
   }
 
   function open(chunkIdx, units) {
@@ -155,7 +228,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
 
   // Jejak pencarian: urutan pasal menurut skor BM25 dan kontribusi tiap istilah, supaya terlihat
   // kata mana yang membuat suatu pasal naik. Batang tumbuh berurutan dari peringkat 1.
-  function buildTrace(tokens, top, scores) {
+  function buildTrace(tokens, top, scores, generatif = false) {
     const unik = [...new Set(tokens)];
     const asing = unik.filter((t) => !(t in idf));
     const max = top.length ? scores[top[0]] : 1;
@@ -178,7 +251,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
       h("div", { class: "jejak-isi" },
         asing.length ? h("p", { class: "jejak-catatan" }, `Istilah yang tidak ada di korpus dan tidak ikut menilai: ${asing.join(", ")}.`) : null,
         h("ol", { class: "jejak-daftar" }, rows),
-        h("p", { class: "jejak-catatan" }, "Kutipan hanya diambil dari pasal peringkat 1. Angka kecil di tiap baris adalah sumbangan istilah pertanyaan pada skor pasal itu.")));
+        h("p", { class: "jejak-catatan" }, `${generatif ? `Model generatif membaca ${K_PASAL} pasal teratas.` : "Kutipan hanya diambil dari pasal peringkat 1."} Angka kecil di tiap baris adalah sumbangan istilah pertanyaan pada skor pasal itu.`)));
     return {
       el,
       async play() {

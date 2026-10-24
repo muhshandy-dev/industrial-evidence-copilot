@@ -62,8 +62,10 @@ for (const f of [...semua("js"), ...semua("css")]) {
 // 4. Header
 const hd = baca("_headers");
 cek(/Content-Security-Policy:.*default-src 'none'/.test(hd), "CSP default-src 'none' hilang");
-cek(!/unsafe-inline|unsafe-eval/.test(hd), "CSP memakai unsafe-*");
-cek(/script-src 'self'/.test(hd) && /connect-src 'self'/.test(hd), "CSP script-src/connect-src bukan 'self'");
+cek(!/'unsafe-inline'|'unsafe-eval'/.test(hd), "CSP memakai 'unsafe-inline' atau 'unsafe-eval'");
+// Pihak ketiga hanya untuk mode generatif yang diaktifkan pengguna; daftar ini dikunci.
+cek(/script-src 'self' 'wasm-unsafe-eval' blob: https:\/\/cdn\.jsdelivr\.net;/.test(hd), "CSP script-src berbeda dari yang diizinkan");
+cek(/connect-src 'self' https:\/\/cdn\.jsdelivr\.net https:\/\/huggingface\.co https:\/\/\*\.huggingface\.co https:\/\/\*\.hf\.co;/.test(hd), "CSP connect-src berbeda dari yang diizinkan");
 
 // 5. Berkas yang dirujuk index.html ada
 for (const m of html.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)) {
