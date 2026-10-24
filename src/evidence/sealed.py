@@ -23,6 +23,7 @@ from pathlib import Path
 
 import numpy as np
 
+from . import generation
 from . import metrics as M
 from .evalset import read_questions, relevant, validate
 
@@ -195,5 +196,7 @@ def run(root: Path) -> dict:
         },
         "pencarian": retrieval(corpus, systems, rows, key),
         "ekstraktif": summarize_answers(ext),
-        "generatif": generative(root, corpus, shipped, threshold, rows, ext),
+        "generatif": generative(
+            root, corpus, systems[generation.SISTEM_GENERATIF], threshold, rows, ext
+        ),
     }

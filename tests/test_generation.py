@@ -72,3 +72,29 @@ def test_keluaran_basi_tidak_dihitung():
     assert G._fresh({"pasal": ["b#2", "a#1"]}, {"peringkat": [1, 0, 2]}, ids)
     assert not G._fresh({"pasal": ["a#1", "b#2"]}, {"peringkat": [1, 0, 2]}, ids)
     assert not G._fresh(None, {"peringkat": [1]}, ids)
+
+
+def test_reranker_situs_sama_dengan_evaluasi():
+    import json
+    import subprocess
+
+    from evidence.corpus import Corpus
+    from evidence.rerank import RERANKERS, TOP
+
+    js = (ROOT / "web/public/js/gen/rerank.js").read_text(encoding="utf-8")
+    repo, rev, layak = RERANKERS[G.SISTEM_GENERATIF.split("+")[1]]
+    assert f'id: "{repo}"' in js and f'revision: "{rev}"' in js and layak
+    assert f"RERANK_TOP = {TOP};" in js
+    # Teks pasal yang dinilai reranker di peramban identik dengan Corpus.index_text.
+    kode = (
+        "import { readFileSync } from 'node:fs';"
+        "import { teksPasal } from './web/public/js/gen/rerank.js';"
+        "const k = JSON.parse(readFileSync('web/public/data/korpus.json'));"
+        "console.log(JSON.stringify(k.chunk.map((_, i) => teksPasal(k, i))));"
+    )
+    out = subprocess.run(
+        ["node", "--input-type=module", "-e", kode],
+        cwd=ROOT, check=True, capture_output=True, text=True,
+    )  # fmt: skip
+    corpus = Corpus.read(ROOT / "web/public/data/korpus.json")
+    assert json.loads(out.stdout) == [corpus.index_text(i) for i in range(len(corpus.chunks))]

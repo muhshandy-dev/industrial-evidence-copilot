@@ -3,6 +3,7 @@
 // semuanya pada versi yang dipatok dan hanya setelah pengguna menekan tombol muat. Kode pustaka
 // diperiksa SHA-256-nya sebelum dijalankan. Pertanyaan tidak pernah dikirim ke server mana pun.
 import { MODEL, MODEL_CPU, MAX_TOKEN_BARU } from "./prompt.js";
+import { muatReranker, urutUlang as urutDenganReranker } from "./rerank.js";
 
 // Diperiksa oleh scripts/check-build.mjs terhadap paket npm yang terpasang (versi dan SHA-256).
 export const PUSTAKA = {
@@ -21,11 +22,13 @@ export async function muatPustaka() {
   try { return await import(url); } finally { URL.revokeObjectURL(url); }
 }
 
-// Ukuran unduhan (berkas ONNX menurut dtype dan tokenizer, dibulatkan) per jalur.
-export const UKURAN_UNDUHAN_MB = { webgpu: 1240, wasm: 800 };
+// Ukuran unduhan per jalur, dibulatkan: model generatif (berkas ONNX menurut dtype dan
+// tokenizer) ditambah reranker fp32 (sekitar 490 MB).
+export const UKURAN_UNDUHAN_MB = { webgpu: 1730, wasm: 1290 };
 
 let lib = null;
 let gen = null;
+let rr = null;
 
 // Jalur utama: WebGPU dengan shader-f16 dan model 1,5B. Tanpa itu, pengguna dapat memilih jalur
 // CPU (WebAssembly) dengan model 0,5B; keduanya dievaluasi dengan prompt yang sama.
@@ -51,14 +54,25 @@ export async function muatModel(perangkat, onProgress) {
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
   const m = modelUntuk(perangkat);
-  gen = await lib.pipeline("text-generation", m.id, {
-    revision: m.revision,
-    dtype: m.dtype,
-    device: perangkat,
-    progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
-  });
+  const [g, r] = await Promise.all([
+    lib.pipeline("text-generation", m.id, {
+      revision: m.revision,
+      dtype: m.dtype,
+      device: perangkat,
+      progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
+    }),
+    muatReranker(lib, perangkat, onProgress),
+  ]);
+  rr = r;
+  gen = g;
   perangkatDipakai = perangkat;
   return gen;
+}
+
+// Urutan pasal untuk model generatif: 20 teratas BM25 dinilai ulang oleh reranker.
+export async function urutUlang(korpus, tanya, ranked) {
+  if (!rr) throw new Error("reranker belum dimuat");
+  return urutDenganReranker(rr, korpus, tanya, ranked);
 }
 
 // Dekode serakah (tanpa sampling), sama seperti evaluasi. onTeks dipanggil untuk setiap potongan.

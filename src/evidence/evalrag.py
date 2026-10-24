@@ -521,8 +521,16 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "jawaban": ans_summary,
         "pembanding_jawaban": base,
         "kegagalan_test": failures(rows, recs, corpus),
+        "metode_generatif": generation.SISTEM_GENERATIF
+        if generation.SISTEM_GENERATIF in systems
+        else None,
         "generatif": generation.evaluate(
-            corpus_path.resolve().parents[1], corpus, shipped, threshold, rows, recs
+            corpus_path.resolve().parents[1],
+            corpus,
+            systems.get(generation.SISTEM_GENERATIF, shipped),
+            threshold,
+            rows,
+            recs,
         ),
         "per_pertanyaan": recs,
     }

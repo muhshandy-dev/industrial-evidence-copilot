@@ -38,8 +38,11 @@ try {
   console.log(`status setelah ${((Date.now() - t0Muat) / 1000).toFixed(0)} detik:`, status);
   assert.equal(await page.getAttribute(".mode-jawab", "data-model"), "siap");
   const t0 = Date.now();
-  // Pertanyaan dengan skor jauh di atas ambang, supaya model benar-benar dipanggil.
-  await page.fill("#pertanyaan", "Berapa lama masa berlaku Lisensi K3 operator pesawat uap?");
+  // Pertanyaan dev dengan skor jauh di atas ambang (model benar-benar dipanggil) dan reranker
+  // mengubah pasal teratas. Urutan yang diharapkan dihitung evaluasi Python dari cache reranker:
+  // BM25 saja menaruh permenaker-4-2025#pasal-8 di peringkat 1.
+  const HARAP = ["permenaker-8-2020#pasal-153", "permenaker-4-2025#pasal-8", "permenaker-8-2020#pasal-148", "permenaker-8-2020#pasal-154"];
+  await page.fill("#pertanyaan", "Berapa usia paling rendah untuk menjadi operator forklift kelas II?");
   await page.press("#pertanyaan", "Enter");
   await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 30 * 60 * 1000 });
   console.log(`dijawab dalam ${((Date.now() - t0) / 1000).toFixed(0)} detik`);
@@ -48,6 +51,9 @@ try {
   console.log("isi:", (await page.textContent(".jawaban")).slice(0, 800));
   const mode = await page.getAttribute(".jawaban[data-selesai=ya]", "data-mode");
   console.log("mode:", mode);
+  const peringkat = (await page.getAttribute(".jawaban[data-selesai=ya]", "data-peringkat") ?? "").split(" ");
+  console.log("pasal untuk model:", peringkat.join(", "));
+  assert.deepEqual(peringkat, HARAP, "urutan reranker di peramban berbeda dari evaluasi");
   // Model harus benar-benar berjalan: bukan ditolak gerbang dan bukan galat model.
   assert.ok(["generatif", "tolak_model", "cadangan_ekstraktif"].includes(mode), `mode ${mode}`);
   if (mode === "generatif") assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat generatif tanpa sitasi");

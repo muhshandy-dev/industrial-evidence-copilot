@@ -4577,6 +4577,7 @@
    "skor": 20.1688
   }
  ],
+ "metode_generatif": "bm25_konteks+mminilm",
  "generatif": null,
  "per_pertanyaan": [
   {

@@ -6,7 +6,8 @@ import { createReader } from "./reader.js";
 import { wait, motionOn } from "./motion.js";
 import { createModePanel } from "./gen/panel.js";
 import { bacaJawaban, pasalUntukPrompt, periksa, susunPesan, K_PASAL } from "./gen/prompt.js";
-import { bangkitkan, modelUntuk, perangkatAktif } from "./gen/runtime.js";
+import { bangkitkan, modelUntuk, perangkatAktif, urutUlang } from "./gen/runtime.js";
+import { RERANK_TOP } from "./gen/rerank.js";
 
 const num = (x) => x.toFixed(1).replace(".", ",");
 
@@ -153,12 +154,17 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   }
 
   async function jawabGeneratif(card, q, ranked, ans, top, kepala, ringkas) {
-    const pasal = pasalUntukPrompt(korpus, ranked);
     const tulis = h("p", { class: "gen-mentah", "aria-hidden": "true" });
-    const tunggu = h("p", { class: "catatan gen-tunggu", role: "status" }, "Model sedang menulis jawaban dari pasal yang ditemukan…");
+    const tunggu = h("p", { class: "catatan gen-tunggu", role: "status" }, `Reranker menilai ulang ${RERANK_TOP} pasal teratas…`);
     card.append(h("div", { class: "jawaban-isi" }, tunggu, tulis));
     let mentah = "";
+    let pasal = [];
     try {
+      // Sama dengan evaluasi: 20 teratas BM25 diurutkan ulang, empat teratas masuk ke prompt.
+      const { peringkat } = await urutUlang(korpus, q, ranked);
+      pasal = pasalUntukPrompt(korpus, peringkat);
+      card.dataset.peringkat = pasal.map((p) => p.id).join(" ");
+      tunggu.textContent = "Model sedang menulis jawaban dari pasal yang ditemukan…";
       mentah = await bangkitkan(susunPesan(q, pasal), (t) => { tulis.textContent += t; });
     } catch (err) {
       tunggu.textContent = `Model gagal menjawab (${err.message}). Ditampilkan kutipan langsung.`;
@@ -257,7 +263,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
       h("div", { class: "jejak-isi" },
         asing.length ? h("p", { class: "jejak-catatan" }, `Istilah yang tidak ada di korpus dan tidak ikut menilai: ${asing.join(", ")}.`) : null,
         h("ol", { class: "jejak-daftar" }, rows),
-        h("p", { class: "jejak-catatan" }, `${generatif ? `Model generatif membaca ${K_PASAL} pasal teratas.` : "Kutipan hanya diambil dari pasal peringkat 1."} Angka kecil di tiap baris adalah sumbangan istilah pertanyaan pada skor pasal itu.`)));
+        h("p", { class: "jejak-catatan" }, `${generatif ? `Untuk mode generatif, ${RERANK_TOP} pasal teratas ini dinilai ulang oleh reranker, lalu ${K_PASAL} pasal terbaik dibaca model.` : "Kutipan hanya diambil dari pasal peringkat 1."} Angka kecil di tiap baris adalah sumbangan istilah pertanyaan pada skor pasal itu.`)));
     return {
       el,
       async play() {

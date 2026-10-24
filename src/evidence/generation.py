@@ -43,6 +43,12 @@ MODEL_UTAMA = "onnx-community/Qwen2.5-1.5B-Instruct"  # WebGPU
 MODEL_CPU = "onnx-community/Qwen2.5-0.5B-Instruct"  # jalur CPU (WebAssembly)
 DTYPE_UTAMA = "q4f16"
 DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt penuh
+# Urutan pasal untuk mode generatif: BM25 dengan konteks, 20 teratas dinilai ulang oleh reranker
+# mMiniLM (ONNX yang sama di peramban, paritas diuji). Gerbang penolakan tetap skor BM25.
+# Aturan pilih: di antara sistem layak peramban, MRR@10 dev tertinggi; selisih di bawah 0,01
+# dianggap seri dan dipilih yang mengunduh model paling sedikit. Aturan ini ditetapkan setelah
+# angka dev dan test semua sistem terlihat (lihat docs/evaluasi.md).
+SISTEM_GENERATIF = "bm25_konteks+mminilm"
 # bertahan: prompt situs dengan model utama; polos: pembanding injeksi; bertahan-cpu: model CPU.
 KONFIGURASI = ("bertahan", "polos", "bertahan-cpu")
 
@@ -84,9 +90,8 @@ def gen_input(corpus, system, rows: list[dict], set_name: str, threshold: float)
     out = []
     for r in rows:
         ranked = system.search(r["tanya"], 10)
-        top = float(
-            system.retriever.bm25.scores(system.retriever.query_tokens(r["tanya"]))[ranked[0]]
-        )
+        # Gerbang: skor BM25 tertinggi, sama dengan situs, apa pun urutan setelah reranker.
+        top = float(system.retriever.bm25.scores(system.retriever.query_tokens(r["tanya"])).max())
         out.append(
             {
                 "id": r["id"],

@@ -236,6 +236,18 @@ def _shipped():
     return corpus, system, results["ambang"]["terpilih"]
 
 
+def _generative():
+    """Sistem urutan pasal untuk mode generatif (BM25 + reranker), korpus, dan ambang."""
+    from .evalrag import build_systems
+    from .generation import SISTEM_GENERATIF
+
+    corpus, _, threshold = _shipped()
+    systems = build_systems(corpus, ROOT)
+    if SISTEM_GENERATIF not in systems:
+        raise SystemExit(f"{SISTEM_GENERATIF} belum ada; jalankan workflow Model (rerank) dulu")
+    return corpus, systems[SISTEM_GENERATIF], threshold
+
+
 def cmd_gen_input(args: argparse.Namespace) -> int:
     """Masukan generator: peringkat pasal dan keputusan gerbang dari metode yang dikirim."""
     from .generation import gen_input, load_set
@@ -244,7 +256,7 @@ def cmd_gen_input(args: argparse.Namespace) -> int:
     if "sealed" in sets:
         print("set tersegel hanya lewat `evidence eval-sealed`.", file=sys.stderr)
         return 1
-    corpus, system, threshold = _shipped()
+    corpus, system, threshold = _generative()
     lines = []
     for s in sets:
         lines += gen_input(corpus, system, load_set(ROOT, s), s, threshold)
@@ -311,7 +323,7 @@ def cmd_eval_sealed(args: argparse.Namespace) -> int:
     if args.action == "input":
         from .generation import gen_input
 
-        corpus, system, threshold = _shipped()
+        corpus, system, threshold = _generative()
         rows = sealed.load_rows(ROOT, corpus)
         lines = gen_input(corpus, system, rows, "sealed", threshold)
         Path(args.out).write_text(

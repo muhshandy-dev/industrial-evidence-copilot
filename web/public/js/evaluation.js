@@ -118,7 +118,7 @@ function catatanPadat(ps, sel, poin) {
   const teks = [];
   if (dense) teks.push(`Gabungan BM25 dan e5 terbesar dibanding BM25 dengan konteks: ${poin(dense["mrr@10"])} MRR.`);
   for (const k of rr) teks.push(`${nama(k)} dibanding BM25 dengan konteks saja: ${poin(sel[`${k}_vs_bm25_konteks`]["mrr@10"])} MRR, pasal tepat di peringkat 1 pada ${pct(ps[k].metrik.test["hit@1"].nilai)} pertanyaan uji.`);
-  teks.push("Selisih ini dihitung pada data uji yang sama dan tanpa koreksi untuk banyak perbandingan. Model embedding dan reranker dijalankan offline di GitHub Actions; kolom \"dipakai di situs\" hanya menandai cara yang benar-benar berjalan di peramban.");
+  teks.push("Selisih ini dihitung pada data uji yang sama dan tanpa koreksi untuk banyak perbandingan. Model embedding dan reranker dijalankan offline di GitHub Actions; label \"dipakai\" hanya menandai cara yang benar-benar berjalan di peramban.");
   return h("p", { class: "catatan" }, teks.join(" "));
 }
 
@@ -158,7 +158,8 @@ export function mountEvaluation(main, { evaluasi: ev }) {
     `Tidak ada kalimat jawaban yang berbeda dari teks korpus (${t.kutipan_tidak_verbatim.jumlah} dari ${t.kutipan_tidak_verbatim.n}). Angka nol ini hanya mencerminkan cara kerjanya, yaitu menyalin, bukan temuan. Teks korpus sendiri adalah hasil ekstraksi PDF; beberapa dokumen berasal dari OCR dan memuat salah baca.`);
 
   const barisMetode = Object.entries(ps).map(([key, v]) => h("tr", { class: key === kirim ? "dipakai" : null },
-    h("th", { scope: "row" }, v.label, key === kirim ? h("span", { class: "lencana" }, "dipakai di situs") : null),
+    h("th", { scope: "row" }, v.label, key === kirim ? h("span", { class: "lencana" }, "dipakai mode kutipan") : null,
+      key === ev.metode_generatif ? h("span", { class: "lencana" }, "dipakai mode generatif") : null),
     h("td", { class: "num" }, pct(v.metrik.dev["mrr@10"].nilai)),
     h("td", { class: "num" }, pct(v.metrik.test["hit@1"].nilai), batas(v.metrik.test["hit@1"])),
     h("td", { class: "num" }, pct(v.metrik.test["hit@5"].nilai), batas(v.metrik.test["hit@5"])),
@@ -167,7 +168,7 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const poin = (d) => `${d.selisih > 0 ? "+" : ""}${(d.selisih * 100).toFixed(1).replace(".", ",")} poin (interval ${(d.bawah * 100).toFixed(1).replace(".", ",")} sampai ${(d.atas * 100).toFixed(1).replace(".", ",")})`;
   const metode = h("section", { "aria-labelledby": "e-metode" },
     h("h2", { id: "e-metode" }, "Perbandingan metode pencarian"),
-    h("p", {}, `${Object.keys(ps).length} cara mencari diuji pada pertanyaan yang sama: BM25, LSA, model embedding e5 (multilingual, tiga ukuran), gabungan BM25 dan e5, serta reranker cross-encoder yang menilai ulang 20 pasal teratas. Metode situs dipilih dari kolom MRR data dev, di antara cara yang benar-benar dijalankan situs. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja.`),
+    h("p", {}, `${Object.keys(ps).length} cara mencari diuji pada pertanyaan yang sama: BM25, LSA, model embedding e5 (multilingual, tiga ukuran), gabungan BM25 dan e5, serta reranker cross-encoder yang menilai ulang 20 pasal teratas. Metode mode kutipan dipilih dari kolom MRR data dev, di antara cara yang berjalan tanpa unduhan model. Mode generatif memakai BM25 dengan reranker mMiniLM; aturan pemilihannya ditetapkan setelah angka semua cara terlihat, jadi angka uji untuk pilihan itu optimistis. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja.`),
     h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan metode, dapat digulir" },
       h("table", { class: "tabel" },
         h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col", class: "num" }, "MRR data dev (dasar pemilihan)"), h("th", { scope: "col", class: "num" }, "Peringkat 1 (uji)"), h("th", { scope: "col", class: "num" }, "Lima teratas (uji)"), h("th", { scope: "col", class: "num" }, "MRR (uji)"))),

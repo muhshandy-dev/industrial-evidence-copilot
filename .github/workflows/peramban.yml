@@ -5,7 +5,12 @@ name: Peramban generatif
 on:
   push:
     branches-ignore: [main]
-    paths: [".github/workflows/peramban.yml", "web/tests/gen-browser.mjs", "web/tests/wasm-probe.mjs"]
+    paths:
+      - ".github/workflows/peramban.yml"
+      - "web/tests/gen-browser.mjs"
+      - "web/tests/wasm-probe.mjs"
+      - "web/public/js/gen/**"
+      - "web/scripts/paritas-rerank.mjs"
   workflow_dispatch:
     inputs:
       calon:
@@ -37,5 +42,7 @@ jobs:
           CALON: ${{ inputs.calon }}
         run: node tests/wasm-probe.mjs
         continue-on-error: true
+      - name: Paritas reranker (transformers.js di Node terhadap skor evaluasi)
+        run: node scripts/paritas-rerank.mjs
       - name: Uji asap mode generatif
         run: node tests/gen-browser.mjs
