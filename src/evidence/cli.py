@@ -226,14 +226,14 @@ def cmd_gen_input(args: argparse.Namespace) -> int:
 
 def cmd_gen_merge(args: argparse.Namespace) -> int:
     """Gabungkan keluaran shard generator ke eval/cache/gen/<varian>/<set>.jsonl (ganti per id)."""
-    from .generation import gen_dir
+    from .generation import gen_dir, konfigurasi
 
     new: dict[tuple[str, str], dict[str, dict]] = {}
     for f in args.files:
         for line in Path(f).read_text(encoding="utf-8").splitlines():
             if line.strip():
                 r = json.loads(line)
-                new.setdefault((r["varian"], r["set"]), {})[r["id"]] = r
+                new.setdefault((konfigurasi(r["varian"], r["dtype"]), r["set"]), {})[r["id"]] = r
     for (varian, s), recs in sorted(new.items()):
         path = gen_dir(ROOT, varian) / f"{s}.jsonl"
         old = {}
@@ -255,9 +255,16 @@ def cmd_gen_merge(args: argparse.Namespace) -> int:
 
 def cmd_nli(_: argparse.Namespace) -> int:
     """Skor entailment untuk kalimat jawaban generatif (butuh internet)."""
-    from .generation import SETS, nli_pairs, nli_path, read_outputs, score_nli_and_cache
+    from .generation import (
+        KONFIGURASI,
+        SETS,
+        nli_pairs,
+        nli_path,
+        read_outputs,
+        score_nli_and_cache,
+    )
 
-    parsed = [r for v in ("bertahan", "polos") for r in read_outputs(ROOT, v, SETS)]
+    parsed = [r for v in KONFIGURASI for r in read_outputs(ROOT, v, SETS)]
     pairs = nli_pairs(parsed)
     print(f"{len(parsed)} jawaban, {len(pairs)} pasangan premis-hipotesis")
     score_nli_and_cache(pairs, nli_path(ROOT))

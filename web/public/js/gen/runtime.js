@@ -21,34 +21,39 @@ async function muatPustaka() {
   try { return await import(url); } finally { URL.revokeObjectURL(url); }
 }
 
-export const UKURAN_UNDUHAN_MB = 1250; // model_q4f16.onnx dan tokenizer, dibulatkan
+// Ukuran unduhan per kuantisasi (berkas ONNX dan tokenizer, dibulatkan).
+export const UKURAN_UNDUHAN_MB = { q4f16: 1240, q4: 1800 };
 
 let lib = null;
 let gen = null;
 
-// WebGPU dengan shader-f16 dibutuhkan agar bobot q4f16 yang sama dengan evaluasi dapat dipakai.
+// WebGPU wajib. GPU dengan shader-f16 memakai kuantisasi utama (q4f16); tanpa f16 memakai q4.
+// Keduanya dievaluasi dengan bobot dan prompt yang sama di GitHub Actions.
 export async function periksaDukungan() {
   if (!("gpu" in navigator)) return { ok: false, alasan: "Peramban ini belum mendukung WebGPU." };
   let adapter = null;
   try { adapter = await navigator.gpu.requestAdapter(); } catch { adapter = null; }
   if (!adapter) return { ok: false, alasan: "WebGPU tidak tersedia di perangkat ini." };
-  if (!adapter.features.has("shader-f16")) return { ok: false, alasan: "GPU perangkat ini tidak mendukung perhitungan f16 yang dibutuhkan model." };
-  return { ok: true };
+  return { ok: true, dtype: adapter.features.has("shader-f16") ? MODEL.dtype : MODEL.dtypeCadangan };
 }
+
+let dtypeDipakai = null;
+export function dtypeAktif() { return dtypeDipakai; }
 
 export function sudahDimuat() { return gen !== null; }
 
 // onProgress menerima {file, loaded, total} dari transformers.js.
-export async function muatModel(onProgress) {
+export async function muatModel(dtype, onProgress) {
   if (gen) return gen;
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
   gen = await lib.pipeline("text-generation", MODEL.id, {
     revision: MODEL.revision,
-    dtype: MODEL.dtype,
+    dtype,
     device: "webgpu",
     progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
   });
+  dtypeDipakai = dtype;
   return gen;
 }
 

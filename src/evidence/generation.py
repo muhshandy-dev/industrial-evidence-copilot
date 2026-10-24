@@ -38,6 +38,14 @@ NLI_MODEL = (
 NLI_AMBANG = 0.5  # peluang entailment minimum agar kalimat dianggap didukung
 JENDELA_KARAKTER = 900  # premis NLI: jendela ayat berurutan, supaya muat 512 token
 SETS = ("dev", "test", "stress", "injeksi", "sealed")
+# Kuantisasi utama (sama dengan MODEL.dtype di web/public/js/gen/prompt.js; diuji). Situs memakai
+# q4 bila GPU tidak mendukung f16, jadi konfigurasi itu juga dievaluasi.
+DTYPE_UTAMA = "q4f16"
+KONFIGURASI = ("bertahan", "polos", "bertahan-q4")
+
+
+def konfigurasi(varian: str, dtype: str) -> str:
+    return varian if dtype == DTYPE_UTAMA else f"{varian}-{dtype}"
 
 
 def gen_dir(root: Path, varian: str) -> Path:
@@ -320,7 +328,7 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
     }
     nli = NliCache(root)
     any_output = False
-    for varian in ("bertahan", "polos"):
+    for varian in KONFIGURASI:
         parsed = read_outputs(root, varian, sets)
         if not parsed:
             continue
@@ -359,5 +367,6 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
             if s == "test" and varian == "bertahan":
                 res["sampel_validasi_manual"] = manual_sample(recs, by_id)
         out[varian] = res
-        out["model"] = {k: parsed[0][k] for k in ("model", "revisi", "dtype")}
+        if varian == "bertahan":
+            out["model"] = {k: parsed[0][k] for k in ("model", "revisi", "dtype")}
     return out if any_output else None

@@ -8,10 +8,11 @@ const mb = (b) => Math.round(b / 1e6).toLocaleString("id-ID");
 
 export function createModePanel() {
   let mode = "kutipan";
+  let dtype = MODEL.dtype;
   const status = h("p", { class: "mode-status", role: "status" });
   const batang = h("span", { class: "mode-batang-isi" });
   const kemajuan = h("div", { class: "mode-batang", hidden: true, "aria-hidden": "true" }, batang);
-  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: muat }, `Muat model (sekitar ${UKURAN_UNDUHAN_MB.toLocaleString("id-ID")} MB)`);
+  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: muat }, "Muat model");
   const pilih = (nilai, label, ket) => h("label", { class: "mode-pilih" },
     h("input", { type: "radio", name: "mode-jawab", value: nilai, checked: nilai === "kutipan", onchange: () => ganti(nilai) }),
     h("span", {}, h("strong", {}, label), h("span", { class: "catatan" }, ket)));
@@ -33,8 +34,11 @@ export function createModePanel() {
       status.textContent = `${d.alasan} Jawaban tetap memakai kutipan langsung.`;
       return;
     }
+    dtype = d.dtype;
+    tombol.textContent = `Muat model (sekitar ${UKURAN_UNDUHAN_MB[dtype].toLocaleString("id-ID")} MB)`;
     tombol.hidden = false;
-    status.textContent = "Bobot model diunduh dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, lalu disimpan di peramban. Pertanyaan Anda tetap diproses di perangkat ini.";
+    const varian = dtype === MODEL.dtype ? "" : " GPU ini tidak mendukung f16, jadi dipakai versi q4 yang lebih besar; versi ini juga dievaluasi.";
+    status.textContent = `Bobot model diunduh dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, lalu disimpan di peramban. Pertanyaan Anda tetap diproses di perangkat ini.${varian}`;
   }
 
   async function muat() {
@@ -43,7 +47,7 @@ export function createModePanel() {
     const per = new Map();
     status.textContent = "Mengunduh model…";
     try {
-      await muatModel((p) => {
+      await muatModel(dtype, (p) => {
         per.set(p.file, [p.loaded, p.total]);
         const [a, b] = [...per.values()].reduce(([x, y], [l, t]) => [x + l, y + t], [0, 0]);
         batang.style.width = `${b ? Math.round((a / b) * 100) : 0}%`;
