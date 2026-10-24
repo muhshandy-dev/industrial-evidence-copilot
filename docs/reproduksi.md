@@ -32,7 +32,7 @@ evidence data fetch    # unduh dari JDIH, tolak bila SHA-256 tidak cocok dengan 
 evidence build         # corpus/korpus.json
 ```
 
-Ekstraksi PDF bergantung pada versi pdfplumber. Bila hasil ekstraksi di mesin lain berbeda sedikit, `git diff corpus/korpus.json` akan menunjukkannya, dan hasil evaluasi perlu dihitung ulang. Workflow `sumber-resmi` di GitHub Actions memeriksa ini secara terjadwal dan tidak menggagalkan PR.
+Sudah diuji di runner GitHub Actions (ubuntu-latest, Python 3.12) pada 2026-10-24: semua PDF terunduh dari JDIH dengan SHA-256 yang cocok, dan `corpus/korpus.json` terbangun ulang identik byte demi byte. Ekstraksi PDF tetap bergantung pada versi pdfplumber. Bila hasil ekstraksi di mesin lain berbeda sedikit, `git diff corpus/korpus.json` akan menunjukkannya, dan hasil evaluasi perlu dihitung ulang. Workflow `sumber-resmi` di GitHub Actions memeriksa ini secara terjadwal dan tidak menggagalkan PR.
 
 ## Situs
 
