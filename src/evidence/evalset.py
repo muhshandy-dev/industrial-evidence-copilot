@@ -125,8 +125,11 @@ def read_questions(path: Path) -> list[dict]:
     return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
 
 
-def validate(rows: list[dict], corpus: Corpus) -> list[str]:
-    """Daftar masalah; kosong berarti set pertanyaan konsisten dengan korpus."""
+def validate(
+    rows: list[dict], corpus: Corpus, splits: tuple[str, ...] = ("dev", "test")
+) -> list[str]:
+    """Daftar masalah; kosong berarti set pertanyaan konsisten dengan korpus. Set tersegel
+    memakai splits=("sealed",)."""
     problems: list[str] = []
     by_id = {c.id: i for i, c in enumerate(corpus.chunks)}
     seen: set[str] = set()
@@ -137,7 +140,7 @@ def validate(rows: list[dict], corpus: Corpus) -> list[str]:
         seen.add(r["tanya"])
         if r["gaya"] not in GAYA:
             problems.append(f"{qid}: gaya tidak dikenal {r['gaya']!r}")
-        if r.get("split") not in ("dev", "test"):
+        if r.get("split") not in splits:
             problems.append(f"{qid}: split tidak valid")
         if not r["gold"]:
             if r["gaya"] not in ("dekat", "luar") or r["kunci"]:
