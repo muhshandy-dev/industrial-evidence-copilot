@@ -8,6 +8,8 @@ const read = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url)));
 const korpus = read("../public/data/korpus.json");
 const indeks = read("../public/data/indeks.json");
 const ev = read("../public/data/evaluasi.json");
+// Acuan Python per pertanyaan ada di hasil mentah repo, bukan di data situs.
+const hasil = read("../../eval/results.json");
 const questions = readFileSync(new URL("../../eval/questions.jsonl", import.meta.url), "utf8")
   .split("\n").filter(Boolean).map((l) => JSON.parse(l));
 
@@ -23,7 +25,7 @@ test("seluruh pertanyaan evaluasi: peringkat 1, penolakan, dan kutipan identik d
   const idf = Object.fromEntries(Object.entries(indeks.bm25).map(([t, v]) => [t, v[0]]));
   const texts = korpus.chunk.map((c) => c.teks_cari || c.teks);
   const shown = korpus.chunk.map((c) => c.teks);
-  const byId = new Map(ev.per_pertanyaan.map((x) => [x.id, x]));
+  const byId = new Map(hasil.per_pertanyaan.map((x) => [x.id, x]));
   assert.equal(byId.size, questions.length);
   let compared = 0;
   for (const q of questions) {

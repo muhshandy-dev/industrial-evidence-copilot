@@ -6,7 +6,7 @@ const LANGKAH = [
   ["Pecah per pasal", "Teks PDF dipecah menjadi satu bagian untuk setiap pasal, lengkap dengan bab dan judul babnya. Nomor pasal yang rusak karena OCR diperbaiki dan dicatat."],
   ["Bangun indeks", "Teks dinormalkan (huruf kecil, kata dasar sederhana, ejaan lama disamakan) lalu dihitung bobot tiap kata dengan BM25. Judul dokumen dan bab ikut dipakai sebagai konteks pencarian, tetapi tidak muncul di kutipan."],
   ["Cari di peramban", "Pertanyaan Anda diolah dengan cara yang sama dan dicocokkan dengan indeks. Seluruh proses berjalan di peramban Anda; pertanyaan tidak dikirim ke server."],
-  ["Putuskan menjawab atau diam", "Bila skor pasal teratas lebih rendah dari ambang yang dipilih dari data dev, sistem menolak menjawab dan hanya menunjukkan pasal terdekat."],
+  ["Putuskan menjawab atau diam", "Bila skor pasal teratas lebih rendah dari ambang yang dipilih dari data dev, sistem menolak menjawab dan hanya menunjukkan pasal terdekat. Skor BM25 mentah cenderung lebih tinggi untuk pertanyaan panjang, jadi gerbang ini tidak sempurna."],
   ["Kutip, jangan menulis", "Kalimat jawaban dipilih dari ayat atau butir di pasal peringkat 1 dan disalin apa adanya. Tidak ada model bahasa yang menulis kalimat baru."],
 ];
 
@@ -41,8 +41,8 @@ export function mountMethod(main, { korpus, evaluasi }) {
   const jenis = h("section", { "aria-labelledby": "m-jenis" },
     h("h2", { id: "m-jenis" }, "Apakah ini AI generatif?"),
     h("div", { class: "kotak-jujur" },
-      h("p", {}, "Tidak. Jawaban di situs ini bersifat ekstraktif: sistem memilih kalimat yang sudah ada di peraturan, tidak menulis kalimat baru. Karena itu kutipannya selalu dapat dicocokkan dengan teks aslinya, dan tidak ada kalimat karangan."),
-      h("p", {}, "Yang tetap bisa salah adalah pemilihannya: sistem dapat mengutip pasal yang keliru, atau menjawab pertanyaan yang sebenarnya tidak dijawab oleh korpus. Dua kegagalan itu yang diukur di halaman Evaluasi.")));
+      h("p", {}, "Tidak. Jawaban di situs ini bersifat ekstraktif: sistem memilih kalimat yang sudah ada di peraturan, tidak menulis kalimat baru. Karena itu tidak ada kalimat karangan. Namun teks korpus adalah hasil ekstraksi PDF, dan beberapa dokumen berasal dari OCR sehingga dapat memuat salah baca (misalnya “keija” untuk “kerja”). Rujuk selalu ke PDF resmi sebelum mengutip."),
+      h("p", {}, "Yang tetap bisa salah adalah pemilihannya: sistem dapat mengutip pasal yang keliru, atau menjawab pertanyaan yang sebenarnya tidak dijawab oleh korpus. Pada data uji, sekitar 1 dari 4 jawaban mengutip pasal yang salah. Dua kegagalan itu diukur di halaman Evaluasi.")));
 
   const alur = h("section", { "aria-labelledby": "m-alur" },
     h("h2", { id: "m-alur" }, "Alur dari dokumen sampai kutipan"),
@@ -68,7 +68,7 @@ export function mountMethod(main, { korpus, evaluasi }) {
   const lisensi = h("section", { "aria-labelledby": "m-lisensi" },
     h("h2", { id: "m-lisensi" }, "Lisensi dan dasar hukum penggunaan"),
     h("p", {}, "Teks peraturan perundang-undangan tidak memiliki hak cipta. Dasarnya Pasal 42 huruf b Undang-Undang Nomor 28 Tahun 2014 tentang Hak Cipta, yang mengecualikan peraturan perundang-undangan dari objek hak cipta."),
-    h("div", { class: "peringatan" }, h("p", {}, "Rujukan pasal itu diambil dari sumber sekunder. Teks resmi di peraturan.bpk.go.id belum dapat dibuka dari lingkungan pengembangan, jadi nomor pasalnya perlu dicek manual sebelum dijadikan pegangan. Halaman ini bukan nasihat hukum.")),
+    h("div", { class: "peringatan" }, h("p", {}, "Rujukan pasal itu diambil dari sumber sekunder. Teks resmi di peraturan.bpk.go.id belum dapat dibuka dari lingkungan pengembangan, jadi nomor pasalnya perlu dicek manual oleh pemilik proyek sebelum dijadikan pegangan. Halaman ini bukan nasihat hukum.")),
     h("p", {}, "Kode program situs berlisensi MIT. Kutipan peraturan tetap milik publik dan tetap harus dirujuk ke sumber resminya."));
 
   const batas = h("section", { "aria-labelledby": "m-batas" },
@@ -77,7 +77,8 @@ export function mountMethod(main, { korpus, evaluasi }) {
       h("li", {}, `Cakupannya ${korpus.dokumen.length} peraturan K3, bukan seluruh hukum Indonesia. Pertanyaan di luar itu seharusnya ditolak.`),
       h("li", {}, "Peraturan bisa berubah. Periksa selalu versi terbaru di sumber resmi sebelum mengambil keputusan."),
       h("li", {}, "Pertanyaan yang jawabannya tersebar di beberapa pasal atau beberapa peraturan hanya dijawab sebagian: sistem mengutip dari satu pasal."),
-      h("li", {}, "Pertanyaan evaluasi ditulis oleh pengembang, jadi angka di halaman Evaluasi tidak dapat dibaca sebagai kepuasan pengguna sebenarnya."),
+      h("li", {}, "Pertanyaan evaluasi ditulis oleh asisten AI pengembang, bukan pengguna atau praktisi K3, dan data uji sudah pernah dilihat. Angka di halaman Evaluasi adalah perkiraan optimistis, bukan ukuran kepuasan pengguna."),
+      h("li", {}, "Gerbang penolakan lebih mudah menolak pertanyaan pendek dan masih dapat menjawab pertanyaan panjang berkosakata K3 yang tidak ada di korpus dengan pasal yang tidak relevan."),
       h("li", {}, "Jawaban untuk keputusan hukum, sanksi, atau audit sebaiknya dikonfirmasi ke ahli K3 atau konsultan hukum.")));
 
   const jejak = h("section", { "aria-labelledby": "m-jejak" },

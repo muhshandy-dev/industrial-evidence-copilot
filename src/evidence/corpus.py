@@ -130,5 +130,6 @@ def build_corpus(manifest: dict, raw_dir: Path, text_dir: Path | None = None) ->
         "peringatan_ekstraksi": warnings,
         "dibuat_dari": manifest["sumber"],
         "dasar_lisensi": manifest["dasar_lisensi"],
+        "dikecualikan": manifest.get("dikecualikan", []),
     }
     return Corpus("nyata", docs, chunks, meta)

@@ -10,6 +10,9 @@ const NAMA_GAGAL = {
   dijawab_padahal_tak_terjawab: "Menjawab pertanyaan yang tidak ada dasarnya",
 };
 
+const nama = (id) => id.replace(/#pasal-/, ", Pasal ");
+const namaUnik = (ids) => [...new Set(ids)].map(nama).join("; ");
+
 function kartu(judul, nilai, rinci, catatan) {
   return h("div", { class: "kartu-angka" },
     h("div", { class: "kartu-judul" }, judul),
@@ -54,20 +57,36 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const ps = ev.pencarian.per_sistem;
   const kirim = ev.metode_dikirim;
   const t = ev.jawaban.test;
-  const d = ev.jawaban.dev;
-  const q = ev.pertanyaan;
   const m = ps[kirim].metrik.test;
+  const q = ev.pertanyaan;
+  const pro = ev.protokol;
+  const sitasi = t.sitasi_benar_dari_yang_dijawab;
+  const salah = { k: sitasi.n - sitasi.k, n: sitasi.n };
+  const salahCi = { nilai: salah.k / salah.n, bawah: 1 - sitasi.atas, atas: 1 - sitasi.bawah };
+  const selalu = ev.pembanding_jawaban.selalu_menjawab;
+  const tekan = ev.uji_tekanan;
+  const gagalSitasi = ev.kegagalan_test.filter((f) => f.jenis === "sitasi_pasal_salah");
+  const gagalSatuPeraturan = gagalSitasi.filter((f) => f.satu_peraturan).length;
+
+  const ringkas = h("section", { "aria-labelledby": "e-ringkas" },
+    h("h2", { id: "e-ringkas" }, "Ringkasan jujur"),
+    h("div", { class: "kotak-jujur" },
+      h("p", {}, `Pasal yang tepat muncul di peringkat 1 pada ${pct(m["hit@1"].nilai)} pertanyaan uji dan di lima teratas pada ${pct(m["hit@5"].nilai)}. Namun dari ${salah.n} jawaban yang diberikan, ${salah.k} (${pct(salahCi.nilai)}) mengutip pasal yang salah. Selalu periksa pasal yang dikutip.`),
+      h("p", {}, `Angka ini optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
 
   const hasil = h("section", { "aria-labelledby": "e-hasil" },
     h("h2", { id: "e-hasil" }, "Hasil pada data uji"),
-    h("p", { class: "catatan" }, `Data uji berisi ${t.jawaban_benar.n} pertanyaan yang ada jawabannya dan ${t.dijawab_padahal_tak_terjawab.n} pertanyaan yang sengaja tidak ada jawabannya di korpus. Rentang di bawah angka adalah interval kepercayaan 95%; makin sempit makin pasti.`),
+    h("p", { class: "catatan" }, `Data uji berisi ${t.jawaban_benar.n} pertanyaan yang ada jawabannya dan ${t.dijawab_padahal_tak_terjawab.n} pertanyaan yang sengaja tidak ada jawabannya di korpus. Rentang di bawah angka adalah interval kepercayaan 95%.`),
     h("div", { class: "kartu-baris" },
       kartu("Pasal tepat di peringkat 1", pct(m["hit@1"].nilai), rentang(m["hit@1"]), "Seberapa sering pasal yang memuat jawaban ada di urutan pertama."),
       kartu("Pasal tepat di lima teratas", pct(m["hit@5"].nilai), rentang(m["hit@5"]), "Bila pasal di urutan pertama keliru, seberapa sering pasal yang tepat masih terlihat."),
-      kartu("Jawaban benar", pct(t.jawaban_benar.nilai), rentang(t.jawaban_benar), "Menjawab, mengutip pasal yang tepat, dan kalimat kutipannya memuat fakta kunci."),
-      kartu("Menolak padahal ada jawabannya", pct(t.menolak_padahal_terjawab.nilai), rentang(t.menolak_padahal_terjawab), "Harga dari sikap hati-hati: pertanyaan yang sebenarnya terjawab tetapi sistem memilih diam."),
-      kartu("Menjawab pertanyaan tanpa dasar", `${t.dijawab_padahal_tak_terjawab.k} dari ${t.dijawab_padahal_tak_terjawab.n}`, `batas atas ${pct(t.dijawab_padahal_tak_terjawab.atas)}`, "Pertanyaan di luar peraturan atau di luar korpus yang tetap dijawab. Inilah bentuk halusinasi yang relevan untuk sistem ekstraktif."),
-      kartu("Kalimat yang bukan salinan", `${t.kutipan_tidak_verbatim.jumlah} dari ${t.kutipan_tidak_verbatim.n}`, "diperiksa otomatis", "Setiap kalimat jawaban dicocokkan huruf demi huruf dengan teks pasalnya. Karena tidak ada model yang menulis, angka ini memang diharapkan nol.")));
+      kartu("Jawaban yang mengutip pasal salah", `${salah.k} dari ${salah.n}`, `${pct(salahCi.nilai)}, rentang ${rentang(salahCi)}`, "Risiko utama sistem ekstraktif: kalimatnya asli, tetapi bisa berasal dari pasal yang keliru."),
+      kartu("Jawaban benar", pct(t.jawaban_benar.nilai), rentang(t.jawaban_benar), `Menjawab, mengutip pasal yang tepat, dan memuat fakta kunci. Ukuran ini hampir sama dengan "pasal tepat di peringkat 1 dan sistem menjawab"; ketepatan kalimat yang dipilih tidak diukur terpisah. Rata-rata ${String(t.unit_per_jawaban).replace(".", ",")} kalimat per jawaban.`),
+      kartu("Menolak padahal ada jawabannya", pct(t.menolak_padahal_terjawab.nilai), rentang(t.menolak_padahal_terjawab), `Harga dari sikap hati-hati. Pada ${t.menolak_padahal_peringkat1_sah.k} dari ${t.menolak_padahal_peringkat1_sah.n} penolakan itu, pasal peringkat 1 sebenarnya sudah tepat.`),
+      kartu("Menjawab pertanyaan tanpa dasar", `${t.dijawab_padahal_tak_terjawab.k} dari ${t.dijawab_padahal_tak_terjawab.n}`, `batas atas ${pct(t.dijawab_padahal_tak_terjawab.atas)}`, "Hanya 21 pertanyaan, dan sebagian besar pendek atau jelas di luar topik. Lihat uji tekanan di bawah sebelum menyimpulkan bahwa sistem pasti menolak yang di luar cakupan.")));
+
+  const salinan = h("p", { class: "catatan" },
+    `Tidak ada kalimat jawaban yang berbeda dari teks korpus (${t.kutipan_tidak_verbatim.jumlah} dari ${t.kutipan_tidak_verbatim.n}). Angka nol ini hanya mencerminkan cara kerjanya, yaitu menyalin, bukan temuan. Teks korpus sendiri adalah hasil ekstraksi PDF; beberapa dokumen berasal dari OCR dan memuat salah baca.`);
 
   const barisMetode = Object.entries(ps).map(([key, v]) => h("tr", { class: key === kirim ? "dipakai" : null },
     h("th", { scope: "row" }, v.label, key === kirim ? h("span", { class: "lencana" }, "dipakai di situs") : null),
@@ -75,44 +94,59 @@ export function mountEvaluation(main, { evaluasi: ev }) {
     h("td", { class: "num" }, pct(v.metrik.test["hit@1"].nilai), batas(v.metrik.test["hit@1"])),
     h("td", { class: "num" }, pct(v.metrik.test["hit@5"].nilai), batas(v.metrik.test["hit@5"])),
     h("td", { class: "num" }, pct(v.metrik.test["mrr@10"].nilai), batas(v.metrik.test["mrr@10"]))));
-  const sel = ev.pencarian.selisih_berpasangan.hybrid_vs_bm25_konteks["mrr@10"];
+  const sel = ev.pencarian.selisih_berpasangan;
+  const poin = (d) => `${d.selisih > 0 ? "+" : ""}${(d.selisih * 100).toFixed(1).replace(".", ",")} poin (interval ${(d.bawah * 100).toFixed(1).replace(".", ",")} sampai ${(d.atas * 100).toFixed(1).replace(".", ",")})`;
   const metode = h("section", { "aria-labelledby": "e-metode" },
     h("h2", { id: "e-metode" }, "Perbandingan metode pencarian"),
-    h("p", {}, "Lima cara mencari diuji pada pertanyaan yang sama. Metode yang dipakai situs dipilih hanya dari kolom data dev, sebelum data uji dilihat untuk keputusan itu."),
+    h("p", {}, "Lima cara mencari diuji pada pertanyaan yang sama. Metode yang dipakai situs dipilih dari kolom MRR data dev. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja."),
     h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan metode, dapat digulir" },
       h("table", { class: "tabel" },
-        h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col", class: "num" }, "MRR data dev"), h("th", { scope: "col", class: "num" }, "Peringkat 1 (uji)"), h("th", { scope: "col", class: "num" }, "Lima teratas (uji)"), h("th", { scope: "col", class: "num" }, "MRR (uji)"))),
+        h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col", class: "num" }, "MRR data dev (dasar pemilihan)"), h("th", { scope: "col", class: "num" }, "Peringkat 1 (uji)"), h("th", { scope: "col", class: "num" }, "Lima teratas (uji)"), h("th", { scope: "col", class: "num" }, "MRR (uji)"))),
         h("tbody", {}, barisMetode))),
-    h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Gabungan BM25 dan LSA lebih buruk daripada BM25 dengan konteks: selisih MRR pada data uji ${Math.round(sel.selisih * 100)} poin (interval ${Math.round(sel.bawah * 100)} sampai ${Math.round(sel.atas * 100)}). Karena itu situs hanya memuat BM25. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`));
+    h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Pada MRR data uji, BM25 dengan stem dan konteks lebih baik daripada BM25 polos: ${poin(sel.bm25_konteks_vs_bm25_polos["mrr@10"])}. Gabungan BM25 dan LSA tidak lebih baik daripada BM25 dengan konteks: ${poin(sel.hybrid_vs_bm25_konteks["mrr@10"])}. Ini tiga perbandingan tanpa koreksi, dan selisih peringkat lima teratas tidak berbeda nyata. Karena itu situs hanya memuat BM25. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`),
+    h("p", { class: "catatan" }, "Model embedding pra-latih (misalnya e5) belum dibandingkan karena unduhan modelnya diblokir di lingkungan pengembangan. Jangan membaca tabel ini sebagai bukti bahwa BM25 lebih baik daripada embedding pra-latih."));
 
   const gaya = ps[kirim].per_gaya_test;
+  const tekanBlok = tekan ? h("div", { class: "kotak-jujur" },
+    h("h3", {}, "Uji tekanan: pertanyaan panjang di luar cakupan"),
+    h("p", {}, `Dari ${tekan.n} pertanyaan panjang berkosakata K3 yang jawabannya tidak ada di korpus, ${tekan.dijawab} tetap dijawab (skor tertinggi ${String(tekan.skor_maks).replace(".", ",")}, ambang ${String(tekan.ambang).replace(".", ",")}), dengan pasal yang tidak menjawab. Skor BM25 mentah cenderung tinggi untuk pertanyaan yang panjang, sehingga gerbang lebih mudah menolak pertanyaan pendek daripada yang panjang. Set ini kecil dan ditulis auditor setelah melihat perilaku sistem, jadi ia ilustrasi kelemahan, bukan perkiraan angka.`),
+    h("details", { class: "gagal" },
+      h("summary", {}, `Lihat ${tekan.dijawab} pertanyaan yang tetap dijawab`),
+      h("ul", {}, tekan.contoh_dijawab.map((c) => h("li", {}, h("strong", {}, c.tanya), h("div", { class: "catatan" }, `Mengutip ${namaUnik(c.sitasi)}, skor ${String(c.skor).replace(".", ",")}.`)))))) : null;
+
   const ambang = h("section", { "aria-labelledby": "e-ambang" },
     h("h2", { id: "e-ambang" }, "Kapan sistem memilih diam"),
     h("p", {}, `Sistem menolak menjawab bila skor BM25 pasal teratas lebih kecil dari ambang. Ambang ${ev.ambang.terpilih} dipilih dari data dev dan dipakai apa adanya pada data uji. Grafik memperlihatkan pertukarannya pada data uji: ambang lebih tinggi membuat sistem lebih jarang menjawab pertanyaan tanpa dasar, tetapi lebih sering diam pada pertanyaan yang sebenarnya terjawab.`),
     h("div", { class: "grafik-bungkus" }, h("div", { class: "grafik-gulir", tabindex: "0", role: "region", "aria-label": "Grafik ambang, dapat digulir" }, grafikAmbang(ev)),
       h("div", { class: "legenda" }, h("span", { class: "leg-benar" }, "Jawaban benar"), h("span", { class: "leg-salah" }, "Menjawab pertanyaan tanpa dasar"))),
-    h("p", { class: "catatan" }, `Jenis pertanyaan juga berpengaruh. Pertanyaan yang mengulang kata-kata pasal ("leksikal") benar ${pct(t.jawaban_benar_leksikal.nilai)}, pertanyaan yang dirumuskan ulang ("parafrase") benar ${pct(t.jawaban_benar_parafrase.nilai)}. Pertanyaan leksikal tidak otomatis lebih mudah. Dugaan penyebabnya, yang belum diuji terpisah: kata-katanya sering sama persis di banyak peraturan sehingga pasal yang dimaksud sulit dibedakan.`));
+    h("p", {}, `Gerbang ini bukan peningkat akurasi. Dibanding sistem yang selalu menjawab, jawaban benar turun dari ${selalu.jawaban_benar.k} ke ${t.jawaban_benar.k} dari ${t.jawaban_benar.n}, sebagai imbalan karena hanya ${t.dijawab_padahal_tak_terjawab.k} dari ${t.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar yang dijawab (tanpa gerbang: ${selalu.dijawab_padahal_tak_terjawab.k} dari ${selalu.dijawab_padahal_tak_terjawab.n}). Pertukaran ini sah, tetapi tetap pertukaran.`),
+    tekanBlok,
+    h("p", { class: "catatan" }, `Menurut jenis pertanyaan, jawaban benar ${pct(t.jawaban_benar_leksikal.nilai)} untuk pertanyaan yang mengulang kata-kata pasal ("leksikal") dan ${pct(t.jawaban_benar_parafrase.nilai)} untuk yang dirumuskan ulang ("parafrase"). Selisih ini tidak berpasangan dan bercampur dengan panjang pertanyaan serta komposisi dokumen, jadi jangan disimpulkan sebagai sebab.`));
 
   const gagalMap = new Map();
   for (const f of ev.kegagalan_test) { if (!gagalMap.has(f.jenis)) gagalMap.set(f.jenis, []); gagalMap.get(f.jenis).push(f); }
-  const nama = (id) => id.replace(/#pasal-/, ", Pasal ");
   const gagal = h("section", { "aria-labelledby": "e-gagal" },
     h("h2", { id: "e-gagal" }, "Di mana sistem gagal"),
-    h("p", {}, "Daftar lengkap kegagalan pada data uji, tanpa disaring. Kegagalan terbanyak adalah salah memilih pasal ketika beberapa peraturan memuat kalimat yang mirip."),
+    h("p", {}, `Daftar lengkap kegagalan pada data uji, tanpa disaring. Dari ${gagalSitasi.length} jawaban dengan pasal yang salah, ${gagalSatuPeraturan} mengutip pasal lain di peraturan yang sama dengan jawaban yang benar, misalnya pasal tetangga atau pasal definisi. Pola ini terlihat dari daftar di bawah; penyebabnya belum diuji lebih jauh.`),
     ...[...gagalMap.entries()].map(([jenis, list]) => h("details", { class: "gagal" },
       h("summary", {}, `${NAMA_GAGAL[jenis] ?? jenis}: ${list.length}`),
       h("ul", {}, list.map((f) => h("li", {}, h("strong", {}, f.tanya),
-        h("div", { class: "catatan" }, `Seharusnya: ${f.emas.map(nama).join("; ")}. Sistem: ${f.sitasi.length ? f.sitasi.map(nama).join("; ") : `menolak, peringkat 1 ${nama(f.top1)}`}.`)))))));
+        h("div", { class: "catatan" }, `Seharusnya: ${namaUnik(f.emas)}. Sistem: ${f.sitasi.length ? namaUnik(f.sitasi) : `menolak, peringkat 1 ${nama(f.top1)}`}.`)))))));
 
   const protokol = h("section", { "aria-labelledby": "e-protokol" },
     h("h2", { id: "e-protokol" }, "Cara evaluasi dibuat dan batasnya"),
     h("ul", { class: "daftar-teks" },
-      h("li", {}, `${q.total} pertanyaan ditulis tangan: ${q.terjawab} ada jawabannya di korpus dan ${q.tak_terjawab} sengaja tidak ada (sebagian masih seputar K3, sebagian sama sekali di luar topik). Pembagian dev dan test dibekukan di berkas eval/questions.jsonl.`),
-      h("li", {}, "Pertanyaan ditulis oleh pengembang setelah membaca peraturannya, jadi bukan pertanyaan nyata pengguna. Angka ini mengukur kemampuan mencari dan mengutip pada pertanyaan yang jelas, bukan kepuasan pengguna sebenarnya."),
-      h("li", {}, "Beberapa pertanyaan boleh dijawab oleh lebih dari satu pasal. Jawaban alternatif yang sah dicatat setelah pemeriksaan manual, dan angka \"ketat\" (hanya satu pasal yang dianggap benar) disimpan di hasil mentah."),
-      h("li", {}, `Yang disetel hanya ambang penolakan dan pilihan metode, keduanya dari data dev. Pada data dev jawaban benar ${pct(d.jawaban_benar.nilai)} dan menjawab tanpa dasar ${pct(d.dijawab_padahal_tak_terjawab.nilai)}.`),
-      h("li", {}, "Pertanyaan relatif sedikit dan banyak berasal dari dokumen yang sama, sehingga rentang kepercayaannya lebar dan sedikit terlalu optimistis."),
-      h("li", {}, "Korpus hanya 15 peraturan. Peraturan lain tidak ada, dan peraturan bisa berubah setelah tanggal akses.")));
+      h("li", {}, `${q.total} pertanyaan: ${q.terjawab} ada jawabannya di korpus dan ${q.tak_terjawab} sengaja tidak ada (sebagian masih seputar K3, sebagian sama sekali di luar topik). Dibagi menjadi ${q.dev} dev dan ${q.test} test, dan pembagiannya dibekukan di berkas eval/questions.jsonl.`),
+      h("li", {}, pro.penulis_pertanyaan),
+      h("li", {}, pro.status_test),
+      h("li", {}, `Yang dipilih dari data dev: ${pro.dipilih_dari_dev.join(" dan ")}. Selain itu, keputusan berikut dibuat setelah run pertama dan karena itu tidak murni dari dev:`,
+        h("ul", { class: "daftar-teks" }, pro.keputusan_setelah_run_pertama.map((k) => h("li", {}, k)))),
+      h("li", {}, pro.riwayat_run_pertama),
+      h("li", {}, "Beberapa pertanyaan boleh dijawab oleh lebih dari satu pasal. Jawaban alternatif yang sah dicatat setelah penilaian manual; angka dengan satu pasal saja yang dianggap benar disimpan di hasil mentah."),
+      h("li", {}, "Fakta kunci dicocokkan sebagai kumpulan kata, bukan frasa, dan hampir sepertiga butir kunci (29% menurut audit independen) sudah tercantum di teks pertanyaannya. Karena itu \"jawaban benar\" lebih longgar daripada kedengarannya."),
+      h("li", {}, "Pertanyaan relatif sedikit. Interval kepercayaan menghitung ketidakpastian sampel, tetapi tidak menghitung bias dari penulis tunggal dan dari penyetelan pada data yang sama."),
+      h("li", {}, "Korpus hanya 15 peraturan. Peraturan lain tidak ada, dan peraturan bisa berubah setelah tanggal akses.")),
+    h("p", {}, "Untuk angka yang lebih dapat dipercaya diperlukan set uji tersegel: pertanyaan ditulis praktisi K3 atau orang lain yang tidak melihat sistem, label ditetapkan sebelum melihat keluaran, dan dijalankan satu kali. Itu belum dikerjakan."));
 
   const ulang = h("section", { "aria-labelledby": "e-ulang" },
     h("h2", { id: "e-ulang" }, "Ulangi sendiri"),
@@ -121,7 +155,7 @@ export function mountEvaluation(main, { evaluasi: ev }) {
 
   clear(main).append(h("div", { class: "halaman halaman-lebar" },
     h("header", {}, h("h1", {}, "Evaluasi"),
-      h("p", { class: "lead" }, "Seberapa sering sistem ini mengutip pasal yang tepat, dan seberapa sering ia memilih diam ketika tidak punya dasar. Semua angka di sini dihitung dari pertanyaan yang dikunci sebelum evaluasi, bukan dari contoh pilihan.")),
-    hasil, metode, ambang, gagal, protokol, ulang));
+      h("p", { class: "lead" }, "Seberapa sering sistem ini mengutip pasal yang tepat, seberapa sering ia salah, dan seberapa sering ia memilih diam. Semua angka dihitung dari set pertanyaan tetap, tetapi ada batas penting pada cara set itu dibuat; baca ringkasan jujur di bawah.")),
+    ringkas, hasil, salinan, metode, ambang, gagal, protokol, ulang));
   main.dataset.ready = "evaluasi";
 }

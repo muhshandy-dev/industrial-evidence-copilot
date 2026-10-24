@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "corpus" / "manifest.json"
 RAW = ROOT / "data" / "raw"
+DIGEST = ROOT / "eval" / "test-beku.sha256"
 
 
 def _curl(url: str, out: Path) -> None:
@@ -67,27 +68,29 @@ def cmd_evalset(args: argparse.Namespace) -> int:
         else:
             rows = evalset.assign_split(drafts)
         evalset.write_questions(rows, qpath)
+        if not DIGEST.exists():
+            DIGEST.write_text(evalset.test_digest(rows) + "\n", encoding="utf-8")
         print(evalset.summary(rows))
         return 0
     rows = evalset.read_questions(qpath)
     corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
     problems = evalset.validate(rows, corpus)
+    if DIGEST.exists() and DIGEST.read_text().strip() != evalset.test_digest(rows):
+        problems.append("label pertanyaan test berubah dari yang dibekukan (eval/test-beku.sha256)")
     for p in problems:
         print("masalah:", p)
     print(evalset.summary(rows))
     return 1 if problems else 0
 
 
-def cmd_eval(_: argparse.Namespace) -> int:
+def cmd_eval(args: argparse.Namespace) -> int:
     from . import evalrag
 
     res = evalrag.run(ROOT / "corpus" / "korpus.json", ROOT / "eval" / "questions.jsonl")
-    out = ROOT / "eval" / "results.json"
+    out = Path(args.out) if args.out else ROOT / "eval" / "results.json"
     evalrag.write_results(res, out)
-    t = res["jawaban"]["test"]
-    print(f"ambang dari dev: {res['ambang']['terpilih']}")
-    print("test jawaban benar:", t["jawaban_benar"])
-    print("test dijawab padahal tak terjawab:", t["dijawab_padahal_tak_terjawab"])
+    # Angka test sengaja tidak dicetak: lihat hasilnya di berkas, bukan di tiap iterasi.
+    print(f"metode: {res['metode_dikirim']}, ambang dari dev: {res['ambang']['terpilih']}")
     print("->", out)
     return 0
 
@@ -125,6 +128,7 @@ def cmd_export(_: argparse.Namespace) -> int:
     out.mkdir(parents=True, exist_ok=True)
     corpus.write(out / "korpus.json")
     size = write_index(system.retriever, out / "indeks.json")
+    results = {k: v for k, v in results.items() if k != "per_pertanyaan"}
     ev = {**results, "ambang_jawab": results["ambang"]["terpilih"], "contoh": CONTOH}
     (out / "evaluasi.json").write_text(
         json.dumps(ev, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
@@ -147,9 +151,9 @@ def main(argv: list[str] | None = None) -> int:
         "--force", action="store_true", help="bagi ulang dari nol (merusak pembekuan split)"
     )
     es.set_defaults(fn=cmd_evalset)
-    sub.add_parser("eval", help="jalankan evaluasi lengkap -> eval/results.json").set_defaults(
-        fn=cmd_eval
-    )
+    ev = sub.add_parser("eval", help="jalankan evaluasi lengkap -> eval/results.json")
+    ev.add_argument("--out", help="tulis ke berkas lain, tidak menimpa eval/results.json")
+    ev.set_defaults(fn=cmd_eval)
     sub.add_parser("export", help="tulis data website (web/public/data)").set_defaults(
         fn=cmd_export
     )

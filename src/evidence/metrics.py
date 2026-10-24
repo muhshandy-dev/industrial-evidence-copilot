@@ -25,9 +25,12 @@ def reciprocal_rank(ranked: list[str], gold: set[str], k: int = 10) -> float:
 
 
 def ndcg_at_k(ranked: list[str], gold: set[str], k: int = 10) -> float:
-    dcg = sum(1.0 / math.log2(i + 1) for i, c in enumerate(ranked[:k], start=1) if c in gold)
-    ideal = sum(1.0 / math.log2(i + 1) for i in range(1, min(len(gold), k) + 1))
-    return dcg / ideal
+    """nDCG untuk relevansi "salah satu cukup": satu pasal sah sudah menjawab pertanyaan, jadi
+    idealnya satu bukti di peringkat 1 (IDCG = 1). Bukti sah tambahan tidak menurunkan nilai."""
+    for i, c in enumerate(ranked[:k], start=1):
+        if c in gold:
+            return 1.0 / math.log2(i + 1)
+    return 0.0
 
 
 def bootstrap_ci(

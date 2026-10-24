@@ -1,8 +1,11 @@
 """Set pertanyaan evaluasi: gabung draf, bagi dev/test, dan validasi terhadap korpus.
 
 Pembagian dev/test dibuat sekali, dibekukan di eval/questions.jsonl, lalu hanya diperiksa
-(bukan dihitung ulang) agar tidak ada pertanyaan test yang berpindah setelah hasil terlihat.
-Semua hiperparameter dan ambang dipilih hanya dari split "dev".
+(bukan dihitung ulang) agar tidak ada pertanyaan test yang berpindah. Label pertanyaan test
+(gold, gold_alt, kunci, gaya) juga dibekukan lewat digest di eval/test-beku.sha256.
+
+Catatan jujur: set test ini bukan holdout tersegel. Ia sudah dilihat sebelum desain akhir
+dan label gold_alt-nya dinilai setelah keluaran sistem terlihat (lihat docs/evaluasi.md).
 """
 
 from __future__ import annotations
@@ -20,12 +23,15 @@ DEV_SHARE = 0.4
 GAYA = {"leksikal", "parafrase", "dekat", "luar"}
 
 _RE_TOKEN = re.compile(r"[a-z0-9]+(?:[.,/x%-][a-z0-9]+)*%?")
+# Penanda ayat "(1)" dan butir "1." bukan isi; dibuang agar angka kunci tidak lolos karenanya.
+_RE_MARKER = re.compile(r"\(\d+[a-z]?\)|(?m:^\s*\d+\.(?=\s))")
+LABEL_FIELDS = ("tanya", "gold", "gold_alt", "kunci", "gaya")
 
 
 def key_tokens(text: str) -> set[str]:
     """Token untuk memeriksa kunci fakta: huruf kecil, angka dan satuan utuh. Teks yang diperiksa
     harus teks cocok (ejaan modern), yaitu Corpus.match_text, bukan teks tampilan."""
-    return set(_RE_TOKEN.findall(text.lower()))
+    return set(_RE_TOKEN.findall(_RE_MARKER.sub(" ", text.lower())))
 
 
 def relevant(row: dict) -> set[str]:
@@ -69,8 +75,22 @@ def assign_split(rows: list[dict]) -> list[dict]:
     return ordered
 
 
+def _label(r: dict) -> dict:
+    listy = ("gold", "gold_alt", "kunci")
+    return {k: r.get(k, []) if k in listy else r.get(k) for k in LABEL_FIELDS}
+
+
+def test_digest(rows: list[dict]) -> str:
+    """Sidik label seluruh pertanyaan test, urut menurut id. Berubah bila label test berubah."""
+    test = sorted((r for r in rows if r["split"] == "test"), key=lambda r: r["id"])
+    blob = json.dumps(
+        [{"id": r["id"], **_label(r)} for r in test], ensure_ascii=False, sort_keys=True
+    )
+    return hashlib.sha256(blob.encode()).hexdigest()
+
+
 def merge_frozen(drafts: list[dict], frozen: list[dict]) -> list[dict]:
-    """Tambah pertanyaan baru tanpa mengubah id atau split yang sudah dibekukan.
+    """Tambah pertanyaan baru tanpa mengubah id, split, atau label test yang sudah dibekukan.
 
     Pertanyaan baru wajib menyatakan split sendiri (dalam praktik hanya "dev"), sehingga
     tidak ada pertanyaan test yang bisa muncul atau berpindah setelah hasil terlihat.
@@ -81,6 +101,8 @@ def merge_frozen(drafts: list[dict], frozen: list[dict]) -> list[dict]:
     for d in drafts:
         if d["tanya"] in old:
             keep = old[d["tanya"]]
+            if keep["split"] == "test" and _label(d) != _label(keep):
+                raise SystemExit(f"label pertanyaan test {keep['id']} berubah; test dibekukan")
             out.append({**d, "id": keep["id"], "split": keep["split"]})
         else:
             if d.get("split") != "dev":

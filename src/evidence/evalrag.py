@@ -1,9 +1,10 @@
 """Evaluasi RAG yang dapat direproduksi: pencarian, jawaban bersitasi, dan penolakan.
 
-Aturan yang dijaga kode ini:
-- Satu-satunya yang disetel adalah ambang penolakan, dan hanya dari split dev.
-- Split test dilaporkan sekali dengan ambang itu. Tidak ada pemilihan metode dari test.
-- Semua interval adalah bootstrap persentil per pertanyaan dengan seed tetap.
+Yang dipilih dari split dev: metode (MRR@10 dev) dan ambang penolakan (skor seimbang dev).
+Split test tidak dipakai memilih apa pun di kode ini, tetapi test BUKAN holdout tersegel:
+ia sudah dilihat dan desain akhir dibuat sesudahnya (lihat PROTOKOL di bawah dan
+docs/evaluasi.md). Interval: bootstrap persentil per pertanyaan dengan seed tetap untuk
+metrik peringkat, Wilson untuk proporsi.
 """
 
 from __future__ import annotations
@@ -23,6 +24,34 @@ from .answer import extract_answer
 from .corpus import Corpus
 from .evalset import key_hit, relevant, summary
 from .retriever import Retriever
+
+# Dicatat apa adanya di eval/results.json dan ditampilkan di halaman Evaluasi.
+PROTOKOL = {
+    "status_test": (
+        "Semi-holdout. Agregat test sudah terlihat pada run pertama dan jawaban alternatif "
+        "yang sah dinilai setelah melihat keluaran lima sistem pada pertanyaan test. "
+        "Angka test sebaiknya dibaca sebagai perkiraan optimistis, bukan uji tersegel."
+    ),
+    "penulis_pertanyaan": (
+        "Semua pertanyaan dan kunci fakta ditulis oleh asisten AI pengembang setelah membaca "
+        "peraturannya, bukan oleh praktisi K3 atau pengguna nyata."
+    ),
+    "keputusan_setelah_run_pertama": [
+        "Gerbang penolakan diganti dari kecocokan kata (cakupan) ke skor BM25 pasal teratas.",
+        "Kutipan hanya diambil dari pasal peringkat 1 (sebelumnya dari tiga pasal teratas).",
+        "Jumlah kalimat per jawaban dinaikkan dari maksimal 2 ke 3, dengan syarat kalimat kedua "
+        "turun dari 80% ke 60% skor kalimat terbaik (menambah jawaban benar test dari 52 ke 56 "
+        "dari 96 menurut analisis auditor).",
+        "25 pertanyaan tak terjawab ditambahkan ke dev saja, memindahkan ambang dari 15 ke 14.",
+        "Jawaban alternatif yang sah ditetapkan untuk dev dan test lewat penilaian manual.",
+    ],
+    "riwayat_run_pertama": (
+        "Run pertama (gerbang cakupan lama) memberi pasal tepat di lima teratas sekitar 90% dan "
+        "jawaban benar sekitar 50% pada test. Kode dan angka run pertama tidak di-commit "
+        "terpisah, sehingga urutan itu tidak dapat diverifikasi dari riwayat git."
+    ),
+    "dipilih_dari_dev": ["metode pencarian (MRR@10 dev)", "ambang penolakan (skor seimbang dev)"],
+}
 
 K_LIST = (1, 3, 5, 10)
 # Ambang penolakan dalam satuan skor BM25 pasal teratas.
@@ -193,6 +222,7 @@ def answer_all(corpus: Corpus, system: System, rows: list[dict], threshold: floa
             "top1": ids[ranked[0]],
         }
         if gold:
+            rec["top1_sah"] = ids[ranked[0]] in gold
             rec["sitasi_benar"] = bool(cited) and cited[0] in gold
             rec["kunci_ada"] = bool(cited) and key_hit(
                 r["kunci"], " ".join(e.match for e in ans.evidence)
@@ -201,6 +231,30 @@ def answer_all(corpus: Corpus, system: System, rows: list[dict], threshold: floa
             rec["benar_ketat"] = rec["benar"] and bool(cited) and cited[0] in set(r["gold"])
         out.append(rec)
     return out
+
+
+def stress_probe(corpus: Corpus, system: System, threshold: float, path: Path) -> dict | None:
+    """Pertanyaan panjang berkosakata K3 yang jawabannya tidak ada di korpus. Set kecil yang
+    ditulis auditor setelah melihat sistem: ilustrasi kelemahan gerbang, bukan estimasi."""
+    from .evalset import read_questions
+
+    if not path.exists():
+        return None
+    rows = [{**r, "split": "stress", "gaya": "dekat", "kunci": []} for r in read_questions(path)]
+    recs = answer_all(corpus, system, rows, threshold)
+    answered = [r for r in recs if not r["menolak"]]
+    return {
+        "n": len(recs),
+        "dijawab": len(answered),
+        "skor_maks": round(max(r["skor"] for r in recs), 2),
+        "ambang": threshold,
+        "catatan": rows[0]["asal"],
+        "contoh_dijawab": [
+            {"tanya": q["tanya"], "sitasi": r["sitasi"], "skor": r["skor"]}
+            for r, q in zip(recs, rows, strict=True)
+            if not r["menolak"]
+        ],
+    }
 
 
 def _balanced(recs: list[dict]) -> float:
@@ -246,7 +300,14 @@ def summarize_answers(recs: list[dict]) -> dict:
         "sitasi_benar_dari_yang_dijawab": _rate(answered, lambda r: r["sitasi_benar"]),
         "kunci_fakta_ada_dari_yang_dijawab": _rate(answered, lambda r: r["kunci_ada"]),
         "menolak_padahal_terjawab": _rate(ans, lambda r: r["menolak"]),
+        # Dari yang ditolak padahal terjawab: berapa yang pasal peringkat 1-nya sebenarnya sah.
+        "menolak_padahal_peringkat1_sah": _rate(
+            [r for r in ans if r["menolak"]], lambda r: r["top1_sah"]
+        ),
         "dijawab_padahal_tak_terjawab": _rate(una, lambda r: not r["menolak"]),
+        "unit_per_jawaban": round(
+            float(np.mean([len(r["unit"]) for r in answered])) if answered else 0.0, 2
+        ),
         "kutipan_tidak_verbatim": {
             "n": sum(len(r["sitasi"]) > 0 for r in recs),
             "jumlah": sum(not r["verbatim"] for r in recs),
@@ -282,10 +343,13 @@ def failures(rows: list[dict], recs: list[dict], corpus: Corpus) -> list[dict]:
             if rec["menolak"]:
                 continue
             kind = "dijawab_padahal_tak_terjawab"
+        gold_docs = {g.split("#")[0] for g in q["gold"]}
         out.append(
             {
                 "id": rec["id"],
                 "jenis": kind,
+                "satu_peraturan": bool(rec["sitasi"])
+                and rec["sitasi"][0].split("#")[0] in gold_docs,
                 "tanya": q["tanya"],
                 "emas": q["gold"],
                 "sitasi": rec["sitasi"],
@@ -358,11 +422,10 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "lingkungan": {"python": platform.python_version(), "numpy": np.__version__},
         "metode_dikirim": shipped_key,
         "aturan_pilih_metode": "MRR@10 tertinggi pada split dev, di antara lima konfigurasi.",
-        "aturan": [
-            "Pembagian dev/test dibekukan sebelum evaluasi dijalankan.",
-            "Hanya ambang penolakan yang disetel, dari dev; tidak ada penyetelan lain.",
-            "Test dilaporkan sekali dengan ambang dari dev.",
-        ],
+        "protokol": PROTOKOL,
+        "uji_tekanan": stress_probe(
+            corpus, shipped, threshold, questions_path.parent / "stress.jsonl"
+        ),
         "pencarian": retrieval,
         "ambang": {"terpilih": threshold, "sapuan_dev": sweep, "sapuan_test": test_sweep},
         "jawaban": ans_summary,

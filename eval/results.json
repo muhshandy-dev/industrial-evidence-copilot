@@ -4,7 +4,7 @@
   "asal": "nyata",
   "dokumen": 15,
   "pasal": 622,
-  "sha256": "ce78c6f1c39b742877d52e5bf1028d212a62b75a4f05ebbb27d3d40466033e96"
+  "sha256": "44279bc73ad2fd4b75c97a0ba7e5d23a57ba93996b7c6727252a9470caab52bb"
  },
  "pertanyaan": {
   "sha256": "52059e47a538821301d90ed904d6c1b89a1803c572bde646b2d36b102c356662",
@@ -26,11 +26,82 @@
  },
  "metode_dikirim": "bm25_konteks",
  "aturan_pilih_metode": "MRR@10 tertinggi pada split dev, di antara lima konfigurasi.",
- "aturan": [
-  "Pembagian dev/test dibekukan sebelum evaluasi dijalankan.",
-  "Hanya ambang penolakan yang disetel, dari dev; tidak ada penyetelan lain.",
-  "Test dilaporkan sekali dengan ambang dari dev."
- ],
+ "protokol": {
+  "status_test": "Semi-holdout. Agregat test sudah terlihat pada run pertama dan jawaban alternatif yang sah dinilai setelah melihat keluaran lima sistem pada pertanyaan test. Angka test sebaiknya dibaca sebagai perkiraan optimistis, bukan uji tersegel.",
+  "penulis_pertanyaan": "Semua pertanyaan dan kunci fakta ditulis oleh asisten AI pengembang setelah membaca peraturannya, bukan oleh praktisi K3 atau pengguna nyata.",
+  "keputusan_setelah_run_pertama": [
+   "Gerbang penolakan diganti dari kecocokan kata (cakupan) ke skor BM25 pasal teratas.",
+   "Kutipan hanya diambil dari pasal peringkat 1 (sebelumnya dari tiga pasal teratas).",
+   "Jumlah kalimat per jawaban dinaikkan dari maksimal 2 ke 3, dengan syarat kalimat kedua turun dari 80% ke 60% skor kalimat terbaik (menambah jawaban benar test dari 52 ke 56 dari 96 menurut analisis auditor).",
+   "25 pertanyaan tak terjawab ditambahkan ke dev saja, memindahkan ambang dari 15 ke 14.",
+   "Jawaban alternatif yang sah ditetapkan untuk dev dan test lewat penilaian manual."
+  ],
+  "riwayat_run_pertama": "Run pertama (gerbang cakupan lama) memberi pasal tepat di lima teratas sekitar 90% dan jawaban benar sekitar 50% pada test. Kode dan angka run pertama tidak di-commit terpisah, sehingga urutan itu tidak dapat diverifikasi dari riwayat git.",
+  "dipilih_dari_dev": [
+   "metode pencarian (MRR@10 dev)",
+   "ambang penolakan (skor seimbang dev)"
+  ]
+ },
+ "uji_tekanan": {
+  "n": 12,
+  "dijawab": 7,
+  "skor_maks": 21.18,
+  "ambang": 14.0,
+  "catatan": "ditulis oleh auditor setelah melihat perilaku sistem; bukan bagian set dev/test",
+  "contoh_dijawab": [
+   {
+    "tanya": "Berapa lama masa berlaku sertifikat ahli K3 kimia bagi perusahaan pertambangan batubara yang mempekerjakan lebih dari seratus tenaga kerja?",
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-16"
+    ],
+    "skor": 19.1824
+   },
+   {
+    "tanya": "Berapa nilai ambang batas kebisingan dan getaran di tempat kerja yang wajib dipenuhi pengusaha untuk tenaga kerja yang bekerja delapan jam sehari?",
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-15",
+     "kepmenaker-187-1999#pasal-15"
+    ],
+    "skor": 16.029
+   },
+   {
+    "tanya": "Bagaimana tata cara pemeriksaan dan pengujian instalasi penyalur petir di tempat kerja oleh ahli K3 listrik?",
+    "sitasi": [
+     "permenaker-37-2016#pasal-75"
+    ],
+    "skor": 14.7404
+   },
+   {
+    "tanya": "Berapa besar iuran jaminan kecelakaan kerja BPJS Ketenagakerjaan yang wajib dibayar pengusaha untuk setiap tenaga kerja?",
+    "sitasi": [
+     "permenaker-3-1998#pasal-3"
+    ],
+    "skor": 15.3726
+   },
+   {
+    "tanya": "Apa sanksi pidana bagi pengusaha yang tidak mendaftarkan tenaga kerjanya dalam program jaminan sosial ketenagakerjaan?",
+    "sitasi": [
+     "permenaker-3-1998#pasal-5",
+     "permenaker-3-1998#pasal-5"
+    ],
+    "skor": 21.1781
+   },
+   {
+    "tanya": "Berapa ketinggian minimal pekerjaan yang mewajibkan tenaga kerja memakai alat pelindung jatuh perorangan dan tali pengaman?",
+    "sitasi": [
+     "permenaker-8-2010#pasal-3"
+    ],
+    "skor": 17.8073
+   },
+   {
+    "tanya": "Apa syarat pemasangan dan pemeliharaan alat pemadam api ringan di tempat kerja dan berapa jarak antar alat pemadam?",
+    "sitasi": [
+     "permenaker-2-1983#pasal-4"
+    ],
+    "skor": 14.1733
+   }
+  ]
+ },
  "pencarian": {
   "per_sistem": {
    "bm25_polos": {
@@ -63,9 +134,9 @@
        "atas": 0.8006
       },
       "ndcg@10": {
-       "nilai": 0.7637,
-       "bawah": 0.6901,
-       "atas": 0.8349
+       "nilai": 0.7678,
+       "bawah": 0.6953,
+       "atas": 0.8404
       }
      },
      "test": {
@@ -95,9 +166,9 @@
        "atas": 0.7739
       },
       "ndcg@10": {
-       "nilai": 0.7578,
-       "bawah": 0.6971,
-       "atas": 0.8179
+       "nilai": 0.7591,
+       "bawah": 0.6982,
+       "atas": 0.8194
       }
      }
     },
@@ -187,9 +258,9 @@
        "atas": 0.8549
       },
       "ndcg@10": {
-       "nilai": 0.8039,
-       "bawah": 0.7259,
-       "atas": 0.8768
+       "nilai": 0.8069,
+       "bawah": 0.7305,
+       "atas": 0.8808
       }
      },
      "test": {
@@ -219,9 +290,9 @@
        "atas": 0.8197
       },
       "ndcg@10": {
-       "nilai": 0.7996,
-       "bawah": 0.7407,
-       "atas": 0.8562
+       "nilai": 0.8009,
+       "bawah": 0.7421,
+       "atas": 0.8575
       }
      }
     },
@@ -311,9 +382,9 @@
        "atas": 0.9223
       },
       "ndcg@10": {
-       "nilai": 0.8752,
-       "bawah": 0.814,
-       "atas": 0.9351
+       "nilai": 0.8791,
+       "bawah": 0.819,
+       "atas": 0.938
       }
      },
      "test": {
@@ -343,9 +414,9 @@
        "atas": 0.8518
       },
       "ndcg@10": {
-       "nilai": 0.8324,
-       "bawah": 0.7796,
-       "atas": 0.8853
+       "nilai": 0.8332,
+       "bawah": 0.7804,
+       "atas": 0.8863
       }
      }
     },
@@ -435,9 +506,9 @@
        "atas": 0.8236
       },
       "ndcg@10": {
-       "nilai": 0.777,
-       "bawah": 0.6954,
-       "atas": 0.8503
+       "nilai": 0.7836,
+       "bawah": 0.702,
+       "atas": 0.8552
       }
      },
      "test": {
@@ -467,9 +538,9 @@
        "atas": 0.7069
       },
       "ndcg@10": {
-       "nilai": 0.6962,
-       "bawah": 0.6272,
-       "atas": 0.7608
+       "nilai": 0.6971,
+       "bawah": 0.6278,
+       "atas": 0.7621
       }
      }
     },
@@ -559,9 +630,9 @@
        "atas": 0.8672
       },
       "ndcg@10": {
-       "nilai": 0.8212,
-       "bawah": 0.7526,
-       "atas": 0.8876
+       "nilai": 0.8266,
+       "bawah": 0.7579,
+       "atas": 0.8922
       }
      },
      "test": {
@@ -591,9 +662,9 @@
        "atas": 0.8078
       },
       "ndcg@10": {
-       "nilai": 0.7877,
-       "bawah": 0.7258,
-       "atas": 0.8456
+       "nilai": 0.7899,
+       "bawah": 0.7279,
+       "atas": 0.8489
       }
      }
     },
@@ -1112,6 +1183,13 @@
     "bawah": 0.1451,
     "atas": 0.3464
    },
+   "menolak_padahal_peringkat1_sah": {
+    "n": 15,
+    "k": 8,
+    "nilai": 0.5333,
+    "bawah": 0.3012,
+    "atas": 0.7519
+   },
    "dijawab_padahal_tak_terjawab": {
     "n": 39,
     "k": 3,
@@ -1119,6 +1197,7 @@
     "bawah": 0.0265,
     "atas": 0.2032
    },
+   "unit_per_jawaban": 1.48,
    "kutipan_tidak_verbatim": {
     "n": 53,
     "jumlah": 0
@@ -1188,6 +1267,13 @@
     "bawah": 0.097,
     "atas": 0.2419
    },
+   "menolak_padahal_peringkat1_sah": {
+    "n": 15,
+    "k": 7,
+    "nilai": 0.4667,
+    "bawah": 0.2481,
+    "atas": 0.6988
+   },
    "dijawab_padahal_tak_terjawab": {
     "n": 21,
     "k": 0,
@@ -1195,6 +1281,7 @@
     "bawah": 0.0,
     "atas": 0.1546
    },
+   "unit_per_jawaban": 1.64,
    "kutipan_tidak_verbatim": {
     "n": 81,
     "jumlah": 0
@@ -1266,6 +1353,13 @@
     "bawah": 0.0,
     "atas": 0.0385
    },
+   "menolak_padahal_peringkat1_sah": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
    "dijawab_padahal_tak_terjawab": {
     "n": 21,
     "k": 20,
@@ -1273,6 +1367,7 @@
     "bawah": 0.7733,
     "atas": 0.9915
    },
+   "unit_per_jawaban": 1.61,
    "kutipan_tidak_verbatim": {
     "n": 116,
     "jumlah": 0
@@ -1311,6 +1406,7 @@
   {
    "id": "q080",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apa saja tugas pokok pelayanan kesehatan kerja?",
    "emas": [
     "permenaker-3-1982#pasal-2"
@@ -1322,6 +1418,7 @@
   {
    "id": "q081",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apa tujuan pembentukan P2K3?",
    "emas": [
     "permenaker-13-2025#pasal-2"
@@ -1333,6 +1430,7 @@
   {
    "id": "q082",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "P2K3 harus melapor kegiatannya ke siapa dan seberapa sering?",
    "emas": [
     "permenaker-13-2025#pasal-11"
@@ -1344,6 +1442,7 @@
   {
    "id": "q083",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Siapa yang menjabat ketua P2K3?",
    "emas": [
     "permenaker-13-2025#pasal-5"
@@ -1355,6 +1454,7 @@
   {
    "id": "q084",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Peraturan lama apa yang dicabut oleh Permenaker operator pesawat uap yang baru?",
    "emas": [
     "permenaker-4-2025#pasal-20"
@@ -1369,6 +1469,7 @@
   {
    "id": "q100",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apa yang dilarang dilakukan saat mengoperasikan pesawat angkat dan angkut?",
    "emas": [
     "permenaker-8-2020#pasal-20"
@@ -1380,6 +1481,7 @@
   {
    "id": "q104",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa lama masa berlaku lisensi K3 personel ruang terbatas?",
    "emas": [
     "permenaker-11-2023#pasal-22"
@@ -1394,6 +1496,7 @@
   {
    "id": "q105",
    "jenis": "pasal_benar_kunci_tidak_ada",
+   "satu_peraturan": true,
    "tanya": "Bolehkah orang berada di bawah dongkrak saat benda diangkat?",
    "emas": [
     "permenaker-8-2020#pasal-26"
@@ -1407,6 +1510,7 @@
   {
    "id": "q110",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa luas lantai maksimum yang dilindungi satu kelompok alarm kebakaran?",
    "emas": [
     "permenaker-2-1983#pasal-34"
@@ -1420,6 +1524,7 @@
   {
    "id": "q113",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa lama Lisensi K3 teknisi bejana tekanan dan tangki timbun berlaku?",
    "emas": [
     "permenaker-37-2016#pasal-62"
@@ -1433,6 +1538,7 @@
   {
    "id": "q116",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Dokumen apa saja yang wajib didokumentasikan dalam penerapan SMK3?",
    "emas": [
     "pp-50-2012#pasal-13"
@@ -1447,6 +1553,7 @@
   {
    "id": "q121",
    "jenis": "pasal_benar_kunci_tidak_ada",
+   "satu_peraturan": true,
    "tanya": "Siapa yang harus memiliki lisensi untuk memberi pertolongan pertama di perusahaan, dan dari siapa lisensinya?",
    "emas": [
     "permenaker-15-2008#pasal-3"
@@ -1462,6 +1569,7 @@
   {
    "id": "q124",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Kapan seorang juru las dianggap tidak terampil lagi?",
    "emas": [
     "permenaker-2-1982#pasal-3"
@@ -1475,6 +1583,7 @@
   {
    "id": "q126",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Kapan pemeriksaan dan pengujian khusus dilakukan?",
    "emas": [
     "permenaker-37-2016#pasal-76"
@@ -1486,6 +1595,7 @@
   {
    "id": "q127",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa batas kadar oksigen yang termasuk gas atmosfer berbahaya?",
    "emas": [
     "permenaker-11-2023#pasal-1"
@@ -1499,6 +1609,7 @@
   {
    "id": "q128",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Kriteria bahan kimia berbahaya apa saja yang dikenal?",
    "emas": [
     "kepmenaker-187-1999#pasal-9"
@@ -1512,6 +1623,7 @@
   {
    "id": "q133",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Siapa yang melakukan pengawasan penerapan SMK3?",
    "emas": [
     "pp-50-2012#pasal-18"
@@ -1523,6 +1635,7 @@
   {
    "id": "q135",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Siapa yang berwenang melakukan pemeriksaan dan pengujian bejana tekanan?",
    "emas": [
     "permenaker-37-2016#pasal-79"
@@ -1536,6 +1649,7 @@
   {
    "id": "q136",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Syarat apa yang harus dipenuhi seseorang agar bisa ditunjuk menjadi Petugas K3 Kimia?",
    "emas": [
     "kepmenaker-187-1999#pasal-22"
@@ -1550,6 +1664,7 @@
   {
    "id": "q137",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Apa syarat tekanan dan volume sehingga suatu wadah dihitung sebagai bejana tekanan?",
    "emas": [
     "permenaker-37-2016#pasal-5"
@@ -1563,6 +1678,7 @@
   {
    "id": "q138",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apakah pekerja baru boleh langsung disuruh bekerja tanpa dijelaskan dulu bahaya di tempatnya?",
    "emas": [
     "uu-1-1970#pasal-9"
@@ -1574,6 +1690,7 @@
   {
    "id": "q139",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa jumlah maksimum detektor panas dalam satu kelompok alarm?",
    "emas": [
     "permenaker-2-1983#pasal-65"
@@ -1587,6 +1704,7 @@
   {
    "id": "q141",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Siapa yang harus memimpin pelayanan kesehatan kerja di perusahaan?",
    "emas": [
     "permenaker-3-1982#pasal-5"
@@ -1598,6 +1716,7 @@
   {
    "id": "q145",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apa yang dimaksud dengan tempat kerja menurut undang-undang keselamatan kerja?",
    "emas": [
     "uu-1-1970#pasal-1"
@@ -1609,6 +1728,7 @@
   {
    "id": "q148",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Siapa yang berwenang membentuk panitia pembina K3?",
    "emas": [
     "uu-1-1970#pasal-10"
@@ -1620,6 +1740,7 @@
   {
    "id": "q152",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": false,
    "tanya": "Siapa yang menilai penerapan SMK3 di perusahaan lewat audit?",
    "emas": [
     "pp-50-2012#pasal-16"
@@ -1634,6 +1755,7 @@
   {
    "id": "q153",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Pemeriksaan kesehatan apa saja yang wajib dilakukan pengurus terhadap tenaga kerja?",
    "emas": [
     "uu-1-1970#pasal-8"
@@ -1645,6 +1767,7 @@
   {
    "id": "q154",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Tempat kerja dengan berapa pekerja yang wajib menyediakan ruang P3K?",
    "emas": [
     "permenaker-15-2008#pasal-9"
@@ -1659,6 +1782,7 @@
   {
    "id": "q155",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa masa berlaku Lisensi K3 operator pesawat uap?",
    "emas": [
     "permenaker-4-2025#pasal-10"
@@ -1673,6 +1797,7 @@
   {
    "id": "q161",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": false,
    "tanya": "Apa saja data yang harus diisi operator dalam buku laporan harian pengoperasian?",
    "emas": [
     "permenaker-4-2025#pasal-16"
@@ -1687,6 +1812,7 @@
   {
    "id": "q169",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Berapa persen detektor yang harus diuji setiap tahun dari setiap kelompok instalasi?",
    "emas": [
     "permenaker-2-1983#pasal-60"
@@ -1698,6 +1824,7 @@
   {
    "id": "q172",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa persen beban kerja aman paling sedikit untuk pengujian beban statis?",
    "emas": [
     "permenaker-8-2020#pasal-176"
@@ -1713,6 +1840,7 @@
   {
    "id": "q174",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Apa saja jenis pemeriksaan dan pengujian bejana tekanan dan tangki timbun?",
    "emas": [
     "permenaker-37-2016#pasal-70"
@@ -1726,6 +1854,7 @@
   {
    "id": "q181",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Siapa yang menjadi sekretaris P2K3?",
    "emas": [
     "permenaker-13-2025#pasal-5"
@@ -1740,6 +1869,7 @@
   {
    "id": "q185",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": false,
    "tanya": "Siapa yang wajib menyediakan alat pelindung diri secara cuma-cuma bagi tenaga kerja?",
    "emas": [
     "uu-1-1970#pasal-14"
@@ -1753,6 +1883,7 @@
   {
    "id": "q190",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": false,
    "tanya": "Siapa yang mengawasi ditaatinya peraturan tentang alat pelindung diri?",
    "emas": [
     "permenaker-8-2010#pasal-10"
@@ -1766,6 +1897,7 @@
   {
    "id": "q191",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apa pengertian audit SMK3?",
    "emas": [
     "pp-50-2012#pasal-1"
@@ -1777,6 +1909,7 @@
   {
    "id": "q192",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa lama Lisensi K3 operator dan juru ikat berlaku?",
    "emas": [
     "permenaker-8-2020#pasal-162"
@@ -1791,6 +1924,7 @@
   {
    "id": "q194",
    "jenis": "menolak_padahal_terjawab",
+   "satu_peraturan": false,
    "tanya": "Apakah APD harus dibeli sendiri oleh pekerja atau disediakan oleh perusahaan?",
    "emas": [
     "permenaker-8-2010#pasal-2"
@@ -1802,6 +1936,7 @@
   {
    "id": "q195",
    "jenis": "sitasi_pasal_salah",
+   "satu_peraturan": true,
    "tanya": "Berapa umur minimal peserta ujian juru las?",
    "emas": [
     "permenaker-2-1982#pasal-4"
@@ -1865,6 +2000,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-61",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -1888,6 +2024,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-19",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -1913,6 +2050,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-8",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -1930,6 +2068,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-12",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -1966,6 +2105,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -1987,6 +2127,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-5",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2021,6 +2162,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-2",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": false,
    "benar": false,
@@ -2044,6 +2186,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-12",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2065,6 +2208,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-2",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2082,6 +2226,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-8",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2103,6 +2248,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-4",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2137,6 +2283,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-31",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2154,6 +2301,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-5",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2175,6 +2323,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-14",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2196,6 +2345,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2230,6 +2380,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1982#pasal-10",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2251,6 +2402,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2281,6 +2433,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2304,6 +2457,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2321,6 +2475,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-6",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2342,6 +2497,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-51",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2376,6 +2532,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-17",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2401,6 +2558,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2424,6 +2582,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-12",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2484,6 +2643,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-58",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2501,6 +2661,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-1",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2522,6 +2683,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-22",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2547,6 +2709,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-29",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": false,
    "benar": false,
@@ -2570,6 +2733,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1982#pasal-4",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2591,6 +2755,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-84",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2608,6 +2773,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2631,6 +2797,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-177",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2648,6 +2815,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-3",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2669,6 +2837,7 @@
    ],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-17",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2686,6 +2855,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-5",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2709,6 +2879,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-15",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2726,6 +2897,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-81",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2756,6 +2928,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-8",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2781,6 +2954,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2815,6 +2989,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-33",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2836,6 +3011,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-10",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2857,6 +3033,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-32",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2887,6 +3064,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-10",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2908,6 +3086,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-20",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2929,6 +3108,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-2",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -2950,6 +3130,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-9",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -2973,6 +3154,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-8",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": true,
    "benar": false,
@@ -2998,6 +3180,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-30",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3019,6 +3202,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-28",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3040,6 +3224,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-85",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3065,6 +3250,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-15",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3086,6 +3272,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3107,6 +3294,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-60",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3128,6 +3316,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-85",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3151,6 +3340,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-29",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3172,6 +3362,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3193,6 +3384,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-4",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3214,6 +3406,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-4",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3235,6 +3428,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-19",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3256,6 +3450,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-39",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3273,6 +3468,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-21",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3290,6 +3486,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-1",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3311,6 +3508,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-127",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3334,6 +3532,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-45",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3351,6 +3550,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3368,6 +3568,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-3-1982#pasal-2",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3385,6 +3586,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-2",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3402,6 +3604,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-11",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3419,6 +3622,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-8",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3442,6 +3646,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-12",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3502,6 +3707,7 @@
    ],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-15",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3525,6 +3731,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-26",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3546,6 +3753,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-14",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3567,6 +3775,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1982#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3603,6 +3812,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3637,6 +3847,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-13",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3658,6 +3869,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-16",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3692,6 +3904,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3715,6 +3928,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-12",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3732,6 +3946,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-52",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3755,6 +3970,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3778,6 +3994,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-10",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3799,6 +4016,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-16",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3822,6 +4040,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-24",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -3843,6 +4062,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-26",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": false,
    "benar": false,
@@ -3864,6 +4084,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-33",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3902,6 +4123,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-33",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3923,6 +4145,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-29",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3944,6 +4167,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-35",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": true,
    "benar": false,
@@ -3965,6 +4189,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-10",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -3999,6 +4224,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-63",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4020,6 +4246,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4056,6 +4283,7 @@
    ],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-16",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4090,6 +4318,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-176",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4111,6 +4340,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-12",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4149,6 +4379,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": false,
    "benar": false,
@@ -4183,6 +4414,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-144",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4204,6 +4436,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-30",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4225,6 +4458,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-171",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4242,6 +4476,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-177",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4263,6 +4498,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-9",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4284,6 +4520,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-14",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": true,
    "benar": false,
@@ -4309,6 +4546,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-2",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4332,6 +4570,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4370,6 +4609,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-73",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4387,6 +4627,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-19",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4421,6 +4662,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-65",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4444,6 +4686,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-24",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4465,6 +4708,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-35",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4482,6 +4726,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-9",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4503,6 +4748,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-35",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4533,6 +4779,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-3-1982#pasal-5",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4558,6 +4805,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-75",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4581,6 +4829,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-37",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4604,6 +4853,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-17",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4621,6 +4871,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-14",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4642,6 +4893,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-13",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4665,6 +4917,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-15",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4682,6 +4935,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-3",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4705,6 +4959,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4726,6 +4981,7 @@
    ],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-21",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4762,6 +5018,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-3",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4779,6 +5036,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-3-1982#pasal-6",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4802,6 +5060,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-2",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4825,6 +5084,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-12",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4846,6 +5106,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-33",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4880,6 +5141,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-87",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4903,6 +5165,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4928,6 +5191,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4951,6 +5215,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-169",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -4974,6 +5239,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -4995,6 +5261,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-11",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5020,6 +5287,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5043,6 +5311,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-4",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5068,6 +5337,7 @@
    ],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-9",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5089,6 +5359,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-54",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5112,6 +5383,7 @@
    ],
    "verbatim": true,
    "top1": "kepmenaker-187-1999#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5129,6 +5401,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-56",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5154,6 +5427,7 @@
    ],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5192,6 +5466,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-175",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": true,
    "benar": false,
@@ -5215,6 +5490,7 @@
    ],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-6",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5236,6 +5512,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-37-2016#pasal-82",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5257,6 +5534,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-3-1998#pasal-8",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5280,6 +5558,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5314,6 +5593,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-10",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5337,6 +5617,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-4-2025#pasal-10",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5358,6 +5639,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-3",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5381,6 +5663,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-13-2025#pasal-8",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": true,
    "benar": false,
@@ -5402,6 +5685,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-15-2008#pasal-5",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5423,6 +5707,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-69",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5457,6 +5742,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-2",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5480,6 +5766,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-27",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5501,6 +5788,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-31",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5535,6 +5823,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1983#pasal-57",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5556,6 +5845,7 @@
    ],
    "verbatim": true,
    "top1": "uu-1-1970#pasal-13",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5573,6 +5863,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-26-2014#pasal-21",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5596,6 +5887,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-8-2020#pasal-163",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5621,6 +5913,7 @@
    ],
    "verbatim": true,
    "top1": "pp-50-2012#pasal-14",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
@@ -5638,6 +5931,7 @@
    "unit": [],
    "verbatim": true,
    "top1": "permenaker-8-2010#pasal-2",
+   "top1_sah": true,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5661,6 +5955,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-2-1982#pasal-11",
+   "top1_sah": false,
    "sitasi_benar": false,
    "kunci_ada": false,
    "benar": false,
@@ -5684,6 +5979,7 @@
    ],
    "verbatim": true,
    "top1": "permenaker-11-2023#pasal-7",
+   "top1_sah": true,
    "sitasi_benar": true,
    "kunci_ada": true,
    "benar": true,
