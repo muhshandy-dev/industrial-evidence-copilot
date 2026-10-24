@@ -80,3 +80,12 @@ def test_bootstrap_seed_tetap():
     assert lo <= v.mean() <= hi
     d, lo, hi = paired_bootstrap_diff(v, v)
     assert d == lo == hi == 0.0
+
+
+def test_wilson_nol_dari_n_tetap_punya_batas_atas():
+    from evidence.metrics import wilson_ci
+
+    lo, hi = wilson_ci(0, 21)
+    assert lo == 0.0 and 0.12 < hi < 0.17
+    lo, hi = wilson_ci(50, 100)
+    assert lo < 0.5 < hi

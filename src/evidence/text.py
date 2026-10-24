@@ -164,3 +164,26 @@ def tokenize(text: str, *, use_stem: bool = True, drop_stopwords: bool = True) -
             continue
         tokens.append(stem(tok) if use_stem else tok)
     return tokens
+
+
+_OLD_SPELLING_PLACEHOLDERS = (
+    ("dj", "\x01", "j"),
+    ("tj", "\x02", "c"),
+    ("nj", "\x03", "ny"),
+    ("sj", "\x04", "sy"),
+)
+
+
+def modernize_spelling(text: str) -> str:
+    """Ejaan Republik (sebelum 1972) ke ejaan sekarang, hanya untuk pencocokan kata.
+
+    Dipakai pada dokumen yang ditandai ejaan_lama di manifest (UU 1/1970). Teks yang ditampilkan
+    dan dikutip tetap asli. Urutan penting: "j" lama berarti "y", jadi dj/tj/nj/sj diamankan dulu.
+    """
+    text = text.lower()
+    for old, token, _ in _OLD_SPELLING_PLACEHOLDERS:
+        text = text.replace(old, token)
+    text = text.replace("j", "y")
+    for _, token, new in _OLD_SPELLING_PLACEHOLDERS:
+        text = text.replace(token, new)
+    return text.replace("ch", "kh").replace("oe", "u")

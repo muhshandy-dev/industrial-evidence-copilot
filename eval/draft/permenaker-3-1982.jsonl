@@ -1,0 +1,5 @@
+{"tanya": "Apa saja tugas pokok pelayanan kesehatan kerja?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-3-1982#pasal-2"], "kunci": ["pemeriksaan", "kesehatan", "sebelum", "kerja", "berkala", "khusus"]}
+{"tanya": "Siapa yang harus memimpin pelayanan kesehatan kerja di perusahaan?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-3-1982#pasal-5"], "kunci": ["dokter"]}
+{"tanya": "Apakah setiap pekerja berhak mendapat pelayanan kesehatan kerja?", "gaya": "parafrase", "jenis": "hak", "gold": ["permenaker-3-1982#pasal-3"], "kunci": ["tenaga", "kerja", "berhak", "pelayanan"]}
+{"tanya": "Dengan cara apa saja pelayanan kesehatan kerja boleh diselenggarakan oleh pengurus?", "gaya": "leksikal", "jenis": "prosedur", "gold": ["permenaker-3-1982#pasal-4"], "kunci": ["sendiri", "dokter", "bersama-sama"]}
+{"tanya": "Berapa lama kurungan yang diancamkan bagi pelanggaran aturan pelayanan kesehatan tenaga kerja?", "gaya": "parafrase", "jenis": "sanksi", "gold": ["permenaker-3-1982#pasal-10"], "kunci": ["tiga", "bulan"]}

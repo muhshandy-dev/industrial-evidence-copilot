@@ -1,0 +1,13 @@
+{"tanya": "Perusahaan seperti apa yang wajib menerapkan SMK3?", "gaya": "leksikal", "jenis": "kewajiban", "gold": ["pp-50-2012#pasal-5"], "kunci": ["100", "orang", "potensi", "bahaya", "tinggi"], "gold_alt": ["permenaker-26-2014#pasal-2"]}
+{"tanya": "Kalau karyawan kami 120 orang, apakah kami harus menjalankan sistem manajemen K3?", "gaya": "parafrase", "jenis": "kewajiban", "gold": ["pp-50-2012#pasal-5"], "kunci": ["100", "orang"], "gold_alt": ["permenaker-26-2014#pasal-2"]}
+{"tanya": "Apa saja lima tahapan penerapan SMK3?", "gaya": "leksikal", "jenis": "prosedur", "gold": ["pp-50-2012#pasal-6"], "kunci": ["kebijakan", "perencanaan", "pelaksanaan", "pemantauan", "peninjauan"]}
+{"tanya": "Apa tujuan perusahaan menerapkan SMK3?", "gaya": "leksikal", "jenis": "faktual", "gold": ["pp-50-2012#pasal-2"], "kunci": ["mencegah", "kecelakaan", "penyakit", "produktivitas"]}
+{"tanya": "Siapa yang menilai penerapan SMK3 di perusahaan lewat audit?", "gaya": "parafrase", "jenis": "faktual", "gold": ["pp-50-2012#pasal-16"], "kunci": ["lembaga", "audit", "independen", "menteri"]}
+{"tanya": "Siapa saja yang harus dilibatkan perusahaan ketika menyusun rencana K3?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["pp-50-2012#pasal-9"], "kunci": ["ahli", "k3", "panitia", "pembina", "pekerja/buruh"]}
+{"tanya": "Perusahaan yang sudah menerapkan SMK3 sebelum aturan ini terbit diberi waktu berapa lama untuk menyesuaikan?", "gaya": "parafrase", "jenis": "angka", "gold": ["pp-50-2012#pasal-21"], "kunci": ["1", "tahun"]}
+{"tanya": "Apa saja yang paling sedikit harus dimuat dalam rencana K3?", "gaya": "leksikal", "jenis": "faktual", "gold": ["pp-50-2012#pasal-9"], "kunci": ["tujuan", "sasaran", "skala", "prioritas", "indikator"]}
+{"tanya": "Kalau perusahaan tidak punya tenaga untuk memantau kinerja K3 sendiri, apa yang boleh dilakukan?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["pp-50-2012#pasal-14"], "kunci": ["jasa", "pihak", "lain"]}
+{"tanya": "Apa pengertian audit SMK3?", "gaya": "leksikal", "jenis": "definisi", "gold": ["pp-50-2012#pasal-1"], "kunci": ["pemeriksaan", "sistematis", "independen"]}
+{"tanya": "Siapa yang melakukan pengawasan penerapan SMK3?", "gaya": "leksikal", "jenis": "faktual", "gold": ["pp-50-2012#pasal-18"], "kunci": ["pengawas", "ketenagakerjaan"]}
+{"tanya": "Apa yang harus dimuat paling sedikit dalam kebijakan K3 perusahaan?", "gaya": "leksikal", "jenis": "faktual", "gold": ["pp-50-2012#pasal-7"], "kunci": ["visi", "tujuan", "komitmen"]}
+{"tanya": "Dokumen apa saja yang wajib didokumentasikan dalam penerapan SMK3?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["pp-50-2012#pasal-13"], "kunci": ["izin", "kerja", "pelatihan", "inspeksi", "audit"]}

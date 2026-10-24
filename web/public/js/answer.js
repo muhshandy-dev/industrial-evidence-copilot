@@ -1,10 +1,11 @@
 // Jawaban ekstraktif. Identik dengan src/evidence/answer.py (paritas diuji).
-// Tidak ada model bahasa generatif: setiap kalimat adalah salinan persis dari satu ayat atau butir.
+// Tidak ada model bahasa generatif: setiap kalimat adalah salinan persis dari satu ayat atau butir
+// pada pasal peringkat 1.
 import { tokenize } from "./text.js";
 
 const UNIT_START = /^(\(\d+[a-z]?\)|\d+\.)\s+/;
-export const MAX_UNITS = 2;
-export const SECOND_RATIO = 0.8;
+export const MAX_UNITS = 3;
+export const SECOND_RATIO = 0.6;
 
 export function splitUnits(text) {
   const units = [];
@@ -25,28 +26,32 @@ export function coverage(queryTerms, textTerms, idf, oovIdf) {
   return uniq.filter((t) => textTerms.has(t)).reduce((s, t) => s + weight(t), 0) / total;
 }
 
-// idf: peta istilah -> idf BM25. rankedChunks: indeks chunk dari peringkat tertinggi.
-export function extractAnswer(query, rankedChunks, chunkTexts, idf, { topChunks = 3, threshold = 0.5, useStem = true } = {}) {
+// idf: peta istilah -> idf BM25. rankedChunks: indeks pasal dari peringkat tertinggi.
+// chunkTexts: teks untuk pencocokan (ejaan modern). displayTexts: teks asli untuk ditampilkan.
+// topScore: skor BM25 pasal peringkat 1. threshold: ambang penolakan dalam satuan skor itu.
+export function extractAnswer(query, rankedChunks, chunkTexts, idf, { topScore, threshold, useStem = true, displayTexts = null }) {
+  if (rankedChunks.length === 0) return { abstain: true, score: topScore, coverage: 0, evidence: [] };
   const qTerms = tokenize(query, { useStem });
   const idfValues = Object.values(idf);
   const oov = idfValues.length ? Math.max(...idfValues) : 1;
+  const ci = rankedChunks[0];
+  const cov = coverage(qTerms, new Set(tokenize(chunkTexts[ci], { useStem })), idf, oov);
+  if (topScore < threshold) return { abstain: true, score: topScore, coverage: cov, evidence: [] };
+  const units = splitUnits(chunkTexts[ci]);
+  let shown = displayTexts ? splitUnits(displayTexts[ci]) : units;
+  if (shown.length !== units.length) shown = units;
   const cand = [];
-  let bestCov = 0;
-  rankedChunks.slice(0, topChunks).forEach((ci, rank) => {
-    const whole = new Set(tokenize(chunkTexts[ci], { useStem }));
-    if (rank === 0) bestCov = coverage(qTerms, whole, idf, oov);
-    splitUnits(chunkTexts[ci]).forEach((unit, ui) => {
-      const score = coverage(qTerms, new Set(tokenize(unit, { useStem })), idf, oov);
-      if (score > 0) cand.push({ chunk: ci, unit: ui, text: unit, score });
-    });
+  units.forEach((unit, ui) => {
+    const score = coverage(qTerms, new Set(tokenize(unit, { useStem })), idf, oov);
+    if (score > 0) cand.push({ chunk: ci, unit: ui, text: shown[ui], match: unit, score });
   });
-  if (bestCov < threshold || cand.length === 0) return { abstain: true, coverage: bestCov, evidence: [] };
-  const order = new Map(rankedChunks.slice(0, topChunks).map((c, r) => [c, r]));
-  cand.sort((a, b) => b.score - a.score || order.get(a.chunk) - order.get(b.chunk) || a.unit - b.unit);
+  if (cand.length === 0) return { abstain: true, score: topScore, coverage: cov, evidence: [] };
+  cand.sort((a, b) => b.score - a.score || a.unit - b.unit);
   const picked = [cand[0]];
   for (const e of cand.slice(1)) {
     if (picked.length >= MAX_UNITS) break;
     if (e.score >= SECOND_RATIO * cand[0].score) picked.push(e);
   }
-  return { abstain: false, coverage: bestCov, evidence: picked };
+  picked.sort((a, b) => a.unit - b.unit);
+  return { abstain: false, score: topScore, coverage: cov, evidence: picked };
 }

@@ -1,0 +1,10 @@
+{"tanya": "Siapa yang harus memiliki lisensi untuk memberi pertolongan pertama di perusahaan, dan dari siapa lisensinya?", "gaya": "parafrase", "jenis": "kewajiban", "gold": ["permenaker-15-2008#pasal-3"], "kunci": ["petugas", "p3k", "lisensi", "instansi"]}
+{"tanya": "Tempat kerja dengan berapa pekerja yang wajib menyediakan ruang P3K?", "gaya": "leksikal", "jenis": "angka", "gold": ["permenaker-15-2008#pasal-9"], "kunci": ["100", "orang", "ruang", "p3k"]}
+{"tanya": "Boleh tidak petugas P3K meninggalkan pekerjaan utamanya untuk menolong korban?", "gaya": "parafrase", "jenis": "hak", "gold": ["permenaker-15-2008#pasal-4"], "kunci": ["meninggalkan", "pekerjaan"]}
+{"tanya": "Apa saja tugas petugas P3K di tempat kerja?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-15-2008#pasal-6"], "kunci": ["tindakan", "merawat", "mencatat", "melaporkan"]}
+{"tanya": "Warna dan lambang kotak P3K yang benar seperti apa?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-15-2008#pasal-10"], "kunci": ["putih", "lambang", "hijau"]}
+{"tanya": "Fasilitas P3K di tempat kerja meliputi apa saja?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-15-2008#pasal-8"], "kunci": ["ruang", "kotak", "evakuasi"]}
+{"tanya": "Apakah pembuatan lisensi petugas P3K dipungut biaya?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-15-2008#pasal-3"], "kunci": ["tidak", "dikenakan", "biaya"]}
+{"tanya": "Di gedung bertingkat, apakah petugas P3K harus ada di setiap lantai?", "gaya": "parafrase", "jenis": "kewajiban", "gold": ["permenaker-15-2008#pasal-5"], "kunci": ["lantai", "berbeda", "gedung", "bertingkat"]}
+{"tanya": "Apa saja syarat untuk mendapat lisensi petugas P3K?", "gaya": "leksikal", "jenis": "prosedur", "gold": ["permenaker-15-2008#pasal-3"], "kunci": ["sehat", "jasmani", "rohani", "sertifikat", "pelatihan"]}
+{"tanya": "Apa yang termasuk alat untuk memindahkan korban dalam fasilitas P3K?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-15-2008#pasal-11"], "kunci": ["tandu", "ambulance"]}

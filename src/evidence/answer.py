@@ -1,9 +1,15 @@
-"""Jawaban ekstraktif: memilih kalimat (ayat atau butir) dari pasal yang diambil.
+"""Jawaban ekstraktif: memilih kalimat (ayat atau butir) dari pasal teratas.
 
 Tidak ada model bahasa generatif. Setiap kalimat jawaban adalah salinan persis dari satu
 unit di korpus, jadi tidak mungkin ada kalimat karangan. Risiko yang tersisa bukan
 karangan, melainkan salah pilih pasal atau menjawab padahal korpus tidak memuat jawabannya;
 keduanya diukur di evaluasi.
+
+Dua keputusan, keduanya dipilih dari split dev (lihat docs/evaluasi.md):
+- Gerbang penolakan memakai skor BM25 pasal teratas, bukan kecocokan kata, karena skor
+  BM25 lebih baik memisahkan pertanyaan yang terjawab dari yang tidak.
+- Kutipan hanya diambil dari pasal peringkat 1, supaya sitasi selalu sama dengan hasil
+  pencarian dan bisa diperiksa.
 
 Algoritma yang sama ditulis ulang di web/public/js/answer.js (paritas diuji).
 """
@@ -16,8 +22,8 @@ from dataclasses import dataclass
 from .text import tokenize
 
 _RE_UNIT_START = re.compile(r"^(\(\d+[a-z]?\)|\d+\.)\s+")
-MAX_UNITS = 2
-SECOND_RATIO = 0.8
+MAX_UNITS = 3
+SECOND_RATIO = 0.6
 
 
 def split_units(text: str) -> list[str]:
@@ -38,16 +44,16 @@ def split_units(text: str) -> list[str]:
 class Evidence:
     chunk_idx: int
     unit_idx: int
-    text: str
+    text: str  # ayat atau butir persis seperti di dokumen (tampilan dan kutipan)
     score: float
+    match: str = ""  # unit yang sama dalam ejaan modern, dipakai untuk pencocokan dan penilaian
 
 
 @dataclass(frozen=True)
 class Answer:
     abstain: bool
-    coverage: (
-        float  # 0..1, seberapa banyak istilah pertanyaan (berbobot idf) ada di kandidat teratas
-    )
+    score: float  # skor BM25 pasal teratas; dasar keputusan menolak
+    coverage: float  # 0..1, bobot idf istilah pertanyaan yang ada di pasal teratas (informasi)
     evidence: tuple[Evidence, ...]
 
 
@@ -69,30 +75,40 @@ def extract_answer(
     chunk_texts: list[str],
     idf: dict[str, float],
     *,
-    top_chunks: int = 3,
-    threshold: float = 0.5,
+    top_score: float,
+    threshold: float,
+    display_texts: list[str] | None = None,
 ) -> Answer:
+    """chunk_texts: teks untuk pencocokan. display_texts: teks asli untuk ditampilkan; hanya
+    berbeda pada dokumen berejaan lama. Pembagian ayat dilakukan per baris sehingga indeks unit
+    keduanya sejajar. top_score: skor BM25 pasal peringkat 1; threshold: ambang penolakan."""
+    if not ranked_chunks:
+        return Answer(True, top_score, 0.0, ())
     q_terms = tokenize(query)
     oov = max(idf.values()) if idf else 1.0
-    cand: list[Evidence] = []
-    best_cov = 0.0
-    for rank, ci in enumerate(ranked_chunks[:top_chunks]):
-        whole = set(tokenize(chunk_texts[ci]))
-        if rank == 0:
-            best_cov = coverage(q_terms, whole, idf, oov)
-        for ui, unit in enumerate(split_units(chunk_texts[ci])):
-            score = coverage(q_terms, set(tokenize(unit)), idf, oov)
-            if score > 0:
-                cand.append(Evidence(ci, ui, unit, score))
-    if best_cov < threshold or not cand:
-        return Answer(True, best_cov, ())
-    # Skor sama: utamakan chunk berperingkat lebih tinggi, lalu urutan unit.
-    order = {ci: r for r, ci in enumerate(ranked_chunks[:top_chunks])}
-    cand.sort(key=lambda e: (-e.score, order[e.chunk_idx], e.unit_idx))
+    ci = ranked_chunks[0]
+    cov = coverage(q_terms, set(tokenize(chunk_texts[ci])), idf, oov)
+    if top_score < threshold:
+        return Answer(True, top_score, cov, ())
+    units = split_units(chunk_texts[ci])
+    shown = split_units(display_texts[ci]) if display_texts else units
+    if len(shown) != len(units):
+        shown = units
+    cand = [
+        Evidence(ci, ui, shown[ui], s, u)
+        for ui, u in enumerate(units)
+        if (s := coverage(q_terms, set(tokenize(u)), idf, oov)) > 0
+    ]
+    if not cand:
+        return Answer(True, top_score, cov, ())
+    # Skor sama: utamakan unit yang lebih awal.
+    cand.sort(key=lambda e: (-e.score, e.unit_idx))
     picked = [cand[0]]
     for e in cand[1:]:
         if len(picked) >= MAX_UNITS:
             break
         if e.score >= SECOND_RATIO * cand[0].score:
             picked.append(e)
-    return Answer(False, best_cov, tuple(picked))
+    # Tampilkan menurut urutan di pasal agar kutipan terbaca wajar.
+    picked.sort(key=lambda e: e.unit_idx)
+    return Answer(False, top_score, cov, tuple(picked))

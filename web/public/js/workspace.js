@@ -12,7 +12,8 @@ const tingkatTeks = { tinggi: "Kecocokan istilah tinggi", sedang: "Kecocokan ist
 export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   const retriever = new Retriever(indeks);
   const idf = Object.fromEntries(Object.entries(indeks.bm25).map(([t, v]) => [t, v[0]]));
-  const texts = korpus.chunk.map((c) => c.teks);
+  const texts = korpus.chunk.map((c) => c.teks_cari || c.teks);
+  const shownTexts = korpus.chunk.map((c) => c.teks);
   const threshold = evaluasi?.ambang_jawab ?? 0.5;
   const active = new Set(korpus.dokumen.map((_, i) => i));
   const root = h("div", { class: "ruang", data: { fokus: "tanya" } });
@@ -96,7 +97,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     empty.remove();
     setFokus("tanya");
     const { fused, bm, ls } = rankings(q);
-    const ans = extractAnswer(q, fused, texts, idf, { threshold, useStem: indeks.pakai_stem });
+    const ans = extractAnswer(q, fused, texts, idf, { threshold, useStem: indeks.pakai_stem, displayTexts: shownTexts });
     const card = h("article", { class: "jawaban masuk", "aria-label": "Jawaban" });
     thread.append(h("h3", { class: "pertanyaan masuk" }, q), card);
     card.scrollIntoView({ block: "nearest", behavior: motionOn() ? "smooth" : "auto" });

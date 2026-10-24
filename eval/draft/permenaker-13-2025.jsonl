@@ -1,0 +1,11 @@
+{"tanya": "Tempat kerja seperti apa yang wajib membentuk P2K3?", "gaya": "leksikal", "jenis": "kewajiban", "gold": ["permenaker-13-2025#pasal-3"], "kunci": ["100", "orang", "risiko", "tinggi"]}
+{"tanya": "Siapa yang menjadi sekretaris P2K3?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-13-2025#pasal-5"], "kunci": ["sekretaris", "ahli", "k3"]}
+{"tanya": "Berapa minimal wakil pekerja dan wakil pengusaha di P2K3 untuk perusahaan berisiko tinggi dengan pekerja sampai 100 orang?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-13-2025#pasal-6"], "kunci": ["3", "orang", "pengusaha", "pekerja/buruh"]}
+{"tanya": "Berapa lama paling lama verifikasi dokumen permohonan penetapan P2K3?", "gaya": "leksikal", "jenis": "angka", "gold": ["permenaker-13-2025#pasal-7"], "kunci": ["3", "hari", "kerja", "verifikasi"]}
+{"tanya": "P2K3 harus melapor kegiatannya ke siapa dan seberapa sering?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["permenaker-13-2025#pasal-11"], "kunci": ["kepala", "dinas", "6", "bulan"]}
+{"tanya": "Siapa yang menetapkan P2K3?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-13-2025#pasal-7"], "kunci": ["kepala", "dinas", "daerah", "provinsi"]}
+{"tanya": "Kalau ketua atau sekretaris P2K3 diganti, paling lama berapa hari harus mengajukan pembaruan penetapan?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-13-2025#pasal-8"], "kunci": ["2", "hari", "kerja"]}
+{"tanya": "Apa tujuan pembentukan P2K3?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-13-2025#pasal-2"], "kunci": ["efektivitas", "mencegah", "kecelakaan", "ekosistem"]}
+{"tanya": "Aturan lama apa yang dicabut ketika Permenaker tentang P2K3 yang baru berlaku?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-13-2025#pasal-16"], "kunci": ["per.04/men/1987"]}
+{"tanya": "Apa saja program dan rencana kegiatan yang paling sedikit dimuat P2K3?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-13-2025#pasal-10"], "kunci": ["inventarisasi", "identifikasi", "pemeriksaan", "statistik"]}
+{"tanya": "Siapa yang menjabat ketua P2K3?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-13-2025#pasal-5"], "kunci": ["ketua", "pimpinan", "puncak", "pengurus"]}

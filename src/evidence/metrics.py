@@ -48,3 +48,15 @@ def paired_bootstrap_diff(
     d = np.asarray(a, dtype=np.float64) - np.asarray(b, dtype=np.float64)
     lo, hi = bootstrap_ci(d, n_boot=n_boot, alpha=alpha, seed=seed)
     return float(d.mean()), lo, hi
+
+
+def wilson_ci(successes: int, n: int, *, z: float = 1.959964) -> tuple[float, float]:
+    """Interval Wilson untuk proporsi. Tetap bermakna saat hasilnya 0 atau n, tidak seperti
+    bootstrap persentil yang jatuh ke selang selebar nol."""
+    if n == 0:
+        return 0.0, 1.0
+    p = successes / n
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, centre - half), min(1.0, centre + half)

@@ -1,0 +1,1817 @@
+{
+ "versi": 1,
+ "korpus": {
+  "asal": "nyata",
+  "dokumen": 15,
+  "pasal": 622,
+  "sha256": "ce78c6f1c39b742877d52e5bf1028d212a62b75a4f05ebbb27d3d40466033e96"
+ },
+ "pertanyaan": {
+  "sha256": "52059e47a538821301d90ed904d6c1b89a1803c572bde646b2d36b102c356662",
+  "total": 221,
+  "terjawab": 161,
+  "tak_terjawab": 60,
+  "dev": 104,
+  "test": 117,
+  "gaya": {
+   "dekat": 35,
+   "leksikal": 61,
+   "luar": 25,
+   "parafrase": 100
+  }
+ },
+ "lingkungan": {
+  "python": "3.13.17",
+  "numpy": "2.5.4"
+ },
+ "metode_dikirim": "bm25_konteks",
+ "aturan_pilih_metode": "MRR@10 tertinggi pada split dev, di antara lima konfigurasi.",
+ "aturan": [
+  "Pembagian dev/test dibekukan sebelum evaluasi dijalankan.",
+  "Hanya ambang penolakan yang disetel, dari dev; tidak ada penyetelan lain.",
+  "Test dilaporkan sekali dengan ambang dari dev."
+ ],
+ "pencarian": {
+  "per_sistem": {
+   "bm25_polos": {
+    "label": "BM25, tanpa stem, tanpa konteks",
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.6,
+       "bawah": 0.4923,
+       "atas": 0.7231
+      },
+      "hit@3": {
+       "nilai": 0.8154,
+       "bawah": 0.7231,
+       "atas": 0.9077
+      },
+      "hit@5": {
+       "nilai": 0.8615,
+       "bawah": 0.7692,
+       "atas": 0.9385
+      },
+      "hit@10": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "mrr@10": {
+       "nilai": 0.7174,
+       "bawah": 0.6325,
+       "atas": 0.8006
+      },
+      "ndcg@10": {
+       "nilai": 0.7637,
+       "bawah": 0.6901,
+       "atas": 0.8349
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.5729,
+       "bawah": 0.4789,
+       "atas": 0.6667
+      },
+      "hit@3": {
+       "nilai": 0.7917,
+       "bawah": 0.7083,
+       "atas": 0.8646
+      },
+      "hit@5": {
+       "nilai": 0.8542,
+       "bawah": 0.7812,
+       "atas": 0.9167
+      },
+      "hit@10": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "mrr@10": {
+       "nilai": 0.7018,
+       "bawah": 0.6287,
+       "atas": 0.7739
+      },
+      "ndcg@10": {
+       "nilai": 0.7578,
+       "bawah": 0.6971,
+       "atas": 0.8179
+      }
+     }
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.4062,
+       "bawah": 0.25,
+       "atas": 0.5938
+      },
+      "hit@5": {
+       "nilai": 0.8125,
+       "bawah": 0.6562,
+       "atas": 0.9375
+      },
+      "mrr@10": {
+       "nilai": 0.5933,
+       "bawah": 0.4687,
+       "atas": 0.7217
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.6562,
+       "bawah": 0.5469,
+       "atas": 0.7656
+      },
+      "hit@5": {
+       "nilai": 0.875,
+       "bawah": 0.7965,
+       "atas": 0.9531
+      },
+      "mrr@10": {
+       "nilai": 0.756,
+       "bawah": 0.6698,
+       "atas": 0.8382
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.5729,
+      "bawah": 0.4789,
+      "atas": 0.6667
+     },
+     "hit@5": {
+      "nilai": 0.8542,
+      "bawah": 0.7812,
+      "atas": 0.9167
+     },
+     "mrr@10": {
+      "nilai": 0.7018,
+      "bawah": 0.6287,
+      "atas": 0.7739
+     }
+    }
+   },
+   "bm25_stem": {
+    "label": "BM25 + stem Indonesia",
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.7077,
+       "bawah": 0.6,
+       "atas": 0.8154
+      },
+      "hit@3": {
+       "nilai": 0.8,
+       "bawah": 0.7077,
+       "atas": 0.8923
+      },
+      "hit@5": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "hit@10": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "mrr@10": {
+       "nilai": 0.7707,
+       "bawah": 0.6841,
+       "atas": 0.8549
+      },
+      "ndcg@10": {
+       "nilai": 0.8039,
+       "bawah": 0.7259,
+       "atas": 0.8768
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.6354,
+       "bawah": 0.5417,
+       "atas": 0.7292
+      },
+      "hit@3": {
+       "nilai": 0.8646,
+       "bawah": 0.7917,
+       "atas": 0.9271
+      },
+      "hit@5": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9583
+      },
+      "hit@10": {
+       "nilai": 0.9479,
+       "bawah": 0.8958,
+       "atas": 0.9896
+      },
+      "mrr@10": {
+       "nilai": 0.753,
+       "bawah": 0.6839,
+       "atas": 0.8197
+      },
+      "ndcg@10": {
+       "nilai": 0.7996,
+       "bawah": 0.7407,
+       "atas": 0.8562
+      }
+     }
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.4688,
+       "bawah": 0.3117,
+       "atas": 0.6562
+      },
+      "hit@5": {
+       "nilai": 0.875,
+       "bawah": 0.75,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.6436,
+       "bawah": 0.522,
+       "atas": 0.7701
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.7188,
+       "bawah": 0.6094,
+       "atas": 0.8281
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8281,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.8077,
+       "bawah": 0.7309,
+       "atas": 0.8841
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.6354,
+      "bawah": 0.5417,
+      "atas": 0.7292
+     },
+     "hit@5": {
+      "nilai": 0.8958,
+      "bawah": 0.8333,
+      "atas": 0.9583
+     },
+     "mrr@10": {
+      "nilai": 0.753,
+      "bawah": 0.6839,
+      "atas": 0.8197
+     }
+    }
+   },
+   "bm25_konteks": {
+    "label": "BM25 + stem + chunk kontekstual",
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8,
+       "bawah": 0.7077,
+       "atas": 0.8923
+      },
+      "hit@3": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "hit@5": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "hit@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8513,
+       "bawah": 0.7785,
+       "atas": 0.9223
+      },
+      "ndcg@10": {
+       "nilai": 0.8752,
+       "bawah": 0.814,
+       "atas": 0.9351
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.6771,
+       "bawah": 0.5831,
+       "atas": 0.7708
+      },
+      "hit@3": {
+       "nilai": 0.875,
+       "bawah": 0.8021,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9583
+      },
+      "hit@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.7862,
+       "bawah": 0.7203,
+       "atas": 0.8518
+      },
+      "ndcg@10": {
+       "nilai": 0.8324,
+       "bawah": 0.7796,
+       "atas": 0.8853
+      }
+     }
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.4375,
+       "bawah": 0.2812,
+       "atas": 0.625
+      },
+      "hit@5": {
+       "nilai": 0.8438,
+       "bawah": 0.7188,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.6425,
+       "bawah": 0.5279,
+       "atas": 0.7649
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.7969,
+       "bawah": 0.7031,
+       "atas": 0.8906
+      },
+      "hit@5": {
+       "nilai": 0.9219,
+       "bawah": 0.8594,
+       "atas": 0.9844
+      },
+      "mrr@10": {
+       "nilai": 0.8581,
+       "bawah": 0.7876,
+       "atas": 0.9265
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.6667,
+      "bawah": 0.5625,
+      "atas": 0.7604
+     },
+     "hit@5": {
+      "nilai": 0.8958,
+      "bawah": 0.8333,
+      "atas": 0.9583
+     },
+     "mrr@10": {
+      "nilai": 0.781,
+      "bawah": 0.7149,
+      "atas": 0.8449
+     }
+    }
+   },
+   "lsa_konteks": {
+    "label": "LSA (vektor dari korpus) + konteks",
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.6462,
+       "bawah": 0.5231,
+       "atas": 0.7538
+      },
+      "hit@3": {
+       "nilai": 0.8154,
+       "bawah": 0.7231,
+       "atas": 0.9077
+      },
+      "hit@5": {
+       "nilai": 0.8615,
+       "bawah": 0.7692,
+       "atas": 0.9385
+      },
+      "hit@10": {
+       "nilai": 0.9077,
+       "bawah": 0.8308,
+       "atas": 0.9692
+      },
+      "mrr@10": {
+       "nilai": 0.7431,
+       "bawah": 0.6508,
+       "atas": 0.8236
+      },
+      "ndcg@10": {
+       "nilai": 0.777,
+       "bawah": 0.6954,
+       "atas": 0.8503
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.4896,
+       "bawah": 0.3854,
+       "atas": 0.5833
+      },
+      "hit@3": {
+       "nilai": 0.7396,
+       "bawah": 0.6458,
+       "atas": 0.8229
+      },
+      "hit@5": {
+       "nilai": 0.8438,
+       "bawah": 0.7708,
+       "atas": 0.9167
+      },
+      "hit@10": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9583
+      },
+      "mrr@10": {
+       "nilai": 0.6327,
+       "bawah": 0.5537,
+       "atas": 0.7069
+      },
+      "ndcg@10": {
+       "nilai": 0.6962,
+       "bawah": 0.6272,
+       "atas": 0.7608
+      }
+     }
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.3125,
+       "bawah": 0.1562,
+       "atas": 0.4688
+      },
+      "hit@5": {
+       "nilai": 0.7188,
+       "bawah": 0.5625,
+       "atas": 0.875
+      },
+      "mrr@10": {
+       "nilai": 0.4982,
+       "bawah": 0.3669,
+       "atas": 0.6266
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.5781,
+       "bawah": 0.4688,
+       "atas": 0.7031
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8281,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.7,
+       "bawah": 0.6133,
+       "atas": 0.7906
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.4896,
+      "bawah": 0.3854,
+      "atas": 0.5833
+     },
+     "hit@5": {
+      "nilai": 0.8438,
+      "bawah": 0.7708,
+      "atas": 0.9167
+     },
+     "mrr@10": {
+      "nilai": 0.631,
+      "bawah": 0.5507,
+      "atas": 0.7055
+     }
+    }
+   },
+   "hybrid": {
+    "label": "Hibrida BM25 + LSA (RRF)",
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.7077,
+       "bawah": 0.6,
+       "atas": 0.8154
+      },
+      "hit@3": {
+       "nilai": 0.8615,
+       "bawah": 0.7692,
+       "atas": 0.9385
+      },
+      "hit@5": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9692
+      },
+      "hit@10": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
+      },
+      "mrr@10": {
+       "nilai": 0.7904,
+       "bawah": 0.7096,
+       "atas": 0.8672
+      },
+      "ndcg@10": {
+       "nilai": 0.8212,
+       "bawah": 0.7526,
+       "atas": 0.8876
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.625,
+       "bawah": 0.5208,
+       "atas": 0.7188
+      },
+      "hit@3": {
+       "nilai": 0.8333,
+       "bawah": 0.7604,
+       "atas": 0.9062
+      },
+      "hit@5": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9482
+      },
+      "hit@10": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "mrr@10": {
+       "nilai": 0.7386,
+       "bawah": 0.6667,
+       "atas": 0.8078
+      },
+      "ndcg@10": {
+       "nilai": 0.7877,
+       "bawah": 0.7258,
+       "atas": 0.8456
+      }
+     }
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.375,
+       "bawah": 0.2188,
+       "atas": 0.5312
+      },
+      "hit@5": {
+       "nilai": 0.8125,
+       "bawah": 0.6875,
+       "atas": 0.9375
+      },
+      "mrr@10": {
+       "nilai": 0.5753,
+       "bawah": 0.4541,
+       "atas": 0.7042
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.75,
+       "bawah": 0.6406,
+       "atas": 0.8438
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.875,
+       "atas": 0.9844
+      },
+      "mrr@10": {
+       "nilai": 0.8202,
+       "bawah": 0.7422,
+       "atas": 0.8948
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.6146,
+      "bawah": 0.5104,
+      "atas": 0.7083
+     },
+     "hit@5": {
+      "nilai": 0.8958,
+      "bawah": 0.8333,
+      "atas": 0.9482
+     },
+     "mrr@10": {
+      "nilai": 0.7316,
+      "bawah": 0.6578,
+      "atas": 0.7989
+     }
+    }
+   }
+  },
+  "selisih_berpasangan": {
+   "hybrid_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0,
+     "bawah": -0.0521,
+     "atas": 0.0521
+    },
+    "mrr@10": {
+     "selisih": -0.0477,
+     "bawah": -0.0921,
+     "atas": -0.0054
+    }
+   },
+   "hybrid_vs_bm25_polos": {
+    "hit@5": {
+     "selisih": 0.0417,
+     "bawah": -0.0312,
+     "atas": 0.1146
+    },
+    "mrr@10": {
+     "selisih": 0.0368,
+     "bawah": -0.0327,
+     "atas": 0.1094
+    }
+   },
+   "bm25_konteks_vs_bm25_polos": {
+    "hit@5": {
+     "selisih": 0.0417,
+     "bawah": -0.0208,
+     "atas": 0.1042
+    },
+    "mrr@10": {
+     "selisih": 0.0845,
+     "bawah": 0.0261,
+     "atas": 0.1452
+    }
+   }
+  },
+  "acak": {
+   "hit@1": 0.0016,
+   "hit@3": 0.0048,
+   "hit@5": 0.008,
+   "hit@10": 0.0161
+  }
+ },
+ "ambang": {
+  "terpilih": 14.0,
+  "sapuan_dev": [
+   {
+    "ambang": 0.0,
+    "skor_seimbang_dev": 0.3872
+   },
+   {
+    "ambang": 1.0,
+    "skor_seimbang_dev": 0.3872
+   },
+   {
+    "ambang": 2.0,
+    "skor_seimbang_dev": 0.3872
+   },
+   {
+    "ambang": 3.0,
+    "skor_seimbang_dev": 0.3872
+   },
+   {
+    "ambang": 4.0,
+    "skor_seimbang_dev": 0.3872
+   },
+   {
+    "ambang": 5.0,
+    "skor_seimbang_dev": 0.4385
+   },
+   {
+    "ambang": 6.0,
+    "skor_seimbang_dev": 0.4641
+   },
+   {
+    "ambang": 7.0,
+    "skor_seimbang_dev": 0.541
+   },
+   {
+    "ambang": 8.0,
+    "skor_seimbang_dev": 0.5667
+   },
+   {
+    "ambang": 9.0,
+    "skor_seimbang_dev": 0.6103
+   },
+   {
+    "ambang": 10.0,
+    "skor_seimbang_dev": 0.6615
+   },
+   {
+    "ambang": 11.0,
+    "skor_seimbang_dev": 0.6923
+   },
+   {
+    "ambang": 12.0,
+    "skor_seimbang_dev": 0.7359
+   },
+   {
+    "ambang": 13.0,
+    "skor_seimbang_dev": 0.7538
+   },
+   {
+    "ambang": 14.0,
+    "skor_seimbang_dev": 0.7846
+   },
+   {
+    "ambang": 15.0,
+    "skor_seimbang_dev": 0.7821
+   },
+   {
+    "ambang": 16.0,
+    "skor_seimbang_dev": 0.7641
+   },
+   {
+    "ambang": 17.0,
+    "skor_seimbang_dev": 0.7487
+   },
+   {
+    "ambang": 18.0,
+    "skor_seimbang_dev": 0.6949
+   },
+   {
+    "ambang": 19.0,
+    "skor_seimbang_dev": 0.7077
+   },
+   {
+    "ambang": 20.0,
+    "skor_seimbang_dev": 0.7077
+   },
+   {
+    "ambang": 21.0,
+    "skor_seimbang_dev": 0.7
+   },
+   {
+    "ambang": 22.0,
+    "skor_seimbang_dev": 0.6769
+   },
+   {
+    "ambang": 23.0,
+    "skor_seimbang_dev": 0.6462
+   },
+   {
+    "ambang": 24.0,
+    "skor_seimbang_dev": 0.6308
+   },
+   {
+    "ambang": 25.0,
+    "skor_seimbang_dev": 0.6
+   },
+   {
+    "ambang": 26.0,
+    "skor_seimbang_dev": 0.5923
+   },
+   {
+    "ambang": 27.0,
+    "skor_seimbang_dev": 0.5538
+   },
+   {
+    "ambang": 28.0,
+    "skor_seimbang_dev": 0.5538
+   },
+   {
+    "ambang": 29.0,
+    "skor_seimbang_dev": 0.5385
+   },
+   {
+    "ambang": 30.0,
+    "skor_seimbang_dev": 0.5385
+   },
+   {
+    "ambang": 31.0,
+    "skor_seimbang_dev": 0.5308
+   },
+   {
+    "ambang": 32.0,
+    "skor_seimbang_dev": 0.5154
+   },
+   {
+    "ambang": 33.0,
+    "skor_seimbang_dev": 0.5154
+   },
+   {
+    "ambang": 34.0,
+    "skor_seimbang_dev": 0.5154
+   },
+   {
+    "ambang": 35.0,
+    "skor_seimbang_dev": 0.5077
+   },
+   {
+    "ambang": 36.0,
+    "skor_seimbang_dev": 0.5077
+   },
+   {
+    "ambang": 37.0,
+    "skor_seimbang_dev": 0.5077
+   },
+   {
+    "ambang": 38.0,
+    "skor_seimbang_dev": 0.5077
+   },
+   {
+    "ambang": 39.0,
+    "skor_seimbang_dev": 0.5077
+   },
+   {
+    "ambang": 40.0,
+    "skor_seimbang_dev": 0.5077
+   }
+  ],
+  "sapuan_test": [
+   {
+    "ambang": 0.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 1.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 2.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 3.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 4.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 5.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 6.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.9524
+   },
+   {
+    "ambang": 7.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.8571
+   },
+   {
+    "ambang": 8.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.6667
+   },
+   {
+    "ambang": 9.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.4762
+   },
+   {
+    "ambang": 10.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.381
+   },
+   {
+    "ambang": 11.0,
+    "jawaban_benar": 0.6458,
+    "dijawab_padahal_tak_terjawab": 0.2857
+   },
+   {
+    "ambang": 12.0,
+    "jawaban_benar": 0.6354,
+    "dijawab_padahal_tak_terjawab": 0.2857
+   },
+   {
+    "ambang": 13.0,
+    "jawaban_benar": 0.6042,
+    "dijawab_padahal_tak_terjawab": 0.0952
+   },
+   {
+    "ambang": 14.0,
+    "jawaban_benar": 0.5833,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 15.0,
+    "jawaban_benar": 0.5833,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 16.0,
+    "jawaban_benar": 0.5625,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 17.0,
+    "jawaban_benar": 0.5417,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 18.0,
+    "jawaban_benar": 0.4583,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 19.0,
+    "jawaban_benar": 0.4479,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 20.0,
+    "jawaban_benar": 0.3958,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 21.0,
+    "jawaban_benar": 0.3438,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 22.0,
+    "jawaban_benar": 0.3229,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 23.0,
+    "jawaban_benar": 0.2812,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 24.0,
+    "jawaban_benar": 0.2396,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 25.0,
+    "jawaban_benar": 0.2083,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 26.0,
+    "jawaban_benar": 0.1667,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 27.0,
+    "jawaban_benar": 0.1354,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 28.0,
+    "jawaban_benar": 0.1146,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 29.0,
+    "jawaban_benar": 0.0938,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 30.0,
+    "jawaban_benar": 0.0729,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 31.0,
+    "jawaban_benar": 0.0729,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 32.0,
+    "jawaban_benar": 0.0521,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 33.0,
+    "jawaban_benar": 0.0521,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 34.0,
+    "jawaban_benar": 0.0521,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 35.0,
+    "jawaban_benar": 0.0417,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 36.0,
+    "jawaban_benar": 0.0417,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 37.0,
+    "jawaban_benar": 0.0417,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 38.0,
+    "jawaban_benar": 0.0208,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 39.0,
+    "jawaban_benar": 0.0208,
+    "dijawab_padahal_tak_terjawab": 0.0
+   },
+   {
+    "ambang": 40.0,
+    "jawaban_benar": 0.0208,
+    "dijawab_padahal_tak_terjawab": 0.0
+   }
+  ]
+ },
+ "jawaban": {
+  "dev": {
+   "jawaban_benar": {
+    "n": 65,
+    "k": 42,
+    "nilai": 0.6462,
+    "bawah": 0.5248,
+    "atas": 0.7512
+   },
+   "jawaban_benar_ketat": {
+    "n": 65,
+    "k": 41,
+    "nilai": 0.6308,
+    "bawah": 0.5092,
+    "atas": 0.7377
+   },
+   "sitasi_benar_dari_yang_dijawab": {
+    "n": 50,
+    "k": 44,
+    "nilai": 0.88,
+    "bawah": 0.762,
+    "atas": 0.9438
+   },
+   "kunci_fakta_ada_dari_yang_dijawab": {
+    "n": 50,
+    "k": 43,
+    "nilai": 0.86,
+    "bawah": 0.7381,
+    "atas": 0.9305
+   },
+   "menolak_padahal_terjawab": {
+    "n": 65,
+    "k": 15,
+    "nilai": 0.2308,
+    "bawah": 0.1451,
+    "atas": 0.3464
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 39,
+    "k": 3,
+    "nilai": 0.0769,
+    "bawah": 0.0265,
+    "atas": 0.2032
+   },
+   "kutipan_tidak_verbatim": {
+    "n": 53,
+    "jumlah": 0
+   },
+   "dijawab_padahal_tak_terjawab_dekat": {
+    "n": 23,
+    "k": 2,
+    "nilai": 0.087,
+    "bawah": 0.0242,
+    "atas": 0.268
+   },
+   "dijawab_padahal_tak_terjawab_luar": {
+    "n": 16,
+    "k": 1,
+    "nilai": 0.0625,
+    "bawah": 0.0111,
+    "atas": 0.2833
+   },
+   "jawaban_benar_leksikal": {
+    "n": 29,
+    "k": 16,
+    "nilai": 0.5517,
+    "bawah": 0.3755,
+    "atas": 0.7159
+   },
+   "jawaban_benar_parafrase": {
+    "n": 36,
+    "k": 26,
+    "nilai": 0.7222,
+    "bawah": 0.5601,
+    "atas": 0.8415
+   }
+  },
+  "test": {
+   "jawaban_benar": {
+    "n": 96,
+    "k": 56,
+    "nilai": 0.5833,
+    "bawah": 0.4834,
+    "atas": 0.6769
+   },
+   "jawaban_benar_ketat": {
+    "n": 96,
+    "k": 56,
+    "nilai": 0.5833,
+    "bawah": 0.4834,
+    "atas": 0.6769
+   },
+   "sitasi_benar_dari_yang_dijawab": {
+    "n": 81,
+    "k": 58,
+    "nilai": 0.716,
+    "bawah": 0.6098,
+    "atas": 0.8027
+   },
+   "kunci_fakta_ada_dari_yang_dijawab": {
+    "n": 81,
+    "k": 60,
+    "nilai": 0.7407,
+    "bawah": 0.636,
+    "atas": 0.8237
+   },
+   "menolak_padahal_terjawab": {
+    "n": 96,
+    "k": 15,
+    "nilai": 0.1562,
+    "bawah": 0.097,
+    "atas": 0.2419
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 21,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.1546
+   },
+   "kutipan_tidak_verbatim": {
+    "n": 81,
+    "jumlah": 0
+   },
+   "dijawab_padahal_tak_terjawab_dekat": {
+    "n": 12,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.2425
+   },
+   "dijawab_padahal_tak_terjawab_luar": {
+    "n": 9,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.2991
+   },
+   "jawaban_benar_leksikal": {
+    "n": 32,
+    "k": 12,
+    "nilai": 0.375,
+    "bawah": 0.2293,
+    "atas": 0.5475
+   },
+   "jawaban_benar_parafrase": {
+    "n": 64,
+    "k": 44,
+    "nilai": 0.6875,
+    "bawah": 0.5661,
+    "atas": 0.7877
+   }
+  }
+ },
+ "pembanding_jawaban": {
+  "selalu_menjawab": {
+   "jawaban_benar": {
+    "n": 96,
+    "k": 62,
+    "nilai": 0.6458,
+    "bawah": 0.5462,
+    "atas": 0.7342
+   },
+   "jawaban_benar_ketat": {
+    "n": 96,
+    "k": 61,
+    "nilai": 0.6354,
+    "bawah": 0.5357,
+    "atas": 0.7248
+   },
+   "sitasi_benar_dari_yang_dijawab": {
+    "n": 96,
+    "k": 65,
+    "nilai": 0.6771,
+    "bawah": 0.5783,
+    "atas": 0.7622
+   },
+   "kunci_fakta_ada_dari_yang_dijawab": {
+    "n": 96,
+    "k": 66,
+    "nilai": 0.6875,
+    "bawah": 0.5891,
+    "atas": 0.7715
+   },
+   "menolak_padahal_terjawab": {
+    "n": 96,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.0385
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 21,
+    "k": 20,
+    "nilai": 0.9524,
+    "bawah": 0.7733,
+    "atas": 0.9915
+   },
+   "kutipan_tidak_verbatim": {
+    "n": 116,
+    "jumlah": 0
+   },
+   "dijawab_padahal_tak_terjawab_dekat": {
+    "n": 12,
+    "k": 12,
+    "nilai": 1.0,
+    "bawah": 0.7575,
+    "atas": 1.0
+   },
+   "dijawab_padahal_tak_terjawab_luar": {
+    "n": 9,
+    "k": 8,
+    "nilai": 0.8889,
+    "bawah": 0.565,
+    "atas": 0.9801
+   },
+   "jawaban_benar_leksikal": {
+    "n": 32,
+    "k": 14,
+    "nilai": 0.4375,
+    "bawah": 0.2817,
+    "atas": 0.6067
+   },
+   "jawaban_benar_parafrase": {
+    "n": 64,
+    "k": 48,
+    "nilai": 0.75,
+    "bawah": 0.6318,
+    "atas": 0.8399
+   }
+  }
+ },
+ "kegagalan_test": [
+  {
+   "id": "q080",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apa saja tugas pokok pelayanan kesehatan kerja?",
+   "emas": [
+    "permenaker-3-1982#pasal-2"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-3-1982#pasal-2",
+   "skor": 12.9973
+  },
+  {
+   "id": "q081",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apa tujuan pembentukan P2K3?",
+   "emas": [
+    "permenaker-13-2025#pasal-2"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-13-2025#pasal-2",
+   "skor": 13.9547
+  },
+  {
+   "id": "q082",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "P2K3 harus melapor kegiatannya ke siapa dan seberapa sering?",
+   "emas": [
+    "permenaker-13-2025#pasal-11"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-13-2025#pasal-11",
+   "skor": 12.492
+  },
+  {
+   "id": "q083",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Siapa yang menjabat ketua P2K3?",
+   "emas": [
+    "permenaker-13-2025#pasal-5"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-13-2025#pasal-8",
+   "skor": 13.7703
+  },
+  {
+   "id": "q084",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Peraturan lama apa yang dicabut oleh Permenaker operator pesawat uap yang baru?",
+   "emas": [
+    "permenaker-4-2025#pasal-20"
+   ],
+   "sitasi": [
+    "permenaker-4-2025#pasal-12",
+    "permenaker-4-2025#pasal-12"
+   ],
+   "top1": "permenaker-4-2025#pasal-12",
+   "skor": 18.4869
+  },
+  {
+   "id": "q100",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apa yang dilarang dilakukan saat mengoperasikan pesawat angkat dan angkut?",
+   "emas": [
+    "permenaker-8-2020#pasal-20"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-8-2020#pasal-52",
+   "skor": 13.3846
+  },
+  {
+   "id": "q104",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa lama masa berlaku lisensi K3 personel ruang terbatas?",
+   "emas": [
+    "permenaker-11-2023#pasal-22"
+   ],
+   "sitasi": [
+    "permenaker-11-2023#pasal-24",
+    "permenaker-11-2023#pasal-24"
+   ],
+   "top1": "permenaker-11-2023#pasal-24",
+   "skor": 27.3046
+  },
+  {
+   "id": "q105",
+   "jenis": "pasal_benar_kunci_tidak_ada",
+   "tanya": "Bolehkah orang berada di bawah dongkrak saat benda diangkat?",
+   "emas": [
+    "permenaker-8-2020#pasal-26"
+   ],
+   "sitasi": [
+    "permenaker-8-2020#pasal-26"
+   ],
+   "top1": "permenaker-8-2020#pasal-26",
+   "skor": 20.0034
+  },
+  {
+   "id": "q110",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa luas lantai maksimum yang dilindungi satu kelompok alarm kebakaran?",
+   "emas": [
+    "permenaker-2-1983#pasal-34"
+   ],
+   "sitasi": [
+    "permenaker-2-1983#pasal-35"
+   ],
+   "top1": "permenaker-2-1983#pasal-35",
+   "skor": 32.2735
+  },
+  {
+   "id": "q113",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa lama Lisensi K3 teknisi bejana tekanan dan tangki timbun berlaku?",
+   "emas": [
+    "permenaker-37-2016#pasal-62"
+   ],
+   "sitasi": [
+    "permenaker-37-2016#pasal-63"
+   ],
+   "top1": "permenaker-37-2016#pasal-63",
+   "skor": 29.0842
+  },
+  {
+   "id": "q116",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Dokumen apa saja yang wajib didokumentasikan dalam penerapan SMK3?",
+   "emas": [
+    "pp-50-2012#pasal-13"
+   ],
+   "sitasi": [
+    "pp-50-2012#pasal-16",
+    "pp-50-2012#pasal-16"
+   ],
+   "top1": "pp-50-2012#pasal-16",
+   "skor": 16.6734
+  },
+  {
+   "id": "q121",
+   "jenis": "pasal_benar_kunci_tidak_ada",
+   "tanya": "Siapa yang harus memiliki lisensi untuk memberi pertolongan pertama di perusahaan, dan dari siapa lisensinya?",
+   "emas": [
+    "permenaker-15-2008#pasal-3"
+   ],
+   "sitasi": [
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3",
+    "permenaker-15-2008#pasal-3"
+   ],
+   "top1": "permenaker-15-2008#pasal-3",
+   "skor": 16.9036
+  },
+  {
+   "id": "q124",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Kapan seorang juru las dianggap tidak terampil lagi?",
+   "emas": [
+    "permenaker-2-1982#pasal-3"
+   ],
+   "sitasi": [
+    "permenaker-2-1982#pasal-30"
+   ],
+   "top1": "permenaker-2-1982#pasal-30",
+   "skor": 23.9437
+  },
+  {
+   "id": "q126",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Kapan pemeriksaan dan pengujian khusus dilakukan?",
+   "emas": [
+    "permenaker-37-2016#pasal-76"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-8-2020#pasal-177",
+   "skor": 12.3461
+  },
+  {
+   "id": "q127",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa batas kadar oksigen yang termasuk gas atmosfer berbahaya?",
+   "emas": [
+    "permenaker-11-2023#pasal-1"
+   ],
+   "sitasi": [
+    "permenaker-11-2023#pasal-9"
+   ],
+   "top1": "permenaker-11-2023#pasal-9",
+   "skor": 17.7481
+  },
+  {
+   "id": "q128",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Kriteria bahan kimia berbahaya apa saja yang dikenal?",
+   "emas": [
+    "kepmenaker-187-1999#pasal-9"
+   ],
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-14"
+   ],
+   "top1": "kepmenaker-187-1999#pasal-14",
+   "skor": 17.6037
+  },
+  {
+   "id": "q133",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Siapa yang melakukan pengawasan penerapan SMK3?",
+   "emas": [
+    "pp-50-2012#pasal-18"
+   ],
+   "sitasi": [],
+   "top1": "pp-50-2012#pasal-19",
+   "skor": 13.0799
+  },
+  {
+   "id": "q135",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Siapa yang berwenang melakukan pemeriksaan dan pengujian bejana tekanan?",
+   "emas": [
+    "permenaker-37-2016#pasal-79"
+   ],
+   "sitasi": [
+    "permenaker-37-2016#pasal-65"
+   ],
+   "top1": "permenaker-37-2016#pasal-65",
+   "skor": 14.471
+  },
+  {
+   "id": "q136",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Syarat apa yang harus dipenuhi seseorang agar bisa ditunjuk menjadi Petugas K3 Kimia?",
+   "emas": [
+    "kepmenaker-187-1999#pasal-22"
+   ],
+   "sitasi": [
+    "kepmenaker-187-1999#pasal-24",
+    "kepmenaker-187-1999#pasal-24"
+   ],
+   "top1": "kepmenaker-187-1999#pasal-24",
+   "skor": 15.0918
+  },
+  {
+   "id": "q137",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Apa syarat tekanan dan volume sehingga suatu wadah dihitung sebagai bejana tekanan?",
+   "emas": [
+    "permenaker-37-2016#pasal-5"
+   ],
+   "sitasi": [
+    "permenaker-37-2016#pasal-35"
+   ],
+   "top1": "permenaker-37-2016#pasal-35",
+   "skor": 16.3942
+  },
+  {
+   "id": "q138",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apakah pekerja baru boleh langsung disuruh bekerja tanpa dijelaskan dulu bahaya di tempatnya?",
+   "emas": [
+    "uu-1-1970#pasal-9"
+   ],
+   "sitasi": [],
+   "top1": "uu-1-1970#pasal-9",
+   "skor": 11.1049
+  },
+  {
+   "id": "q139",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa jumlah maksimum detektor panas dalam satu kelompok alarm?",
+   "emas": [
+    "permenaker-2-1983#pasal-65"
+   ],
+   "sitasi": [
+    "permenaker-2-1983#pasal-35"
+   ],
+   "top1": "permenaker-2-1983#pasal-35",
+   "skor": 22.0562
+  },
+  {
+   "id": "q141",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Siapa yang harus memimpin pelayanan kesehatan kerja di perusahaan?",
+   "emas": [
+    "permenaker-3-1982#pasal-5"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-3-1982#pasal-5",
+   "skor": 11.1432
+  },
+  {
+   "id": "q145",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apa yang dimaksud dengan tempat kerja menurut undang-undang keselamatan kerja?",
+   "emas": [
+    "uu-1-1970#pasal-1"
+   ],
+   "sitasi": [],
+   "top1": "uu-1-1970#pasal-14",
+   "skor": 10.5936
+  },
+  {
+   "id": "q148",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Siapa yang berwenang membentuk panitia pembina K3?",
+   "emas": [
+    "uu-1-1970#pasal-10"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-13-2025#pasal-3",
+   "skor": 13.0326
+  },
+  {
+   "id": "q152",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Siapa yang menilai penerapan SMK3 di perusahaan lewat audit?",
+   "emas": [
+    "pp-50-2012#pasal-16"
+   ],
+   "sitasi": [
+    "permenaker-26-2014#pasal-3",
+    "permenaker-26-2014#pasal-3"
+   ],
+   "top1": "permenaker-26-2014#pasal-3",
+   "skor": 19.4731
+  },
+  {
+   "id": "q153",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Pemeriksaan kesehatan apa saja yang wajib dilakukan pengurus terhadap tenaga kerja?",
+   "emas": [
+    "uu-1-1970#pasal-8"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-3-1982#pasal-6",
+   "skor": 13.2706
+  },
+  {
+   "id": "q154",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Tempat kerja dengan berapa pekerja yang wajib menyediakan ruang P3K?",
+   "emas": [
+    "permenaker-15-2008#pasal-9"
+   ],
+   "sitasi": [
+    "permenaker-15-2008#pasal-2",
+    "permenaker-15-2008#pasal-2"
+   ],
+   "top1": "permenaker-15-2008#pasal-2",
+   "skor": 16.4633
+  },
+  {
+   "id": "q155",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa masa berlaku Lisensi K3 operator pesawat uap?",
+   "emas": [
+    "permenaker-4-2025#pasal-10"
+   ],
+   "sitasi": [
+    "permenaker-4-2025#pasal-12",
+    "permenaker-4-2025#pasal-12"
+   ],
+   "top1": "permenaker-4-2025#pasal-12",
+   "skor": 23.7286
+  },
+  {
+   "id": "q161",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Apa saja data yang harus diisi operator dalam buku laporan harian pengoperasian?",
+   "emas": [
+    "permenaker-4-2025#pasal-16"
+   ],
+   "sitasi": [
+    "permenaker-8-2020#pasal-169",
+    "permenaker-8-2020#pasal-169"
+   ],
+   "top1": "permenaker-8-2020#pasal-169",
+   "skor": 17.5646
+  },
+  {
+   "id": "q169",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Berapa persen detektor yang harus diuji setiap tahun dari setiap kelompok instalasi?",
+   "emas": [
+    "permenaker-2-1983#pasal-60"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-2-1983#pasal-56",
+   "skor": 12.3711
+  },
+  {
+   "id": "q172",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa persen beban kerja aman paling sedikit untuk pengujian beban statis?",
+   "emas": [
+    "permenaker-8-2020#pasal-176"
+   ],
+   "sitasi": [
+    "permenaker-8-2020#pasal-175",
+    "permenaker-8-2020#pasal-175",
+    "permenaker-8-2020#pasal-175"
+   ],
+   "top1": "permenaker-8-2020#pasal-175",
+   "skor": 26.0682
+  },
+  {
+   "id": "q174",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Apa saja jenis pemeriksaan dan pengujian bejana tekanan dan tangki timbun?",
+   "emas": [
+    "permenaker-37-2016#pasal-70"
+   ],
+   "sitasi": [
+    "permenaker-37-2016#pasal-82"
+   ],
+   "top1": "permenaker-37-2016#pasal-82",
+   "skor": 18.4469
+  },
+  {
+   "id": "q181",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Siapa yang menjadi sekretaris P2K3?",
+   "emas": [
+    "permenaker-13-2025#pasal-5"
+   ],
+   "sitasi": [
+    "permenaker-13-2025#pasal-8",
+    "permenaker-13-2025#pasal-8"
+   ],
+   "top1": "permenaker-13-2025#pasal-8",
+   "skor": 17.6164
+  },
+  {
+   "id": "q185",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Siapa yang wajib menyediakan alat pelindung diri secara cuma-cuma bagi tenaga kerja?",
+   "emas": [
+    "uu-1-1970#pasal-14"
+   ],
+   "sitasi": [
+    "permenaker-8-2010#pasal-2"
+   ],
+   "top1": "permenaker-8-2010#pasal-2",
+   "skor": 25.4787
+  },
+  {
+   "id": "q190",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Siapa yang mengawasi ditaatinya peraturan tentang alat pelindung diri?",
+   "emas": [
+    "permenaker-8-2010#pasal-10"
+   ],
+   "sitasi": [
+    "uu-1-1970#pasal-13"
+   ],
+   "top1": "uu-1-1970#pasal-13",
+   "skor": 20.4069
+  },
+  {
+   "id": "q191",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apa pengertian audit SMK3?",
+   "emas": [
+    "pp-50-2012#pasal-1"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-26-2014#pasal-21",
+   "skor": 10.1811
+  },
+  {
+   "id": "q192",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa lama Lisensi K3 operator dan juru ikat berlaku?",
+   "emas": [
+    "permenaker-8-2020#pasal-162"
+   ],
+   "sitasi": [
+    "permenaker-8-2020#pasal-163",
+    "permenaker-8-2020#pasal-163"
+   ],
+   "top1": "permenaker-8-2020#pasal-163",
+   "skor": 22.1481
+  },
+  {
+   "id": "q194",
+   "jenis": "menolak_padahal_terjawab",
+   "tanya": "Apakah APD harus dibeli sendiri oleh pekerja atau disediakan oleh perusahaan?",
+   "emas": [
+    "permenaker-8-2010#pasal-2"
+   ],
+   "sitasi": [],
+   "top1": "permenaker-8-2010#pasal-2",
+   "skor": 13.6361
+  },
+  {
+   "id": "q195",
+   "jenis": "sitasi_pasal_salah",
+   "tanya": "Berapa umur minimal peserta ujian juru las?",
+   "emas": [
+    "permenaker-2-1982#pasal-4"
+   ],
+   "sitasi": [
+    "permenaker-2-1982#pasal-11",
+    "permenaker-2-1982#pasal-11"
+   ],
+   "top1": "permenaker-2-1982#pasal-11",
+   "skor": 20.1688
+  }
+ ]
+}
