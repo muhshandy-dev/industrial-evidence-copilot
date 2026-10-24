@@ -1,8 +1,8 @@
 """Pencarian vektor padat tanpa model eksternal: TF-IDF lalu proyeksi SVD (LSA).
 
 Ini bukan model bahasa pra-latih. Vektor dilatih hanya dari korpus, jadi lemah untuk
-sinonim yang tidak pernah muncul bersama di korpus. Dipakai sebagai pembanding vektor
-yang berjalan penuh di browser; pembanding model pra-latih ada di dense_ext.py.
+sinonim yang tidak pernah muncul bersama di korpus. Hanya dipakai sebagai pembanding offline
+di evaluasi; model embedding pra-latih belum diuji dan tidak dipakai di situs.
 """
 
 from __future__ import annotations

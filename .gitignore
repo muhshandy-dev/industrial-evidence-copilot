@@ -7,6 +7,5 @@ __pycache__/
 node_modules/
 data/raw/
 *.egg-info/
-web/public/data/*.json
 !web/public/data/.gitkeep
 data/processed/

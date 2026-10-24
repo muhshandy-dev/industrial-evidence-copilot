@@ -17,7 +17,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.6"]
-dense = ["sentence-transformers>=3", "torch"]
 
 [project.scripts]
 evidence = "evidence.cli:main"
@@ -28,7 +27,6 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
-markers = ["realdata: butuh korpus asli di data/raw"]
 
 [tool.ruff]
 line-length = 100
