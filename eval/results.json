@@ -25,7 +25,7 @@
   "numpy": "2.5.4"
  },
  "metode_dikirim": "bm25_konteks",
- "aturan_pilih_metode": "MRR@10 tertinggi pada split dev, di antara lima konfigurasi.",
+ "aturan_pilih_metode": "MRR@10 tertinggi pada split dev, di antara konfigurasi yang benar-benar dijalankan situs (paritas diuji).",
  "protokol": {
   "status_test": "Semi-holdout. Agregat test sudah terlihat pada run pertama dan jawaban alternatif yang sah dinilai setelah melihat keluaran lima sistem pada pertanyaan test. Angka test sebaiknya dibaca sebagai perkiraan optimistis, bukan uji tersegel.",
   "penulis_pertanyaan": "Semua pertanyaan dan kunci fakta ditulis oleh asisten AI pengembang setelah membaca peraturannya, bukan oleh praktisi K3 atau pengguna nyata.",
@@ -106,6 +106,8 @@
   "per_sistem": {
    "bm25_polos": {
     "label": "BM25, tanpa stem, tanpa konteks",
+    "situs": true,
+    "layak_peramban": true,
     "metrik": {
      "dev": {
       "hit@1": {
@@ -132,6 +134,21 @@
        "nilai": 0.7174,
        "bawah": 0.6325,
        "atas": 0.8006
+      },
+      "recall@5": {
+       "nilai": 0.8615,
+       "bawah": 0.7692,
+       "atas": 0.9385
+      },
+      "recall@10": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "recall@20": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
       },
       "ndcg@10": {
        "nilai": 0.7678,
@@ -164,6 +181,21 @@
        "nilai": 0.7018,
        "bawah": 0.6287,
        "atas": 0.7739
+      },
+      "recall@5": {
+       "nilai": 0.8542,
+       "bawah": 0.7812,
+       "atas": 0.9167
+      },
+      "recall@10": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "recall@20": {
+       "nilai": 0.9479,
+       "bawah": 0.8958,
+       "atas": 0.9896
       },
       "ndcg@10": {
        "nilai": 0.7591,
@@ -230,6 +262,8 @@
    },
    "bm25_stem": {
     "label": "BM25 + stem Indonesia",
+    "situs": true,
+    "layak_peramban": true,
     "metrik": {
      "dev": {
       "hit@1": {
@@ -256,6 +290,21 @@
        "nilai": 0.7707,
        "bawah": 0.6841,
        "atas": 0.8549
+      },
+      "recall@5": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "recall@10": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "recall@20": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.8069,
@@ -288,6 +337,21 @@
        "nilai": 0.753,
        "bawah": 0.6839,
        "atas": 0.8197
+      },
+      "recall@5": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9583
+      },
+      "recall@10": {
+       "nilai": 0.9479,
+       "bawah": 0.8958,
+       "atas": 0.9896
+      },
+      "recall@20": {
+       "nilai": 0.9479,
+       "bawah": 0.8958,
+       "atas": 0.9896
       },
       "ndcg@10": {
        "nilai": 0.8009,
@@ -354,6 +418,8 @@
    },
    "bm25_konteks": {
     "label": "BM25 + stem + chunk kontekstual",
+    "situs": true,
+    "layak_peramban": true,
     "metrik": {
      "dev": {
       "hit@1": {
@@ -380,6 +446,21 @@
        "nilai": 0.8513,
        "bawah": 0.7785,
        "atas": 0.9223
+      },
+      "recall@5": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "recall@10": {
+       "nilai": 0.9538,
+       "bawah": 0.9077,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.8791,
@@ -412,6 +493,21 @@
        "nilai": 0.7862,
        "bawah": 0.7203,
        "atas": 0.8518
+      },
+      "recall@5": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9583
+      },
+      "recall@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.8332,
@@ -478,6 +574,8 @@
    },
    "lsa_konteks": {
     "label": "LSA (vektor dari korpus) + konteks",
+    "situs": false,
+    "layak_peramban": true,
     "metrik": {
      "dev": {
       "hit@1": {
@@ -504,6 +602,21 @@
        "nilai": 0.7431,
        "bawah": 0.6508,
        "atas": 0.8236
+      },
+      "recall@5": {
+       "nilai": 0.8615,
+       "bawah": 0.7692,
+       "atas": 0.9385
+      },
+      "recall@10": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9692
+      },
+      "recall@20": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.7836,
@@ -536,6 +649,21 @@
        "nilai": 0.6327,
        "bawah": 0.5537,
        "atas": 0.7069
+      },
+      "recall@5": {
+       "nilai": 0.8438,
+       "bawah": 0.7708,
+       "atas": 0.9167
+      },
+      "recall@10": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9583
+      },
+      "recall@20": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.6971,
@@ -602,6 +730,8 @@
    },
    "hybrid": {
     "label": "Hibrida BM25 + LSA (RRF)",
+    "situs": false,
+    "layak_peramban": true,
     "metrik": {
      "dev": {
       "hit@1": {
@@ -628,6 +758,21 @@
        "nilai": 0.7904,
        "bawah": 0.7096,
        "atas": 0.8672
+      },
+      "recall@5": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9692
+      },
+      "recall@10": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "recall@20": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.8266,
@@ -660,6 +805,21 @@
        "nilai": 0.7386,
        "bawah": 0.6667,
        "atas": 0.8078
+      },
+      "recall@5": {
+       "nilai": 0.8958,
+       "bawah": 0.8333,
+       "atas": 0.9482
+      },
+      "recall@10": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "recall@20": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
       },
       "ndcg@10": {
        "nilai": 0.7899,
@@ -1949,6 +2109,7 @@
    "skor": 20.1688
   }
  ],
+ "generatif": null,
  "per_pertanyaan": [
   {
    "id": "q001",

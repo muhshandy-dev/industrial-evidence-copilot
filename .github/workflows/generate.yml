@@ -138,6 +138,8 @@ jobs:
           evidence export
           pytest -q
       - name: Commit hasil ke cabang ini
+        # Uji asap (push) tidak meng-commit apa pun.
+        if: github.event_name == 'workflow_dispatch'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

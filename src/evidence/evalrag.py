@@ -81,7 +81,11 @@ class System:
     context: bool
     dense: DenseIndex | None = None
     rerank: RerankCache | None = None
-    situs: bool = True  # layak dijalankan di peramban
+    # True hanya bila situs benar-benar menjalankan sistem ini dan paritasnya diuji. Sistem padat
+    # baru boleh True setelah embedding pertanyaan di peramban memakai bobot ONNX yang sama dengan
+    # evaluasi; sampai itu, ia hanya kandidat (layak_peramban).
+    situs: bool = True
+    layak_peramban: bool = True
     rrf_k: int = 60
 
     def scores(self, query: str) -> np.ndarray:
@@ -123,11 +127,12 @@ def build_systems(corpus: Corpus, root: Path | None = None) -> dict[str, System]
             continue
         name = repo.split("/")[-1]
         out[f"dense_{mkey}"] = System(
-            f"dense_{mkey}", f"Dense {name}", base.retriever, "dense", True, idx, situs=situs
-        )
+            f"dense_{mkey}", f"Dense {name}", base.retriever, "dense", True, idx,
+            situs=False, layak_peramban=situs,
+        )  # fmt: skip
         out[f"hybrid_{mkey}"] = System(
             f"hybrid_{mkey}", f"Hibrida BM25 + {name} (RRF)", base.retriever, "hybrid_dense",
-            True, idx, situs=situs,
+            True, idx, situs=False, layak_peramban=situs,
         )  # fmt: skip
     for rkey, (repo, _rev, r_situs) in RERANKERS.items():
         rc = RerankCache.load(root, rkey, sha, ids)
@@ -137,7 +142,8 @@ def build_systems(corpus: Corpus, root: Path | None = None) -> dict[str, System]
             f = out[first]
             out[f"{first}+{rkey}"] = System(
                 f"{first}+{rkey}", f"{f.label} + rerank {repo.split('/')[-1]}", f.retriever,
-                f.method, True, f.dense, rc, situs=f.situs and r_situs,
+                f.method, True, f.dense, rc, situs=False,
+                layak_peramban=f.layak_peramban and r_situs,
             )  # fmt: skip
     return out
 
@@ -190,7 +196,12 @@ def eval_retrieval(corpus: Corpus, systems: dict[str, System], rows: list[dict])
     result: dict = {"per_sistem": {}, "selisih_berpasangan": {}}
     metric_names = list(next(iter(per_q.values()))["test"][0].keys())
     for key, sys_ in systems.items():
-        entry: dict = {"label": sys_.label, "situs": sys_.situs, "metrik": {}}
+        entry: dict = {
+            "label": sys_.label,
+            "situs": sys_.situs,
+            "layak_peramban": sys_.layak_peramban,
+            "metrik": {},
+        }
         if sys_.dense is not None:
             entry["model_embedding"] = {k: sys_.dense.meta[k] for k in ("model", "revisi")}
         if sys_.rerank is not None:
@@ -494,7 +505,8 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "lingkungan": {"python": platform.python_version(), "numpy": np.__version__},
         "metode_dikirim": shipped_key,
         "aturan_pilih_metode": (
-            "MRR@10 tertinggi pada split dev, di antara konfigurasi yang layak jalan di peramban."
+            "MRR@10 tertinggi pada split dev, di antara konfigurasi yang benar-benar dijalankan "
+            "situs (paritas diuji)."
         ),
         "protokol": PROTOKOL,
         "uji_tekanan": stress_probe(
