@@ -61,4 +61,5 @@ jobs:
           git add eval/cache eval/results.json web/public/data
           if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
           git commit -m "Model: perbarui cache ($TAHAP) dan hasil evaluasi"
-          git push
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

@@ -1,0 +1,148 @@
+name: Generasi
+
+# Menjalankan model generatif situs (transformers.js, bobot ONNX yang sama) atas set evaluasi,
+# lalu menilai groundedness dengan NLI dan meng-commit keluaran serta hasil evaluasi.
+# Pertanyaan dibagi ke beberapa shard yang berjalan paralel di CPU runner.
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/generate.yml"]
+  workflow_dispatch:
+    inputs:
+      set:
+        description: "Set untuk varian bertahan (dev,test,stress,injeksi)"
+        default: "dev,test,stress,injeksi"
+      polos:
+        description: "Jalankan juga varian prompt polos pada set injeksi (pembanding pertahanan)"
+        type: boolean
+        default: true
+      shards:
+        description: "Jumlah shard paralel"
+        default: "8"
+      batas:
+        description: "Batas pertanyaan per shard (kosong = semua; isi kecil untuk uji asap)"
+        default: ""
+      dtype:
+        description: "Kuantisasi bobot ONNX"
+        default: "q4f16"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generasi-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  SET: ${{ inputs.set || 'dev,test,stress,injeksi' }}
+  POLOS: ${{ github.event_name == 'push' || inputs.polos }}
+  SHARDS: ${{ inputs.shards || '8' }}
+  # Push yang mengubah berkas ini hanya menjalankan uji asap: 2 pertanyaan per shard.
+  BATAS: ${{ github.event_name == 'push' && '2' || inputs.batas }}
+  DTYPE: ${{ inputs.dtype || 'q4f16' }}
+
+jobs:
+  siapkan:
+    runs-on: ubuntu-latest
+    outputs:
+      shards: ${{ steps.m.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - run: evidence gen-input --set "$SET" --out masukan.jsonl && wc -l masukan.jsonl
+      - id: m
+        run: echo "shards=$(python -c "import json;print(json.dumps(list(range(int('$SHARDS')))))")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: masukan
+          path: masukan.jsonl
+
+  bangkitkan:
+    needs: siapkan
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.siapkan.outputs.shards) }}
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: web/node_modules/@huggingface/transformers/.cache
+          key: tjs-${{ hashFiles('web/public/js/gen/prompt.js') }}-${{ env.DTYPE }}
+          restore-keys: tjs-
+      - uses: actions/download-artifact@v4
+        with:
+          name: masukan
+          path: web
+      - name: Varian bertahan
+        run: |
+          node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian bertahan \
+            --shard ${{ matrix.shard }} --shards "$SHARDS" --dtype "$DTYPE" ${BATAS:+--batas $BATAS}
+      - name: Varian polos (injeksi saja)
+        if: env.POLOS == 'true' && contains(env.SET, 'injeksi')
+        run: |
+          node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian polos --set injeksi \
+            --shard ${{ matrix.shard }} --shards "$SHARDS" --dtype "$DTYPE" ${BATAS:+--batas $BATAS}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: keluaran-${{ matrix.shard }}
+          path: web/keluaran.jsonl
+          if-no-files-found: ignore
+
+  gabung:
+    needs: bangkitkan
+    if: always() && needs.bangkitkan.result != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nli-${{ hashFiles('src/evidence/generation.py') }}
+          restore-keys: hf-
+      - name: Pasang dependensi (torch CPU)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,model]"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: keluaran-*
+          path: keluaran
+      - run: evidence gen-merge keluaran/*/keluaran.jsonl
+      - run: evidence nli
+      - name: Evaluasi dan ekspor
+        run: |
+          evidence eval
+          evidence export
+          pytest -q
+      - name: Commit hasil ke cabang ini
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/cache eval/results.json web/public/data
+          if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
+          git commit -m "Generasi: keluaran model, skor NLI, dan hasil evaluasi"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

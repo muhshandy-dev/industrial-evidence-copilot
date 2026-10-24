@@ -194,6 +194,76 @@ def cmd_rerank(args: argparse.Namespace) -> int:
     return 0
 
 
+def _shipped():
+    from .corpus import Corpus
+    from .evalrag import build_systems
+
+    results = json.loads((ROOT / "eval" / "results.json").read_text(encoding="utf-8"))
+    corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
+    system = build_systems(corpus, ROOT)[results["metode_dikirim"]]
+    return corpus, system, results["ambang"]["terpilih"]
+
+
+def cmd_gen_input(args: argparse.Namespace) -> int:
+    """Masukan generator: peringkat pasal dan keputusan gerbang dari metode yang dikirim."""
+    from .generation import gen_input, load_set
+
+    sets = args.set.split(",")
+    if "sealed" in sets:
+        print("set tersegel hanya lewat `evidence eval-sealed`.", file=sys.stderr)
+        return 1
+    corpus, system, threshold = _shipped()
+    lines = []
+    for s in sets:
+        lines += gen_input(corpus, system, load_set(ROOT, s), s, threshold)
+    text = "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines)
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+    else:
+        sys.stdout.write(text)
+    return 0
+
+
+def cmd_gen_merge(args: argparse.Namespace) -> int:
+    """Gabungkan keluaran shard generator ke eval/cache/gen/<varian>/<set>.jsonl (ganti per id)."""
+    from .generation import gen_dir
+
+    new: dict[tuple[str, str], dict[str, dict]] = {}
+    for f in args.files:
+        for line in Path(f).read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                new.setdefault((r["varian"], r["set"]), {})[r["id"]] = r
+    for (varian, s), recs in sorted(new.items()):
+        path = gen_dir(ROOT, varian) / f"{s}.jsonl"
+        old = {}
+        if path.exists():
+            old = {
+                (r := json.loads(x))["id"]: r
+                for x in path.read_text(encoding="utf-8").splitlines()
+                if x.strip()
+            }
+        old.update(recs)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        rows = sorted(old.values(), key=lambda r: r["id"])
+        path.write_text(
+            "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8"
+        )
+        print(f"{varian}/{s}: {len(recs)} baru, {len(rows)} total")
+    return 0
+
+
+def cmd_nli(_: argparse.Namespace) -> int:
+    """Skor entailment untuk kalimat jawaban generatif (butuh internet)."""
+    from .generation import SETS, nli_pairs, nli_path, read_outputs, score_nli_and_cache
+
+    parsed = [r for v in ("bertahan", "polos") for r in read_outputs(ROOT, v, SETS)]
+    pairs = nli_pairs(parsed)
+    print(f"{len(parsed)} jawaban, {len(pairs)} pasangan premis-hipotesis")
+    score_nli_and_cache(pairs, nli_path(ROOT))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="evidence")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -217,6 +287,16 @@ def main(argv: list[str] | None = None) -> int:
     rr = sub.add_parser("rerank", help="skor cross-encoder kandidat -> eval/cache/rerank")
     rr.add_argument("--model", action="append", help="kunci reranker (default: semua)")
     rr.set_defaults(fn=cmd_rerank)
+    gi = sub.add_parser("gen-input", help="masukan generator (peringkat pasal dan gerbang)")
+    gi.add_argument("--set", default="dev,test,stress", help="dev,test,stress,injeksi")
+    gi.add_argument("--out")
+    gi.set_defaults(fn=cmd_gen_input)
+    gm = sub.add_parser("gen-merge", help="gabungkan keluaran shard generator")
+    gm.add_argument("files", nargs="+")
+    gm.set_defaults(fn=cmd_gen_merge)
+    sub.add_parser("nli", help="skor NLI kalimat jawaban -> eval/cache/nli").set_defaults(
+        fn=cmd_nli
+    )
     sub.add_parser("export", help="tulis data website (web/public/data)").set_defaults(
         fn=cmd_export
     )

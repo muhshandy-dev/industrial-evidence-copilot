@@ -19,6 +19,7 @@ from pathlib import Path
 
 import numpy as np
 
+from . import generation
 from . import metrics as M
 from .answer import extract_answer
 from .corpus import Corpus
@@ -504,6 +505,9 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "jawaban": ans_summary,
         "pembanding_jawaban": base,
         "kegagalan_test": failures(rows, recs, corpus),
+        "generatif": generation.evaluate(
+            corpus_path.resolve().parents[1], corpus, shipped, threshold, rows, recs
+        ),
         "per_pertanyaan": recs,
     }
 
