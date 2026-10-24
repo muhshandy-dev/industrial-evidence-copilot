@@ -130,6 +130,12 @@ def cmd_export(_: argparse.Namespace) -> int:
     size = write_index(system.retriever, out / "indeks.json")
     results = {k: v for k, v in results.items() if k != "per_pertanyaan"}
     ev = {**results, "ambang_jawab": results["ambang"]["terpilih"], "contoh": CONTOH}
+    sealed_path = ROOT / "eval" / "sealed" / "hasil.json"
+    if sealed_path.exists():
+        hasil = json.loads(sealed_path.read_text(encoding="utf-8"))
+        for g in hasil["generatif"].values():
+            g.pop("per_pertanyaan", None)
+        ev["tersegel"] = hasil
     (out / "evaluasi.json").write_text(
         json.dumps(ev, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )
@@ -271,6 +277,29 @@ def cmd_nli(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_eval_sealed(args: argparse.Namespace) -> int:
+    """Set tersegel, sekali jalan: `input` menulis masukan generator, `run` menulis hasil."""
+    from . import sealed
+
+    sealed.guard(ROOT)
+    if args.action == "input":
+        from .generation import gen_input
+
+        corpus, system, threshold = _shipped()
+        rows = sealed.load_rows(ROOT, corpus)
+        lines = gen_input(corpus, system, rows, "sealed", threshold)
+        Path(args.out).write_text(
+            "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines), encoding="utf-8"
+        )
+        print(f"{len(lines)} pertanyaan tersegel -> {args.out}")
+        return 0
+    res = sealed.run(ROOT)
+    out = sealed.result_path(ROOT)
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print("->", out)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="evidence")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -304,6 +333,10 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("nli", help="skor NLI kalimat jawaban -> eval/cache/nli").set_defaults(
         fn=cmd_nli
     )
+    es2 = sub.add_parser("eval-sealed", help="set tersegel, sekali jalan -> eval/sealed/hasil.json")
+    es2.add_argument("action", choices=["input", "run"])
+    es2.add_argument("--out", default="masukan.jsonl")
+    es2.set_defaults(fn=cmd_eval_sealed)
     sub.add_parser("export", help="tulis data website (web/public/data)").set_defaults(
         fn=cmd_export
     )
