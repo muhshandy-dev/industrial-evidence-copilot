@@ -54,15 +54,19 @@ export async function muatModel(perangkat, onProgress) {
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
   const m = modelUntuk(perangkat);
-  const [g, r] = await Promise.all([
-    lib.pipeline("text-generation", m.id, {
+  // Dimuat berurutan, bukan bersamaan: di jalur CPU kedua sesi berbagi satu memori
+  // WebAssembly, dan memuat keduanya bersamaan gagal dengan bad_alloc pada uji asap CPU.
+  let g, r;
+  try {
+    g = await lib.pipeline("text-generation", m.id, {
       revision: m.revision,
       dtype: m.dtype,
       device: perangkat,
       progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
-    }),
-    muatReranker(lib, perangkat, onProgress),
-  ]);
+    });
+  } catch (e) { throw new Error(`model generatif: ${e.message}`); }
+  try { r = await muatReranker(lib, perangkat, onProgress); }
+  catch (e) { await g.dispose?.(); throw new Error(`reranker: ${e.message}`); }
   rr = r;
   gen = g;
   perangkatDipakai = perangkat;
