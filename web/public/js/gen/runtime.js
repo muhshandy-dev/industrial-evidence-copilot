@@ -11,7 +11,7 @@ export const PUSTAKA = {
   sha256: "8d6716d9086f57c30a4bf367dba61b887593573c770c454465e8019b2703e743",
 };
 
-async function muatPustaka() {
+export async function muatPustaka() {
   const res = await fetch(PUSTAKA.url, { cache: "force-cache" });
   if (!res.ok) throw new Error(`pustaka transformers.js: HTTP ${res.status}`);
   const buf = await res.arrayBuffer();

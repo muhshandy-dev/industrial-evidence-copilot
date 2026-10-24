@@ -5,8 +5,12 @@ name: Peramban generatif
 on:
   push:
     branches-ignore: [main]
-    paths: [".github/workflows/peramban.yml", "web/tests/gen-browser.mjs"]
+    paths: [".github/workflows/peramban.yml", "web/tests/gen-browser.mjs", "web/tests/wasm-probe.mjs"]
   workflow_dispatch:
+    inputs:
+      calon:
+        description: "Percobaan CPU: daftar model:dtype dipisah koma (kosong = uji asap biasa)"
+        default: ""
 
 permissions:
   contents: read
@@ -27,4 +31,10 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: node tests/gen-browser.mjs
+      - name: Percobaan model di CPU peramban
+        if: github.event_name == 'push' || inputs.calon != ''
+        env:
+          CALON: ${{ inputs.calon }}
+        run: node tests/wasm-probe.mjs
+      - name: Uji asap mode generatif
+        run: node tests/gen-browser.mjs
