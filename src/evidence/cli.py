@@ -137,6 +137,63 @@ def cmd_export(_: argparse.Namespace) -> int:
     return 0
 
 
+def _all_queries() -> list[str]:
+    """Semua teks pertanyaan yang perlu embedding: set dev/test, uji tekanan, set tersegel."""
+    from .evalset import read_questions
+
+    out: list[str] = []
+    for rel in (
+        "questions.jsonl",
+        "stress.jsonl",
+        "sealed/questions.jsonl",
+        "sealed/injeksi.jsonl",
+    ):
+        p = ROOT / "eval" / rel
+        if p.exists():
+            out += [r["tanya"] for r in read_questions(p)]
+    return list(dict.fromkeys(out))
+
+
+def cmd_embed(args: argparse.Namespace) -> int:
+    """Hitung embedding pasal dan pertanyaan dengan sentence-transformers (butuh internet)."""
+    from .corpus import Corpus
+    from .dense import MODELS, cache_dir, encode_and_cache
+    from .evalrag import corpus_sha
+
+    corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
+    passages = [corpus.index_text(i) for i in range(len(corpus.chunks))]
+    queries = _all_queries()
+    for key in args.model or list(MODELS):
+        meta = encode_and_cache(key, passages, queries, cache_dir(ROOT, key), corpus_sha(corpus))
+        print(f"{key}: {meta['pasal']} pasal, {len(meta['pertanyaan'])} pertanyaan")
+    return 0
+
+
+def cmd_rerank(args: argparse.Namespace) -> int:
+    """Skor cross-encoder untuk pool kandidat (BM25 dan semua model embedding yang ada)."""
+    from .corpus import Corpus
+    from .dense import text_key
+    from .evalrag import build_systems, corpus_sha
+    from .rerank import POOL, RERANKERS, cache_path, score_and_cache
+
+    corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
+    systems = build_systems(corpus, ROOT)
+    first = [s for k, s in systems.items() if k == "bm25_konteks" or k.startswith("dense_")]
+    queries = {text_key(q): q for q in _all_queries()}
+    pairs = {
+        qk: sorted({ci for s in first for ci in s.search(q, POOL)}) for qk, q in queries.items()
+    }
+    passages = [corpus.index_text(i) for i in range(len(corpus.chunks))]
+    ids = [c.id for c in corpus.chunks]
+    print(f"{len(pairs)} pertanyaan, {sum(map(len, pairs.values()))} pasangan")
+    for key in args.model or list(RERANKERS):
+        score_and_cache(
+            key, pairs, queries, passages, ids, cache_path(ROOT, key), corpus_sha(corpus)
+        )
+        print(f"{key}: selesai")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="evidence")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -154,6 +211,12 @@ def main(argv: list[str] | None = None) -> int:
     ev = sub.add_parser("eval", help="jalankan evaluasi lengkap -> eval/results.json")
     ev.add_argument("--out", help="tulis ke berkas lain, tidak menimpa eval/results.json")
     ev.set_defaults(fn=cmd_eval)
+    em = sub.add_parser("embed", help="embedding pasal dan pertanyaan -> eval/cache/emb")
+    em.add_argument("--model", action="append", help="kunci model (default: semua)")
+    em.set_defaults(fn=cmd_embed)
+    rr = sub.add_parser("rerank", help="skor cross-encoder kandidat -> eval/cache/rerank")
+    rr.add_argument("--model", action="append", help="kunci reranker (default: semua)")
+    rr.set_defaults(fn=cmd_rerank)
     sub.add_parser("export", help="tulis data website (web/public/data)").set_defaults(
         fn=cmd_export
     )
