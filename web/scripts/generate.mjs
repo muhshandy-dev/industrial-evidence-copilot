@@ -3,6 +3,7 @@
 //
 //   node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl [--varian bertahan|polos]
 //                             [--set dev,test] [--shard 0 --shards 4] [--batas N] [--model utama|cpu]
+//                             [--lolos]   (hanya pertanyaan yang lolos gerbang; untuk eksperimen prompt)
 //
 // Masukan per baris: {id, set, tanya, peringkat: [indeks pasal dari peringkat 1]}, dibuat oleh
 // `evidence gen-input`. Baris keluaran yang prompt-nya sudah ada (prompt_sha sama) dilewati,
@@ -17,11 +18,13 @@ const { values: a } = parseArgs({
     in: { type: "string" }, out: { type: "string" }, varian: { type: "string", default: "bertahan" },
     shard: { type: "string", default: "0" }, shards: { type: "string", default: "1" },
     set: { type: "string" }, batas: { type: "string" }, model: { type: "string", default: "utama" },
+    lolos: { type: "boolean", default: false },
   },
 });
 const korpus = JSON.parse(readFileSync(new URL("../public/data/korpus.json", import.meta.url)));
 const baris = readFileSync(a.in, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l))
   .filter((r) => !a.set || a.set.split(",").includes(r.set))
+  .filter((r) => !a.lolos || r.lolos_gerbang)
   .filter((_, i) => i % Number(a.shards) === Number(a.shard))
   .slice(0, a.batas ? Number(a.batas) : undefined);
 const sudah = new Set(existsSync(a.out)

@@ -297,21 +297,60 @@ def cmd_gen_merge(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_nli(_: argparse.Namespace) -> int:
-    """Skor entailment untuk kalimat jawaban generatif (butuh internet)."""
+def cmd_nli(args: argparse.Namespace) -> int:
+    """Skor entailment untuk kalimat jawaban generatif (butuh internet). Dengan --out, skor baru
+    ditulis ke berkas itu saja (gabungkan dengan nli-merge); tanpa --out, langsung ke cache."""
     from .generation import (
         KONFIGURASI,
         SETS,
+        missing_nli,
         nli_pairs,
         nli_path,
         read_outputs,
-        score_nli_and_cache,
+        score_nli,
+        write_nli,
     )
 
-    parsed = [r for v in KONFIGURASI for r in read_outputs(ROOT, v, SETS)]
-    pairs = nli_pairs(parsed)
-    print(f"{len(parsed)} jawaban, {len(pairs)} pasangan premis-hipotesis")
-    score_nli_and_cache(pairs, nli_path(ROOT))
+    konf = args.konfigurasi.split(",") if args.konfigurasi else list(KONFIGURASI)
+    parsed = [r for v in konf for r in read_outputs(ROOT, v, SETS)]
+    todo = missing_nli(nli_pairs(parsed), nli_path(ROOT))
+    todo = sorted(todo)[args.shard :: args.shards]
+    print(f"{len(parsed)} jawaban, {len(todo)} pasangan baru (shard {args.shard}/{args.shards})")
+    scores = score_nli(todo) if todo else {}
+    if args.out:
+        Path(args.out).write_text(json.dumps(scores) + "\n", encoding="utf-8")
+    else:
+        write_nli(scores, nli_path(ROOT))
+    return 0
+
+
+def cmd_nli_merge(args: argparse.Namespace) -> int:
+    from .generation import nli_path, write_nli
+
+    scores: dict[str, float] = {}
+    for f in args.files:
+        scores.update(json.loads(Path(f).read_text(encoding="utf-8")))
+    write_nli(scores, nli_path(ROOT))
+    print(f"{len(scores)} skor NLI baru digabung")
+    return 0
+
+
+def cmd_gen_experiment(args: argparse.Namespace) -> int:
+    """Ringkasan eksperimen prompt di dev -> eval/eksperimen-prompt.json."""
+    from .generation import experiment
+
+    corpus, system, threshold = _generative()
+    res = experiment(ROOT, corpus, system, threshold, args.varian.split(","))
+    out = ROOT / "eval" / "eksperimen-prompt.json"
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"dev lolos gerbang: {res['n']} pertanyaan, {res['terjawab']} terjawab")
+    for k, s in res["hasil"].items():
+        print(
+            f"{k:14} generatif-benar {s['generatif_benar']:3}  benar {s['jawaban_benar']['k']:3}"
+            f"  mode {s['mode']}  tak-terjawab-dijawab {s['dijawab_padahal_tak_terjawab']['k']}"
+            f"  didukung {s['kalimat_didukung']['k']}/{s['kalimat_didukung']['n']}"
+        )
+    print(f"terpilih: {res['terpilih']}")
     return 0
 
 
@@ -374,9 +413,18 @@ def main(argv: list[str] | None = None) -> int:
     gm = sub.add_parser("gen-merge", help="gabungkan keluaran shard generator")
     gm.add_argument("files", nargs="+")
     gm.set_defaults(fn=cmd_gen_merge)
-    sub.add_parser("nli", help="skor NLI kalimat jawaban -> eval/cache/nli").set_defaults(
-        fn=cmd_nli
-    )
+    nl = sub.add_parser("nli", help="skor NLI kalimat jawaban -> eval/cache/nli")
+    nl.add_argument("--konfigurasi", help="daftar konfigurasi (default: konfigurasi situs)")
+    nl.add_argument("--shard", type=int, default=0)
+    nl.add_argument("--shards", type=int, default=1)
+    nl.add_argument("--out", help="tulis skor baru ke berkas ini, bukan ke cache")
+    nl.set_defaults(fn=cmd_nli)
+    nm = sub.add_parser("nli-merge", help="gabungkan skor NLI dari shard")
+    nm.add_argument("files", nargs="+")
+    nm.set_defaults(fn=cmd_nli_merge)
+    ge = sub.add_parser("gen-eksperimen", help="ringkasan eksperimen prompt di dev")
+    ge.add_argument("--varian", default="bertahan,k1,k2,k3,k4")
+    ge.set_defaults(fn=cmd_gen_experiment)
     es2 = sub.add_parser("eval-sealed", help="set tersegel, sekali jalan -> eval/sealed/hasil.json")
     es2.add_argument("action", choices=["input", "run"])
     es2.add_argument("--out", default="masukan.jsonl")

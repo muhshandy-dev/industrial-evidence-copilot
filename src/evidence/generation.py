@@ -153,20 +153,19 @@ def nli_pairs(parsed: list[dict]) -> list[tuple[str, str]]:
     return list(dict.fromkeys(pairs))
 
 
-def score_nli_and_cache(pairs: list[tuple[str, str]], out: Path) -> None:
-    """Hitung peluang entailment (butuh internet; dijalankan di GitHub Actions)."""
+def score_nli(pairs: list[tuple[str, str]]) -> dict[str, float]:
+    """Peluang entailment per pasangan (butuh internet; dijalankan di GitHub Actions)."""
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-    old = json.loads(out.read_text(encoding="utf-8"))["skor"] if out.exists() else {}
-    todo = [(p, h) for p, h in pairs if f"{_h(p)}:{_h(h)}" not in old]
     repo, rev = NLI_MODEL
     tok = AutoTokenizer.from_pretrained(repo, revision=rev)
     model = AutoModelForSequenceClassification.from_pretrained(repo, revision=rev).eval()
     ent = {v.lower(): k for k, v in model.config.id2label.items()}["entailment"]
+    out: dict[str, float] = {}
     with torch.no_grad():
-        for i in range(0, len(todo), 16):
-            batch = todo[i : i + 16]
+        for i in range(0, len(pairs), 16):
+            batch = pairs[i : i + 16]
             enc = tok(
                 [p for p, _ in batch],
                 [h for _, h in batch],
@@ -177,10 +176,28 @@ def score_nli_and_cache(pairs: list[tuple[str, str]], out: Path) -> None:
             )
             prob = torch.softmax(model(**enc).logits, dim=-1)[:, ent].tolist()
             for (p, h), s in zip(batch, prob, strict=True):
-                old[f"{_h(p)}:{_h(h)}"] = round(float(s), 4)
+                out[f"{_h(p)}:{_h(h)}"] = round(float(s), 4)
+            if (i // 16) % 20 == 0:
+                print(f"NLI {i + len(batch)}/{len(pairs)}", flush=True)
+    return out
+
+
+def missing_nli(pairs: list[tuple[str, str]], out: Path) -> list[tuple[str, str]]:
+    old = json.loads(out.read_text(encoding="utf-8"))["skor"] if out.exists() else {}
+    return [(p, h) for p, h in pairs if f"{_h(p)}:{_h(h)}" not in old]
+
+
+def write_nli(scores: dict[str, float], out: Path) -> None:
+    """Tambahkan skor ke cache NLI (skor lama dipertahankan)."""
+    old = json.loads(out.read_text(encoding="utf-8"))["skor"] if out.exists() else {}
+    old.update(scores)
     out.parent.mkdir(parents=True, exist_ok=True)
-    payload = {"model": repo, "revisi": rev, "skor": dict(sorted(old.items()))}
+    payload = {"model": NLI_MODEL[0], "revisi": NLI_MODEL[1], "skor": dict(sorted(old.items()))}
     out.write_text(json.dumps(payload, indent=0) + "\n", encoding="utf-8")
+
+
+def score_nli_and_cache(pairs: list[tuple[str, str]], out: Path) -> None:
+    write_nli(score_nli(missing_nli(pairs, out)), out)
 
 
 class NliCache:
@@ -381,3 +398,81 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
         if varian == "bertahan":
             out["model"] = {k: parsed[0][k] for k in ("model", "revisi", "dtype")}
     return out if any_output else None
+
+
+# ---------- 6. eksperimen prompt (dev saja) ----------
+
+# Aturan pilih kandidat prompt, ditulis sebelum hasil eksperimen terlihat
+# (docs/eksperimen-prompt.md):
+# 1. Hanya data dev, hanya pertanyaan yang lolos gerbang (yang lain tidak pernah sampai ke model).
+# 2. Ukuran utama: jumlah pertanyaan terjawab yang dijawab GENERATIF dan benar (sitasi pasal emas
+#    dan fakta kunci ada) dengan model utama 1,5B.
+# 3. Syarat: pertanyaan tak terjawab yang dijawab tidak lebih banyak dari prompt "bertahan", dan
+#    kalimat generatif yang didukung NLI paling sedikit 80% (bila ada 10 kalimat atau lebih).
+# 4. Seri (selisih 1 pertanyaan atau kurang): pilih yang lebih baik di model CPU 0,5B, lalu yang
+#    paling sederhana (urutan: bertahan, k1, k4, k2, k3).
+URUTAN_SEDERHANA = ("bertahan", "k1", "k4", "k2", "k3")
+
+
+def experiment(root: Path, corpus, system, threshold: float, varian: list[str]) -> dict:
+    from .evalrag import answer_all
+
+    rows = load_set(root, "dev")
+    gates = {g["id"]: g for g in gen_input(corpus, system, rows, "dev", threshold)}
+    rows = [r for r in rows if gates[r["id"]]["lolos_gerbang"]]
+    ext_by = {r["id"]: r for r in answer_all(corpus, system, rows, threshold)}
+    ids = [c.id for c in corpus.chunks]
+    nli = NliCache(root)
+    out: dict = {
+        "aturan": [
+            "dev saja, pertanyaan yang lolos gerbang",
+            "utama: terjawab, mode generatif, dan benar (model 1,5B)",
+            "syarat: tak terjawab yang dijawab <= bertahan; kalimat didukung NLI >= 80%",
+            "seri (selisih <= 1): lebih baik di 0,5B, lalu paling sederhana",
+        ],
+        "n": len(rows),
+        "terjawab": sum(bool(r["gold"]) for r in rows),
+        "hasil": {},
+    }
+    for v in varian:
+        for konf in (v, f"{v}-cpu"):
+            parsed = {r["id"]: r for r in read_outputs(root, konf, ("dev",))}
+            recs = [
+                judge(parsed[r["id"]], r, gates[r["id"]], ext_by.get(r["id"]), nli)
+                for r in rows
+                if _fresh(parsed.get(r["id"]), gates[r["id"]], ids)
+            ]
+            if not recs:
+                continue
+            s = summarize(recs)
+            s["belum_dibangkitkan"] = len(rows) - len(recs)
+            s["generatif_benar"] = sum(
+                1 for r in recs if r["terjawab"] and r["mode"] == "generatif" and r.get("benar")
+            )
+            out["hasil"][konf] = s
+    out["terpilih"] = choose_prompt(out["hasil"])
+    return out
+
+
+def choose_prompt(hasil: dict) -> str | None:
+    base = hasil.get("bertahan")
+    if base is None:
+        return None
+    ok = []
+    for v in URUTAN_SEDERHANA:
+        s = hasil.get(v)
+        if s is None or s["belum_dibangkitkan"]:
+            continue
+        if s["dijawab_padahal_tak_terjawab"]["k"] > base["dijawab_padahal_tak_terjawab"]["k"]:
+            continue
+        kal = s["kalimat_didukung"]
+        if kal["n"] >= 10 and kal["nilai"] < 0.8:
+            continue
+        ok.append(v)
+    if not ok:
+        return None
+    best = max(hasil[v]["generatif_benar"] for v in ok)
+    tied = [v for v in ok if best - hasil[v]["generatif_benar"] <= 1]
+    cpu = {v: hasil.get(f"{v}-cpu", {}).get("generatif_benar", -1) for v in tied}
+    top_cpu = max(cpu.values())
+    return next(v for v in tied if cpu[v] == top_cpu)

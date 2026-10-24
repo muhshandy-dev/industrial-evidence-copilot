@@ -1,0 +1,168 @@
+{
+ "aturan": [
+  "dev saja, pertanyaan yang lolos gerbang",
+  "utama: terjawab, mode generatif, dan benar (model 1,5B)",
+  "syarat: tak terjawab yang dijawab <= bertahan; kalimat didukung NLI >= 80%",
+  "seri (selisih <= 1): lebih baik di 0,5B, lalu paling sederhana"
+ ],
+ "n": 53,
+ "terjawab": 50,
+ "hasil": {
+  "bertahan": {
+   "n": 53,
+   "mode": {
+    "tolak_model": 26,
+    "cadangan_ekstraktif": 27
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 24,
+    "nilai": 0.48,
+    "bawah": 0.348,
+    "atas": 0.6149
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.5615
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 24,
+    "nilai": 0.48,
+    "bawah": 0.348,
+    "atas": 0.6149
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "sitasi_semua_sah": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "kalimat_didukung": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 18,
+    "nilai": 0.3396,
+    "bawah": 0.2269,
+    "atas": 0.4741
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 28.4,
+    "p90": 44.1
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 0
+  },
+  "bertahan-cpu": {
+   "n": 53,
+   "mode": {
+    "cadangan_ekstraktif": 36,
+    "generatif": 13,
+    "tolak_model": 4
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 31,
+    "nilai": 0.62,
+    "bawah": 0.4815,
+    "atas": 0.7414
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 2,
+    "nilai": 0.6667,
+    "bawah": 0.2077,
+    "atas": 0.9385
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 4,
+    "nilai": 0.08,
+    "bawah": 0.0315,
+    "atas": 0.1884
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 12,
+    "k": 11,
+    "nilai": 0.9167,
+    "bawah": 0.6461,
+    "atas": 0.9851
+   },
+   "sitasi_semua_sah": {
+    "n": 12,
+    "k": 8,
+    "nilai": 0.6667,
+    "bawah": 0.3906,
+    "atas": 0.8619
+   },
+   "kalimat_didukung": {
+    "n": 24,
+    "k": 3,
+    "nilai": 0.125,
+    "bawah": 0.0434,
+    "atas": 0.31
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 13,
+    "k": 1,
+    "nilai": 0.0769,
+    "bawah": 0.0137,
+    "atas": 0.3331
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 25,
+    "k": 3,
+    "nilai": 0.12,
+    "bawah": 0.0417,
+    "atas": 0.2996
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 43,
+    "nilai": 0.8113,
+    "bawah": 0.6864,
+    "atas": 0.8941
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 13.5,
+    "p90": 25.5
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 0
+  }
+ },
+ "terpilih": "bertahan"
+}

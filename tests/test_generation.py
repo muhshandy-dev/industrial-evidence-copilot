@@ -98,3 +98,31 @@ def test_reranker_situs_sama_dengan_evaluasi():
     )  # fmt: skip
     corpus = Corpus.read(ROOT / "web/public/data/korpus.json")
     assert json.loads(out.stdout) == [corpus.index_text(i) for i in range(len(corpus.chunks))]
+
+
+def _hasil(gb: int, tak: int = 0, didukung=(0, 0), belum: int = 0) -> dict:
+    k, n = didukung
+    return {
+        "generatif_benar": gb,
+        "belum_dibangkitkan": belum,
+        "dijawab_padahal_tak_terjawab": {"k": tak},
+        "kalimat_didukung": {"k": k, "n": n, "nilai": k / n if n else 0.0},
+    }
+
+
+def test_aturan_pilih_prompt():
+    from evidence.generation import choose_prompt
+
+    base = _hasil(0)
+    # Terbaik di 1,5B menang bila memenuhi syarat.
+    assert choose_prompt({"bertahan": base, "k1": _hasil(10), "k2": _hasil(20)}) == "k2"
+    # Lebih banyak menjawab pertanyaan tak terjawab daripada bertahan: gugur.
+    assert choose_prompt({"bertahan": base, "k1": _hasil(10), "k2": _hasil(20, tak=1)}) == "k1"
+    # Dukungan NLI di bawah 80% (dengan 10 kalimat atau lebih): gugur.
+    assert choose_prompt({"bertahan": base, "k1": _hasil(10, didukung=(7, 10))}) == "bertahan"
+    # Seri (selisih <= 1): yang lebih baik di model CPU, lalu yang paling sederhana.
+    h = {"bertahan": base, "k1": _hasil(10), "k3": _hasil(11), "k3-cpu": _hasil(5)}
+    assert choose_prompt(h) == "k3"
+    assert choose_prompt({"bertahan": base, "k1": _hasil(10), "k3": _hasil(11)}) == "k1"
+    # Kandidat yang belum lengkap tidak dipilih.
+    assert choose_prompt({"bertahan": base, "k1": _hasil(30, belum=2)}) == "bertahan"
