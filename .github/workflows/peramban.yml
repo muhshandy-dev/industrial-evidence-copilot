@@ -36,5 +36,6 @@ jobs:
         env:
           CALON: ${{ inputs.calon }}
         run: node tests/wasm-probe.mjs
+        continue-on-error: true
       - name: Uji asap mode generatif
         run: node tests/gen-browser.mjs

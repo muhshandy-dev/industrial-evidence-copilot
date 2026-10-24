@@ -191,12 +191,38 @@ def cmd_rerank(args: argparse.Namespace) -> int:
     }
     passages = [corpus.index_text(i) for i in range(len(corpus.chunks))]
     ids = [c.id for c in corpus.chunks]
+    # Shard per pertanyaan (urutan kunci tetap), supaya beberapa runner bekerja paralel.
+    keys = sorted(pairs)[args.shard :: args.shards]
+    pairs = {k: pairs[k] for k in keys}
     print(f"{len(pairs)} pertanyaan, {sum(map(len, pairs.values()))} pasangan")
     for key in args.model or list(RERANKERS):
-        score_and_cache(
-            key, pairs, queries, passages, ids, cache_path(ROOT, key), corpus_sha(corpus)
-        )
-        print(f"{key}: selesai")
+        out = cache_path(ROOT, key)
+        if args.shards > 1:
+            out = Path(args.out_dir) / f"{key}.shard-{args.shard}.json"
+        score_and_cache(key, pairs, queries, passages, ids, out, corpus_sha(corpus))
+        print(f"{key}: selesai -> {out}")
+    return 0
+
+
+def cmd_rerank_merge(args: argparse.Namespace) -> int:
+    """Gabungkan skor reranker dari beberapa shard ke eval/cache/rerank/<kunci>/skor.json."""
+    from .rerank import RERANKERS, cache_path
+
+    by_repo = {repo: key for key, (repo, _, _) in RERANKERS.items()}
+    merged: dict[str, dict] = {}
+    for f in args.files:
+        part = json.loads(Path(f).read_text(encoding="utf-8"))
+        key = by_repo[part["model"]]
+        m = merged.setdefault(key, {**part, "skor": {}})
+        for k in ("model", "revisi", "korpus_sha256"):
+            if m[k] != part[k]:
+                raise SystemExit(f"{f}: {k} berbeda dari shard lain")
+        m["skor"].update(part["skor"])
+    for key, m in merged.items():
+        out = cache_path(ROOT, key)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(m, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"{key}: {len(m['skor'])} pertanyaan -> {out}")
     return 0
 
 
@@ -322,7 +348,13 @@ def main(argv: list[str] | None = None) -> int:
     em.set_defaults(fn=cmd_embed)
     rr = sub.add_parser("rerank", help="skor cross-encoder kandidat -> eval/cache/rerank")
     rr.add_argument("--model", action="append", help="kunci reranker (default: semua)")
+    rr.add_argument("--shard", type=int, default=0)
+    rr.add_argument("--shards", type=int, default=1)
+    rr.add_argument("--out-dir", default="rerank-shard", help="tempat skor shard (shards > 1)")
     rr.set_defaults(fn=cmd_rerank)
+    rm = sub.add_parser("rerank-merge", help="gabungkan skor reranker dari shard")
+    rm.add_argument("files", nargs="+")
+    rm.set_defaults(fn=cmd_rerank_merge)
     gi = sub.add_parser("gen-input", help="masukan generator (peringkat pasal dan gerbang)")
     gi.add_argument("--set", default="dev,test,stress", help="dev,test,stress,injeksi")
     gi.add_argument("--out")
