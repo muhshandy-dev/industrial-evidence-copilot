@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id" data-theme="terang">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Industrial Evidence Copilot</title>
+  <meta name="description" content="Tanya jawab atas peraturan keselamatan dan kesehatan kerja (K3) Indonesia. Setiap jawaban dikutip langsung dari pasal sumbernya dan dapat diperiksa.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/newsreader-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <script src="js/theme.js?v=1"></script>
+</head>
+<body>
+  <a class="lewati" href="#utama">Lewati ke isi utama</a>
+  <header class="bar">
+    <a class="merek" href="#/" aria-label="Industrial Evidence Copilot, ke ruang kerja">
+      <svg class="merek-tanda" viewBox="0 0 28 28" aria-hidden="true"><rect x="3" y="3" width="22" height="22" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10h12M8 14h12M8 18h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="21" cy="19" r="3.4" fill="var(--aksen)"/></svg>
+      <span class="merek-nama">Industrial Evidence Copilot</span>
+    </a>
+    <nav class="nav" aria-label="Halaman">
+      <a href="#/" data-nav="ruang">Ruang kerja</a>
+      <a href="#/evaluasi" data-nav="evaluasi">Evaluasi</a>
+      <a href="#/metode" data-nav="metode">Cara kerja dan batas</a>
+    </nav>
+    <div class="bar-kanan">
+      <span class="mode" id="mode-lencana" tabindex="0" role="note" aria-describedby="mode-tip">
+        <span class="mode-titik" aria-hidden="true"></span>Jawaban ekstraktif, di peramban Anda
+        <span class="mode-tip" id="mode-tip" role="tooltip">Kalimat jawaban disalin persis dari pasal. Tidak ada model bahasa yang menulis ulang, dan pertanyaan Anda tidak dikirim ke server mana pun.</span>
+      </span>
+      <button class="tombol-ikon" id="tema" type="button" aria-label="Ganti tema terang atau gelap">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="utama" tabindex="-1">
+    <div class="memuat" id="memuat" role="status" aria-live="polite">
+      <div class="memuat-batang"><span id="memuat-isi"></span></div>
+      <p id="memuat-teks">Memuat indeks pencarian…</p>
+    </div>
+  </main>
+  <noscript><p class="noscript">Situs ini membutuhkan JavaScript karena pencarian berjalan di peramban Anda.</p></noscript>
+  <script type="module" src="js/main.js?v=1"></script>
+</body>
+</html>
