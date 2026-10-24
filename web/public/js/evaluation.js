@@ -109,6 +109,19 @@ function bagianGeneratif(ev) {
     blokInjeksi);
 }
 
+// Ringkasan model embedding dan reranker, dari selisih berpasangan di data uji.
+function catatanPadat(ps, sel, poin) {
+  const rr = Object.keys(ps).filter((k) => k.startsWith("bm25_konteks+"));
+  const dense = sel.hybrid_e5_large_vs_bm25_konteks;
+  if (!dense && !rr.length) return h("p", { class: "catatan" }, "Model embedding dan reranker belum dievaluasi di versi ini.");
+  const nama = (k) => ps[k].label;
+  const teks = [];
+  if (dense) teks.push(`Gabungan BM25 dan e5 terbesar dibanding BM25 dengan konteks: ${poin(dense["mrr@10"])} MRR.`);
+  for (const k of rr) teks.push(`${nama(k)} dibanding BM25 dengan konteks saja: ${poin(sel[`${k}_vs_bm25_konteks`]["mrr@10"])} MRR, pasal tepat di peringkat 1 pada ${pct(ps[k].metrik.test["hit@1"].nilai)} pertanyaan uji.`);
+  teks.push("Selisih ini dihitung pada data uji yang sama dan tanpa koreksi untuk banyak perbandingan. Model embedding dan reranker dijalankan offline di GitHub Actions; kolom \"dipakai di situs\" hanya menandai cara yang benar-benar berjalan di peramban.");
+  return h("p", { class: "catatan" }, teks.join(" "));
+}
+
 export function mountEvaluation(main, { evaluasi: ev }) {
   const ps = ev.pencarian.per_sistem;
   const kirim = ev.metode_dikirim;
@@ -154,13 +167,13 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const poin = (d) => `${d.selisih > 0 ? "+" : ""}${(d.selisih * 100).toFixed(1).replace(".", ",")} poin (interval ${(d.bawah * 100).toFixed(1).replace(".", ",")} sampai ${(d.atas * 100).toFixed(1).replace(".", ",")})`;
   const metode = h("section", { "aria-labelledby": "e-metode" },
     h("h2", { id: "e-metode" }, "Perbandingan metode pencarian"),
-    h("p", {}, "Lima cara mencari diuji pada pertanyaan yang sama. Metode yang dipakai situs dipilih dari kolom MRR data dev. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja."),
+    h("p", {}, `${Object.keys(ps).length} cara mencari diuji pada pertanyaan yang sama: BM25, LSA, model embedding e5 (multilingual, tiga ukuran), gabungan BM25 dan e5, serta reranker cross-encoder yang menilai ulang 20 pasal teratas. Metode situs dipilih dari kolom MRR data dev, di antara cara yang benar-benar dijalankan situs. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja.`),
     h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan metode, dapat digulir" },
       h("table", { class: "tabel" },
         h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col", class: "num" }, "MRR data dev (dasar pemilihan)"), h("th", { scope: "col", class: "num" }, "Peringkat 1 (uji)"), h("th", { scope: "col", class: "num" }, "Lima teratas (uji)"), h("th", { scope: "col", class: "num" }, "MRR (uji)"))),
         h("tbody", {}, barisMetode))),
-    h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Pada MRR data uji, BM25 dengan stem dan konteks lebih baik daripada BM25 polos: ${poin(sel.bm25_konteks_vs_bm25_polos["mrr@10"])}. Gabungan BM25 dan LSA tidak lebih baik daripada BM25 dengan konteks: ${poin(sel.hybrid_vs_bm25_konteks["mrr@10"])}. Ini tiga perbandingan tanpa koreksi, dan selisih peringkat lima teratas tidak berbeda nyata. Karena itu situs hanya memuat BM25. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`),
-    h("p", { class: "catatan" }, "Model embedding pra-latih (misalnya e5) belum dibandingkan karena unduhan modelnya diblokir di lingkungan pengembangan. Jangan membaca tabel ini sebagai bukti bahwa BM25 lebih baik daripada embedding pra-latih."));
+    h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Pada MRR data uji, BM25 dengan stem dan konteks lebih baik daripada BM25 polos: ${poin(sel.bm25_konteks_vs_bm25_polos["mrr@10"])}. Gabungan BM25 dan LSA tidak lebih baik daripada BM25 dengan konteks: ${poin(sel.hybrid_vs_bm25_konteks["mrr@10"])}. Ini tiga perbandingan tanpa koreksi, dan selisih peringkat lima teratas tidak berbeda nyata. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`),
+    catatanPadat(ps, sel, poin));
 
   const gaya = ps[kirim].per_gaya_test;
   const tekanBlok = tekan ? h("div", { class: "kotak-jujur" },

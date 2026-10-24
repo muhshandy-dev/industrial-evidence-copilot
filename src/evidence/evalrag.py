@@ -138,7 +138,11 @@ def build_systems(corpus: Corpus, root: Path | None = None) -> dict[str, System]
         rc = RerankCache.load(root, rkey, sha, ids)
         if rc is None:
             continue
-        for first in [k for k in list(out) if k == "bm25_konteks" or k.startswith("hybrid_e5")]:
+        # Hanya sistem tahap pertama (tanpa reranker) yang di-rerank; reranker tidak ditumpuk.
+        firsts = [
+            k for k in out if "+" not in k and (k == "bm25_konteks" or k.startswith("hybrid_e5"))
+        ]
+        for first in firsts:
             f = out[first]
             out[f"{first}+{rkey}"] = System(
                 f"{first}+{rkey}", f"{f.label} + rerank {repo.split('/')[-1]}", f.retriever,
@@ -241,7 +245,7 @@ def eval_retrieval(corpus: Corpus, systems: dict[str, System], rows: list[dict])
             pairs.append((key, key.split("+")[0]))
         elif key.startswith(("dense_", "hybrid_e5")):
             pairs.append((key, "bm25_konteks"))
-        if key.startswith("hybrid_e5"):
+        if key.startswith("hybrid_e5") and "+" not in key:
             pairs.append((key, "dense_" + key.removeprefix("hybrid_")))
     for a, b in pairs:
         d: dict = {}

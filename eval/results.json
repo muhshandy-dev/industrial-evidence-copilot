@@ -883,6 +883,2270 @@
       "atas": 0.7989
      }
     }
+   },
+   "dense_e5_small": {
+    "label": "Dense multilingual-e5-small",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.7231,
+       "bawah": 0.6,
+       "atas": 0.8308
+      },
+      "hit@3": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9692
+      },
+      "hit@5": {
+       "nilai": 0.9231,
+       "bawah": 0.8462,
+       "atas": 0.9846
+      },
+      "hit@10": {
+       "nilai": 0.9538,
+       "bawah": 0.8923,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8053,
+       "bawah": 0.7238,
+       "atas": 0.884
+      },
+      "recall@5": {
+       "nilai": 0.9231,
+       "bawah": 0.8462,
+       "atas": 0.9846
+      },
+      "recall@10": {
+       "nilai": 0.9538,
+       "bawah": 0.8923,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8417,
+       "bawah": 0.7711,
+       "atas": 0.9091
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.7188,
+       "bawah": 0.625,
+       "atas": 0.8021
+      },
+      "hit@3": {
+       "nilai": 0.8542,
+       "bawah": 0.7812,
+       "atas": 0.9271
+      },
+      "hit@5": {
+       "nilai": 0.8854,
+       "bawah": 0.8229,
+       "atas": 0.9479
+      },
+      "hit@10": {
+       "nilai": 0.9062,
+       "bawah": 0.8438,
+       "atas": 0.9583
+      },
+      "mrr@10": {
+       "nilai": 0.7914,
+       "bawah": 0.719,
+       "atas": 0.8628
+      },
+      "recall@5": {
+       "nilai": 0.8854,
+       "bawah": 0.8229,
+       "atas": 0.9479
+      },
+      "recall@10": {
+       "nilai": 0.9062,
+       "bawah": 0.8438,
+       "atas": 0.9583
+      },
+      "recall@20": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8199,
+       "bawah": 0.7533,
+       "atas": 0.8847
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-small",
+     "revisi": "614241f622f53c4eeff9890bdc4f31cfecc418b3"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.7812,
+       "bawah": 0.625,
+       "atas": 0.9062
+      },
+      "hit@5": {
+       "nilai": 0.8438,
+       "bawah": 0.7188,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.8125,
+       "bawah": 0.6719,
+       "atas": 0.9375
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.6875,
+       "bawah": 0.5781,
+       "atas": 0.7969
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8281,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.7809,
+       "bawah": 0.6989,
+       "atas": 0.8603
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.7083,
+      "bawah": 0.6146,
+      "atas": 0.8021
+     },
+     "hit@5": {
+      "nilai": 0.8854,
+      "bawah": 0.8229,
+      "atas": 0.9479
+     },
+     "mrr@10": {
+      "nilai": 0.7845,
+      "bawah": 0.7151,
+      "atas": 0.8566
+     }
+    }
+   },
+   "hybrid_e5_small": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF)",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8154,
+       "bawah": 0.7231,
+       "atas": 0.9077
+      },
+      "hit@3": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9538
+      },
+      "hit@5": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9538
+      },
+      "hit@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8668,
+       "bawah": 0.7938,
+       "atas": 0.9308
+      },
+      "recall@5": {
+       "nilai": 0.8923,
+       "bawah": 0.8154,
+       "atas": 0.9538
+      },
+      "recall@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8944,
+       "bawah": 0.836,
+       "atas": 0.9473
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.7188,
+       "bawah": 0.625,
+       "atas": 0.8021
+      },
+      "hit@3": {
+       "nilai": 0.875,
+       "bawah": 0.8021,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.9167,
+       "bawah": 0.8646,
+       "atas": 0.9688
+      },
+      "hit@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8118,
+       "bawah": 0.7477,
+       "atas": 0.8751
+      },
+      "recall@5": {
+       "nilai": 0.9167,
+       "bawah": 0.8646,
+       "atas": 0.9688
+      },
+      "recall@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8525,
+       "bawah": 0.8021,
+       "atas": 0.9023
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-small",
+     "revisi": "614241f622f53c4eeff9890bdc4f31cfecc418b3"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.6562,
+       "bawah": 0.5,
+       "atas": 0.8125
+      },
+      "hit@5": {
+       "nilai": 0.875,
+       "bawah": 0.75,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.7624,
+       "bawah": 0.6376,
+       "atas": 0.8761
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.75,
+       "bawah": 0.6406,
+       "atas": 0.8438
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.875,
+       "atas": 0.9844
+      },
+      "mrr@10": {
+       "nilai": 0.8365,
+       "bawah": 0.7661,
+       "atas": 0.9046
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.7083,
+      "bawah": 0.6146,
+      "atas": 0.8021
+     },
+     "hit@5": {
+      "nilai": 0.9167,
+      "bawah": 0.8646,
+      "atas": 0.9688
+     },
+     "mrr@10": {
+      "nilai": 0.8066,
+      "bawah": 0.7444,
+      "atas": 0.8688
+     }
+    }
+   },
+   "dense_e5_base": {
+    "label": "Dense multilingual-e5-base",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.7692,
+       "bawah": 0.6615,
+       "atas": 0.8615
+      },
+      "hit@3": {
+       "nilai": 0.9077,
+       "bawah": 0.8308,
+       "atas": 0.9692
+      },
+      "hit@5": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
+      },
+      "hit@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8484,
+       "bawah": 0.7766,
+       "atas": 0.915
+      },
+      "recall@5": {
+       "nilai": 0.9231,
+       "bawah": 0.8615,
+       "atas": 0.9846
+      },
+      "recall@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8784,
+       "bawah": 0.8167,
+       "atas": 0.9335
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.75,
+       "bawah": 0.6562,
+       "atas": 0.8333
+      },
+      "hit@3": {
+       "nilai": 0.9062,
+       "bawah": 0.8438,
+       "atas": 0.9583
+      },
+      "hit@5": {
+       "nilai": 0.9167,
+       "bawah": 0.8542,
+       "atas": 0.9688
+      },
+      "hit@10": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "mrr@10": {
+       "nilai": 0.8295,
+       "bawah": 0.7652,
+       "atas": 0.8885
+      },
+      "recall@5": {
+       "nilai": 0.9167,
+       "bawah": 0.8542,
+       "atas": 0.9688
+      },
+      "recall@10": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "recall@20": {
+       "nilai": 0.9688,
+       "bawah": 0.9375,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8566,
+       "bawah": 0.7989,
+       "atas": 0.9081
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-base",
+     "revisi": "d128750597153bb5987e10b1c3493a34e5a4502a"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.8438,
+       "bawah": 0.7188,
+       "atas": 0.9688
+      },
+      "hit@5": {
+       "nilai": 0.8438,
+       "bawah": 0.7188,
+       "atas": 0.9688
+      },
+      "mrr@10": {
+       "nilai": 0.8477,
+       "bawah": 0.7188,
+       "atas": 0.9688
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.7031,
+       "bawah": 0.5938,
+       "atas": 0.8125
+      },
+      "hit@5": {
+       "nilai": 0.9531,
+       "bawah": 0.9062,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8205,
+       "bawah": 0.749,
+       "atas": 0.888
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.7396,
+      "bawah": 0.6458,
+      "atas": 0.8229
+     },
+     "hit@5": {
+      "nilai": 0.9167,
+      "bawah": 0.8542,
+      "atas": 0.9688
+     },
+     "mrr@10": {
+      "nilai": 0.8226,
+      "bawah": 0.7582,
+      "atas": 0.8828
+     }
+    }
+   },
+   "hybrid_e5_base": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF)",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.7692,
+       "bawah": 0.6615,
+       "atas": 0.8615
+      },
+      "hit@3": {
+       "nilai": 0.9077,
+       "bawah": 0.8462,
+       "atas": 0.9692
+      },
+      "hit@5": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
+      },
+      "hit@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8486,
+       "bawah": 0.7772,
+       "atas": 0.9157
+      },
+      "recall@5": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
+      },
+      "recall@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8819,
+       "bawah": 0.8241,
+       "atas": 0.9349
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.7708,
+       "bawah": 0.6771,
+       "atas": 0.8542
+      },
+      "hit@3": {
+       "nilai": 0.9062,
+       "bawah": 0.8438,
+       "atas": 0.9583
+      },
+      "hit@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@10": {
+       "nilai": 0.9583,
+       "bawah": 0.9167,
+       "atas": 0.9896
+      },
+      "mrr@10": {
+       "nilai": 0.8427,
+       "bawah": 0.7785,
+       "atas": 0.9002
+      },
+      "recall@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "recall@10": {
+       "nilai": 0.9583,
+       "bawah": 0.9167,
+       "atas": 0.9896
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8716,
+       "bawah": 0.8172,
+       "atas": 0.9196
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-base",
+     "revisi": "d128750597153bb5987e10b1c3493a34e5a4502a"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.7188,
+       "bawah": 0.5625,
+       "atas": 0.875
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8125,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.7901,
+       "bawah": 0.6635,
+       "atas": 0.9021
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.7969,
+       "bawah": 0.7031,
+       "atas": 0.8906
+      },
+      "hit@5": {
+       "nilai": 0.9688,
+       "bawah": 0.9219,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.869,
+       "bawah": 0.8016,
+       "atas": 0.931
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.7708,
+      "bawah": 0.6771,
+      "atas": 0.8542
+     },
+     "hit@5": {
+      "nilai": 0.9479,
+      "bawah": 0.9062,
+      "atas": 0.9896
+     },
+     "mrr@10": {
+      "nilai": 0.8427,
+      "bawah": 0.7785,
+      "atas": 0.9002
+     }
+    }
+   },
+   "dense_e5_large": {
+    "label": "Dense multilingual-e5-large",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.7692,
+       "bawah": 0.6615,
+       "atas": 0.8615
+      },
+      "hit@3": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
+      },
+      "hit@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8658,
+       "bawah": 0.8,
+       "atas": 0.9231
+      },
+      "recall@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8994,
+       "bawah": 0.8493,
+       "atas": 0.9427
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.8021,
+       "bawah": 0.7188,
+       "atas": 0.875
+      },
+      "hit@3": {
+       "nilai": 0.9062,
+       "bawah": 0.8438,
+       "atas": 0.9583
+      },
+      "hit@5": {
+       "nilai": 0.9167,
+       "bawah": 0.8646,
+       "atas": 0.9688
+      },
+      "hit@10": {
+       "nilai": 0.9583,
+       "bawah": 0.9167,
+       "atas": 0.9896
+      },
+      "mrr@10": {
+       "nilai": 0.8606,
+       "bawah": 0.7998,
+       "atas": 0.9169
+      },
+      "recall@5": {
+       "nilai": 0.9167,
+       "bawah": 0.8646,
+       "atas": 0.9688
+      },
+      "recall@10": {
+       "nilai": 0.9583,
+       "bawah": 0.9167,
+       "atas": 0.9896
+      },
+      "recall@20": {
+       "nilai": 0.9688,
+       "bawah": 0.9375,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8844,
+       "bawah": 0.8316,
+       "atas": 0.9327
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-large",
+     "revisi": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.7812,
+       "bawah": 0.625,
+       "atas": 0.9062
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8125,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8417,
+       "bawah": 0.7281,
+       "atas": 0.9406
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.7188,
+       "atas": 0.9062
+      },
+      "hit@5": {
+       "nilai": 0.9219,
+       "bawah": 0.8438,
+       "atas": 0.9844
+      },
+      "mrr@10": {
+       "nilai": 0.8701,
+       "bawah": 0.7978,
+       "atas": 0.9375
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.7917,
+      "bawah": 0.7083,
+      "atas": 0.875
+     },
+     "hit@5": {
+      "nilai": 0.9167,
+      "bawah": 0.8646,
+      "atas": 0.9688
+     },
+     "mrr@10": {
+      "nilai": 0.8554,
+      "bawah": 0.7944,
+      "atas": 0.9144
+     }
+    }
+   },
+   "hybrid_e5_large": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF)",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8308,
+       "bawah": 0.7385,
+       "atas": 0.9077
+      },
+      "hit@3": {
+       "nilai": 0.9385,
+       "bawah": 0.8769,
+       "atas": 0.9846
+      },
+      "hit@5": {
+       "nilai": 0.9538,
+       "bawah": 0.9077,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8878,
+       "bawah": 0.8231,
+       "atas": 0.9462
+      },
+      "recall@5": {
+       "nilai": 0.9538,
+       "bawah": 0.9077,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9147,
+       "bawah": 0.864,
+       "atas": 0.9599
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.7292,
+       "atas": 0.8854
+      },
+      "hit@3": {
+       "nilai": 0.9062,
+       "bawah": 0.8438,
+       "atas": 0.9583
+      },
+      "hit@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@10": {
+       "nilai": 0.9688,
+       "bawah": 0.9375,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8643,
+       "bawah": 0.8021,
+       "atas": 0.9191
+      },
+      "recall@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "recall@10": {
+       "nilai": 0.9688,
+       "bawah": 0.9375,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.8898,
+       "bawah": 0.8366,
+       "atas": 0.9367
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-large",
+     "revisi": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.6875,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8438,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.851,
+       "bawah": 0.7364,
+       "atas": 0.95
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.7188,
+       "atas": 0.9062
+      },
+      "hit@5": {
+       "nilai": 0.9531,
+       "bawah": 0.9062,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.871,
+       "bawah": 0.8052,
+       "atas": 0.9348
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.8125,
+      "bawah": 0.7292,
+      "atas": 0.8854
+     },
+     "hit@5": {
+      "nilai": 0.9479,
+      "bawah": 0.9062,
+      "atas": 0.9896
+     },
+     "mrr@10": {
+      "nilai": 0.8643,
+      "bawah": 0.8021,
+      "atas": 0.9191
+     }
+    }
+   },
+   "bm25_konteks+mminilm": {
+    "label": "BM25 + stem + chunk kontekstual + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.9231,
+       "bawah": 0.8612,
+       "atas": 0.9846
+      },
+      "hit@3": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9436,
+       "bawah": 0.8897,
+       "atas": 0.9846
+      },
+      "recall@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9502,
+       "bawah": 0.9007,
+       "atas": 0.9886
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.9271,
+       "bawah": 0.875,
+       "atas": 0.9792
+      },
+      "hit@3": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9505,
+       "bawah": 0.9141,
+       "atas": 0.9844
+      },
+      "recall@5": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9602,
+       "bawah": 0.9297,
+       "atas": 0.9885
+      }
+     }
+    },
+    "model_reranker": {
+     "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+     "revisi": "1427fd652930e4ba29e8149678df786c240d8825"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.875,
+       "bawah": 0.75,
+       "atas": 0.9688
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8438,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9115,
+       "bawah": 0.8125,
+       "atas": 0.9844
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.9531,
+       "bawah": 0.9062,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9701,
+       "bawah": 0.9349,
+       "atas": 1.0
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.9062,
+      "bawah": 0.8438,
+      "atas": 0.9583
+     },
+     "hit@5": {
+      "nilai": 0.9792,
+      "bawah": 0.9479,
+      "atas": 1.0
+     },
+     "mrr@10": {
+      "nilai": 0.9401,
+      "bawah": 0.901,
+      "atas": 0.9766
+     }
+    }
+   },
+   "hybrid_e5_small+mminilm": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.9231,
+       "bawah": 0.8612,
+       "atas": 0.9846
+      },
+      "hit@3": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9487,
+       "bawah": 0.8974,
+       "atas": 0.9897
+      },
+      "recall@5": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9579,
+       "bawah": 0.9154,
+       "atas": 0.9923
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.9271,
+       "bawah": 0.875,
+       "atas": 0.9792
+      },
+      "hit@3": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9479,
+       "bawah": 0.9114,
+       "atas": 0.9844
+      },
+      "recall@5": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9557,
+       "bawah": 0.9206,
+       "atas": 0.9881
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-small",
+     "revisi": "614241f622f53c4eeff9890bdc4f31cfecc418b3"
+    },
+    "model_reranker": {
+     "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+     "revisi": "1427fd652930e4ba29e8149678df786c240d8825"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.875,
+       "bawah": 0.75,
+       "atas": 0.9688
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8438,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9115,
+       "bawah": 0.8125,
+       "atas": 0.9844
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.9531,
+       "bawah": 0.9062,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9844,
+       "bawah": 0.9531,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9661,
+       "bawah": 0.9271,
+       "atas": 1.0
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.9062,
+      "bawah": 0.8438,
+      "atas": 0.9583
+     },
+     "hit@5": {
+      "nilai": 0.9688,
+      "bawah": 0.9271,
+      "atas": 1.0
+     },
+     "mrr@10": {
+      "nilai": 0.9375,
+      "bawah": 0.8958,
+      "atas": 0.9757
+     }
+    }
+   },
+   "hybrid_e5_base+mminilm": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "layak_peramban": true,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.9231,
+       "bawah": 0.8612,
+       "atas": 0.9846
+      },
+      "hit@3": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9487,
+       "bawah": 0.8974,
+       "atas": 0.9897
+      },
+      "recall@5": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9579,
+       "bawah": 0.9154,
+       "atas": 0.9923
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.9271,
+       "bawah": 0.875,
+       "atas": 0.9792
+      },
+      "hit@3": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9505,
+       "bawah": 0.9141,
+       "atas": 0.9844
+      },
+      "recall@5": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9602,
+       "bawah": 0.9297,
+       "atas": 0.9885
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-base",
+     "revisi": "d128750597153bb5987e10b1c3493a34e5a4502a"
+    },
+    "model_reranker": {
+     "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+     "revisi": "1427fd652930e4ba29e8149678df786c240d8825"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.875,
+       "bawah": 0.75,
+       "atas": 0.9688
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8438,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9115,
+       "bawah": 0.8125,
+       "atas": 0.9844
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.9531,
+       "bawah": 0.9062,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9701,
+       "bawah": 0.9349,
+       "atas": 1.0
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.9062,
+      "bawah": 0.8438,
+      "atas": 0.9583
+     },
+     "hit@5": {
+      "nilai": 0.9792,
+      "bawah": 0.9479,
+      "atas": 1.0
+     },
+     "mrr@10": {
+      "nilai": 0.9401,
+      "bawah": 0.901,
+      "atas": 0.9766
+     }
+    }
+   },
+   "hybrid_e5_large+mminilm": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.9231,
+       "bawah": 0.8612,
+       "atas": 0.9846
+      },
+      "hit@3": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9487,
+       "bawah": 0.8974,
+       "atas": 0.9897
+      },
+      "recall@5": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9579,
+       "bawah": 0.9154,
+       "atas": 0.9923
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.9271,
+       "bawah": 0.875,
+       "atas": 0.9792
+      },
+      "hit@3": {
+       "nilai": 0.9688,
+       "bawah": 0.9271,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9505,
+       "bawah": 0.9141,
+       "atas": 0.9844
+      },
+      "recall@5": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9602,
+       "bawah": 0.9297,
+       "atas": 0.9885
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-large",
+     "revisi": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "model_reranker": {
+     "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+     "revisi": "1427fd652930e4ba29e8149678df786c240d8825"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.875,
+       "bawah": 0.75,
+       "atas": 0.9688
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8438,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9115,
+       "bawah": 0.8125,
+       "atas": 0.9844
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.9531,
+       "bawah": 0.9062,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9701,
+       "bawah": 0.9349,
+       "atas": 1.0
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.9062,
+      "bawah": 0.8438,
+      "atas": 0.9583
+     },
+     "hit@5": {
+      "nilai": 0.9792,
+      "bawah": 0.9479,
+      "atas": 1.0
+     },
+     "mrr@10": {
+      "nilai": 0.9401,
+      "bawah": 0.901,
+      "atas": 0.9766
+     }
+    }
+   },
+   "bm25_konteks+bge_m3": {
+    "label": "BM25 + stem + chunk kontekstual + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "hit@3": {
+       "nilai": 0.9538,
+       "bawah": 0.9077,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9538,
+       "bawah": 0.9077,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9116,
+       "bawah": 0.8492,
+       "atas": 0.9663
+      },
+      "recall@5": {
+       "nilai": 0.9538,
+       "bawah": 0.9077,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9292,
+       "bawah": 0.8759,
+       "atas": 0.9739
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.8646,
+       "bawah": 0.7917,
+       "atas": 0.9271
+      },
+      "hit@3": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@5": {
+       "nilai": 0.9583,
+       "bawah": 0.9167,
+       "atas": 0.9896
+      },
+      "hit@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9112,
+       "bawah": 0.8635,
+       "atas": 0.9549
+      },
+      "recall@5": {
+       "nilai": 0.9583,
+       "bawah": 0.9167,
+       "atas": 0.9896
+      },
+      "recall@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9304,
+       "bawah": 0.8916,
+       "atas": 0.9658
+      }
+     }
+    },
+    "model_reranker": {
+     "model": "BAAI/bge-reranker-v2-m3",
+     "revisi": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.6562,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8125,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8698,
+       "bawah": 0.7604,
+       "atas": 0.9583
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.8906,
+       "bawah": 0.8125,
+       "atas": 0.9531
+      },
+      "hit@5": {
+       "nilai": 0.9844,
+       "bawah": 0.9531,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9319,
+       "bawah": 0.8807,
+       "atas": 0.9766
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.8646,
+      "bawah": 0.7917,
+      "atas": 0.9271
+     },
+     "hit@5": {
+      "nilai": 0.9583,
+      "bawah": 0.9167,
+      "atas": 0.9896
+     },
+     "mrr@10": {
+      "nilai": 0.9112,
+      "bawah": 0.8635,
+      "atas": 0.9549
+     }
+    }
+   },
+   "hybrid_e5_small+bge_m3": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "hit@3": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9167,
+       "bawah": 0.857,
+       "atas": 0.9684
+      },
+      "recall@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9369,
+       "bawah": 0.8913,
+       "atas": 0.9759
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.8646,
+       "bawah": 0.7917,
+       "atas": 0.9271
+      },
+      "hit@3": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "hit@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "hit@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9074,
+       "bawah": 0.8576,
+       "atas": 0.9543
+      },
+      "recall@5": {
+       "nilai": 0.9375,
+       "bawah": 0.8854,
+       "atas": 0.9792
+      },
+      "recall@10": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9792,
+       "bawah": 0.9479,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9249,
+       "bawah": 0.8815,
+       "atas": 0.9639
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-small",
+     "revisi": "614241f622f53c4eeff9890bdc4f31cfecc418b3"
+    },
+    "model_reranker": {
+     "model": "BAAI/bge-reranker-v2-m3",
+     "revisi": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.6562,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8125,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8698,
+       "bawah": 0.7604,
+       "atas": 0.9583
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.8906,
+       "bawah": 0.8125,
+       "atas": 0.9531
+      },
+      "hit@5": {
+       "nilai": 0.9531,
+       "bawah": 0.8906,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9262,
+       "bawah": 0.8715,
+       "atas": 0.9766
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.8646,
+      "bawah": 0.7917,
+      "atas": 0.9271
+     },
+     "hit@5": {
+      "nilai": 0.9375,
+      "bawah": 0.8854,
+      "atas": 0.9792
+     },
+     "mrr@10": {
+      "nilai": 0.9074,
+      "bawah": 0.8576,
+      "atas": 0.9543
+     }
+    }
+   },
+   "hybrid_e5_base+bge_m3": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "hit@3": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9197,
+       "bawah": 0.8624,
+       "atas": 0.9684
+      },
+      "recall@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9392,
+       "bawah": 0.8955,
+       "atas": 0.9759
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.8646,
+       "bawah": 0.7917,
+       "atas": 0.9271
+      },
+      "hit@3": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9109,
+       "bawah": 0.8628,
+       "atas": 0.9549
+      },
+      "recall@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "recall@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9301,
+       "bawah": 0.8916,
+       "atas": 0.9658
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-base",
+     "revisi": "d128750597153bb5987e10b1c3493a34e5a4502a"
+    },
+    "model_reranker": {
+     "model": "BAAI/bge-reranker-v2-m3",
+     "revisi": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.6562,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8125,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8698,
+       "bawah": 0.7604,
+       "atas": 0.9583
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.8906,
+       "bawah": 0.8125,
+       "atas": 0.9531
+      },
+      "hit@5": {
+       "nilai": 0.9688,
+       "bawah": 0.9219,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9314,
+       "bawah": 0.8793,
+       "atas": 0.9766
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.8646,
+      "bawah": 0.7917,
+      "atas": 0.9271
+     },
+     "hit@5": {
+      "nilai": 0.9479,
+      "bawah": 0.9062,
+      "atas": 0.9896
+     },
+     "mrr@10": {
+      "nilai": 0.9109,
+      "bawah": 0.8628,
+      "atas": 0.9549
+     }
+    }
+   },
+   "hybrid_e5_large+bge_m3": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "layak_peramban": false,
+    "metrik": {
+     "dev": {
+      "hit@1": {
+       "nilai": 0.8769,
+       "bawah": 0.8,
+       "atas": 0.9538
+      },
+      "hit@3": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "hit@10": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9167,
+       "bawah": 0.857,
+       "atas": 0.9684
+      },
+      "recall@5": {
+       "nilai": 0.9692,
+       "bawah": 0.9231,
+       "atas": 1.0
+      },
+      "recall@10": {
+       "nilai": 0.9846,
+       "bawah": 0.9538,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 1.0,
+       "bawah": 1.0,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9369,
+       "bawah": 0.8913,
+       "atas": 0.9759
+      }
+     },
+     "test": {
+      "hit@1": {
+       "nilai": 0.8646,
+       "bawah": 0.7917,
+       "atas": 0.9271
+      },
+      "hit@3": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "hit@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9109,
+       "bawah": 0.8628,
+       "atas": 0.9549
+      },
+      "recall@5": {
+       "nilai": 0.9479,
+       "bawah": 0.9062,
+       "atas": 0.9896
+      },
+      "recall@10": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "recall@20": {
+       "nilai": 0.9896,
+       "bawah": 0.9688,
+       "atas": 1.0
+      },
+      "ndcg@10": {
+       "nilai": 0.9301,
+       "bawah": 0.8916,
+       "atas": 0.9658
+      }
+     }
+    },
+    "model_embedding": {
+     "model": "intfloat/multilingual-e5-large",
+     "revisi": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "model_reranker": {
+     "model": "BAAI/bge-reranker-v2-m3",
+     "revisi": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+    },
+    "per_gaya_test": {
+     "leksikal": {
+      "n": 32,
+      "hit@1": {
+       "nilai": 0.8125,
+       "bawah": 0.6562,
+       "atas": 0.9375
+      },
+      "hit@5": {
+       "nilai": 0.9062,
+       "bawah": 0.8125,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.8698,
+       "bawah": 0.7604,
+       "atas": 0.9583
+      }
+     },
+     "parafrase": {
+      "n": 64,
+      "hit@1": {
+       "nilai": 0.8906,
+       "bawah": 0.8125,
+       "atas": 0.9531
+      },
+      "hit@5": {
+       "nilai": 0.9688,
+       "bawah": 0.9219,
+       "atas": 1.0
+      },
+      "mrr@10": {
+       "nilai": 0.9314,
+       "bawah": 0.8793,
+       "atas": 0.9766
+      }
+     }
+    },
+    "metrik_ketat_test": {
+     "hit@1": {
+      "nilai": 0.8646,
+      "bawah": 0.7917,
+      "atas": 0.9271
+     },
+     "hit@5": {
+      "nilai": 0.9479,
+      "bawah": 0.9062,
+      "atas": 0.9896
+     },
+     "mrr@10": {
+      "nilai": 0.9109,
+      "bawah": 0.8628,
+      "atas": 0.9549
+     }
+    }
    }
   },
   "selisih_berpasangan": {
@@ -920,6 +3184,210 @@
      "selisih": 0.0845,
      "bawah": 0.0261,
      "atas": 0.1452
+    }
+   },
+   "dense_e5_small_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": -0.0104,
+     "bawah": -0.0729,
+     "atas": 0.0521
+    },
+    "mrr@10": {
+     "selisih": 0.0052,
+     "bawah": -0.0642,
+     "atas": 0.0748
+    }
+   },
+   "hybrid_e5_small_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0208,
+     "bawah": -0.0312,
+     "atas": 0.0833
+    },
+    "mrr@10": {
+     "selisih": 0.0256,
+     "bawah": -0.024,
+     "atas": 0.0737
+    }
+   },
+   "hybrid_e5_small_vs_dense_e5_small": {
+    "hit@5": {
+     "selisih": 0.0312,
+     "bawah": 0.0,
+     "atas": 0.0729
+    },
+    "mrr@10": {
+     "selisih": 0.0204,
+     "bawah": -0.0159,
+     "atas": 0.0581
+    }
+   },
+   "dense_e5_base_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0208,
+     "bawah": -0.0521,
+     "atas": 0.0833
+    },
+    "mrr@10": {
+     "selisih": 0.0433,
+     "bawah": -0.0329,
+     "atas": 0.1226
+    }
+   },
+   "hybrid_e5_base_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0521,
+     "bawah": 0.0,
+     "atas": 0.1146
+    },
+    "mrr@10": {
+     "selisih": 0.0565,
+     "bawah": -0.0009,
+     "atas": 0.1097
+    }
+   },
+   "hybrid_e5_base_vs_dense_e5_base": {
+    "hit@5": {
+     "selisih": 0.0312,
+     "bawah": 0.0,
+     "atas": 0.0729
+    },
+    "mrr@10": {
+     "selisih": 0.0132,
+     "bawah": -0.0326,
+     "atas": 0.0606
+    }
+   },
+   "dense_e5_large_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0208,
+     "bawah": -0.0312,
+     "atas": 0.0729
+    },
+    "mrr@10": {
+     "selisih": 0.0744,
+     "bawah": 0.0113,
+     "atas": 0.14
+    }
+   },
+   "hybrid_e5_large_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0521,
+     "bawah": 0.0,
+     "atas": 0.1042
+    },
+    "mrr@10": {
+     "selisih": 0.0781,
+     "bawah": 0.0305,
+     "atas": 0.129
+    }
+   },
+   "hybrid_e5_large_vs_dense_e5_large": {
+    "hit@5": {
+     "selisih": 0.0312,
+     "bawah": 0.0,
+     "atas": 0.0729
+    },
+    "mrr@10": {
+     "selisih": 0.0037,
+     "bawah": -0.0327,
+     "atas": 0.0386
+    }
+   },
+   "bm25_konteks+mminilm_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0833,
+     "bawah": 0.0312,
+     "atas": 0.1458
+    },
+    "mrr@10": {
+     "selisih": 0.1643,
+     "bawah": 0.1078,
+     "atas": 0.227
+    }
+   },
+   "hybrid_e5_small+mminilm_vs_hybrid_e5_small": {
+    "hit@5": {
+     "selisih": 0.0521,
+     "bawah": 0.0104,
+     "atas": 0.1042
+    },
+    "mrr@10": {
+     "selisih": 0.1361,
+     "bawah": 0.0878,
+     "atas": 0.1865
+    }
+   },
+   "hybrid_e5_base+mminilm_vs_hybrid_e5_base": {
+    "hit@5": {
+     "selisih": 0.0312,
+     "bawah": 0.0,
+     "atas": 0.0729
+    },
+    "mrr@10": {
+     "selisih": 0.1078,
+     "bawah": 0.066,
+     "atas": 0.1556
+    }
+   },
+   "hybrid_e5_large+mminilm_vs_hybrid_e5_large": {
+    "hit@5": {
+     "selisih": 0.0312,
+     "bawah": -0.0104,
+     "atas": 0.0729
+    },
+    "mrr@10": {
+     "selisih": 0.0862,
+     "bawah": 0.0457,
+     "atas": 0.1333
+    }
+   },
+   "bm25_konteks+bge_m3_vs_bm25_konteks": {
+    "hit@5": {
+     "selisih": 0.0625,
+     "bawah": 0.0208,
+     "atas": 0.1146
+    },
+    "mrr@10": {
+     "selisih": 0.125,
+     "bawah": 0.0699,
+     "atas": 0.1813
+    }
+   },
+   "hybrid_e5_small+bge_m3_vs_hybrid_e5_small": {
+    "hit@5": {
+     "selisih": 0.0208,
+     "bawah": -0.0208,
+     "atas": 0.0625
+    },
+    "mrr@10": {
+     "selisih": 0.0956,
+     "bawah": 0.0465,
+     "atas": 0.146
+    }
+   },
+   "hybrid_e5_base+bge_m3_vs_hybrid_e5_base": {
+    "hit@5": {
+     "selisih": 0.0,
+     "bawah": -0.0417,
+     "atas": 0.0417
+    },
+    "mrr@10": {
+     "selisih": 0.0682,
+     "bawah": 0.0257,
+     "atas": 0.1101
+    }
+   },
+   "hybrid_e5_large+bge_m3_vs_hybrid_e5_large": {
+    "hit@5": {
+     "selisih": 0.0,
+     "bawah": -0.0417,
+     "atas": 0.0417
+    },
+    "mrr@10": {
+     "selisih": 0.0466,
+     "bawah": 0.0081,
+     "atas": 0.0891
     }
    }
   },
