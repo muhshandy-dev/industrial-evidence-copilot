@@ -31,7 +31,7 @@ function batas(m) {
 }
 
 function grafikAmbang(ev) {
-  const W = 640, H = 260, L = 44, R = 12, T = 12, B = 34;
+  const W = 960, H = 300, L = 48, R = 16, T = 16, B = 44;
   const pts = ev.ambang.sapuan_test;
   const maxX = pts[pts.length - 1].ambang;
   const x = (v) => L + (v / maxX) * (W - L - R);
@@ -41,8 +41,8 @@ function grafikAmbang(ev) {
   for (let t = 0; t <= 1.0001; t += 0.25) {
     g.append(svg("line", { x1: L, x2: W - R, y1: y(t), y2: y(t), class: "grafik-kisi" }), svg("text", { x: L - 8, y: y(t) + 4, class: "grafik-label", "text-anchor": "end" }, `${Math.round(t * 100)}%`));
   }
-  for (let t = 0; t <= maxX; t += 10) g.append(svg("text", { x: x(t), y: H - 12, class: "grafik-label", "text-anchor": "middle" }, String(t)));
-  g.append(svg("text", { x: (L + W - R) / 2, y: H - 0, class: "grafik-label", "text-anchor": "middle" }, "Ambang skor BM25"));
+  for (let t = 0; t <= maxX; t += 10) g.append(svg("text", { x: x(t), y: H - B + 18, class: "grafik-label", "text-anchor": "middle" }, String(t)));
+  g.append(svg("text", { x: (L + W - R) / 2, y: H - 2, class: "grafik-label", "text-anchor": "middle" }, "Ambang skor BM25"));
   const sel = ev.ambang.terpilih;
   g.append(svg("line", { x1: x(sel), x2: x(sel), y1: T, y2: H - B, class: "grafik-pilih" }),
     svg("text", { x: x(sel) + 6, y: T + 12, class: "grafik-label" }, `dipilih dari dev: ${sel}`));
@@ -71,17 +71,17 @@ export function mountEvaluation(main, { evaluasi: ev }) {
 
   const barisMetode = Object.entries(ps).map(([key, v]) => h("tr", { class: key === kirim ? "dipakai" : null },
     h("th", { scope: "row" }, v.label, key === kirim ? h("span", { class: "lencana" }, "dipakai di situs") : null),
-    h("td", { class: "angka" }, pct(v.metrik.dev["mrr@10"].nilai)),
-    h("td", { class: "angka" }, pct(v.metrik.test["hit@1"].nilai), batas(v.metrik.test["hit@1"])),
-    h("td", { class: "angka" }, pct(v.metrik.test["hit@5"].nilai), batas(v.metrik.test["hit@5"])),
-    h("td", { class: "angka" }, pct(v.metrik.test["mrr@10"].nilai), batas(v.metrik.test["mrr@10"]))));
+    h("td", { class: "num" }, pct(v.metrik.dev["mrr@10"].nilai)),
+    h("td", { class: "num" }, pct(v.metrik.test["hit@1"].nilai), batas(v.metrik.test["hit@1"])),
+    h("td", { class: "num" }, pct(v.metrik.test["hit@5"].nilai), batas(v.metrik.test["hit@5"])),
+    h("td", { class: "num" }, pct(v.metrik.test["mrr@10"].nilai), batas(v.metrik.test["mrr@10"]))));
   const sel = ev.pencarian.selisih_berpasangan.hybrid_vs_bm25_konteks["mrr@10"];
   const metode = h("section", { "aria-labelledby": "e-metode" },
     h("h2", { id: "e-metode" }, "Perbandingan metode pencarian"),
     h("p", {}, "Lima cara mencari diuji pada pertanyaan yang sama. Metode yang dipakai situs dipilih hanya dari kolom data dev, sebelum data uji dilihat untuk keputusan itu."),
     h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan metode, dapat digulir" },
       h("table", { class: "tabel" },
-        h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col" }, "MRR data dev"), h("th", { scope: "col" }, "Peringkat 1 (uji)"), h("th", { scope: "col" }, "Lima teratas (uji)"), h("th", { scope: "col" }, "MRR (uji)"))),
+        h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col", class: "num" }, "MRR data dev"), h("th", { scope: "col", class: "num" }, "Peringkat 1 (uji)"), h("th", { scope: "col", class: "num" }, "Lima teratas (uji)"), h("th", { scope: "col", class: "num" }, "MRR (uji)"))),
         h("tbody", {}, barisMetode))),
     h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Gabungan BM25 dan LSA lebih buruk daripada BM25 dengan konteks: selisih MRR pada data uji ${Math.round(sel.selisih * 100)} poin (interval ${Math.round(sel.bawah * 100)} sampai ${Math.round(sel.atas * 100)}). Karena itu situs hanya memuat BM25. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`));
 
@@ -89,9 +89,9 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const ambang = h("section", { "aria-labelledby": "e-ambang" },
     h("h2", { id: "e-ambang" }, "Kapan sistem memilih diam"),
     h("p", {}, `Sistem menolak menjawab bila skor BM25 pasal teratas lebih kecil dari ambang. Ambang ${ev.ambang.terpilih} dipilih dari data dev dan dipakai apa adanya pada data uji. Grafik memperlihatkan pertukarannya pada data uji: ambang lebih tinggi membuat sistem lebih jarang menjawab pertanyaan tanpa dasar, tetapi lebih sering diam pada pertanyaan yang sebenarnya terjawab.`),
-    h("div", { class: "grafik-bungkus" }, grafikAmbang(ev),
+    h("div", { class: "grafik-bungkus" }, h("div", { class: "grafik-gulir", tabindex: "0", role: "region", "aria-label": "Grafik ambang, dapat digulir" }, grafikAmbang(ev)),
       h("div", { class: "legenda" }, h("span", { class: "leg-benar" }, "Jawaban benar"), h("span", { class: "leg-salah" }, "Menjawab pertanyaan tanpa dasar"))),
-    h("p", { class: "catatan" }, `Jenis pertanyaan juga berpengaruh. Pertanyaan yang mengulang kata-kata pasal ("leksikal") benar ${pct(t.jawaban_benar_leksikal.nilai)}, pertanyaan yang dirumuskan ulang ("parafrase") benar ${pct(t.jawaban_benar_parafrase.nilai)}. Pertanyaan leksikal tidak otomatis lebih mudah, sebab kata-katanya sering sama persis di banyak peraturan sehingga pasal yang dimaksud sulit dibedakan.`));
+    h("p", { class: "catatan" }, `Jenis pertanyaan juga berpengaruh. Pertanyaan yang mengulang kata-kata pasal ("leksikal") benar ${pct(t.jawaban_benar_leksikal.nilai)}, pertanyaan yang dirumuskan ulang ("parafrase") benar ${pct(t.jawaban_benar_parafrase.nilai)}. Pertanyaan leksikal tidak otomatis lebih mudah. Dugaan penyebabnya, yang belum diuji terpisah: kata-katanya sering sama persis di banyak peraturan sehingga pasal yang dimaksud sulit dibedakan.`));
 
   const gagalMap = new Map();
   for (const f of ev.kegagalan_test) { if (!gagalMap.has(f.jenis)) gagalMap.set(f.jenis, []); gagalMap.get(f.jenis).push(f); }
@@ -117,7 +117,7 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const ulang = h("section", { "aria-labelledby": "e-ulang" },
     h("h2", { id: "e-ulang" }, "Ulangi sendiri"),
     h("p", {}, "Hasil di halaman ini berasal dari berkas eval/results.json. Untuk menghitung ulang dari nol:"),
-    h("pre", { class: "kode-blok" }, "pip install -e .[dev]\nevidence data fetch   # unduh PDF resmi dan cek SHA-256\nevidence build        # PDF menjadi korpus per pasal\nevidence eval         # tulis eval/results.json\nevidence export       # tulis data situs"));
+    h("pre", { class: "kode-blok", tabindex: "0" }, "pip install -e .[dev]\nevidence data fetch   # unduh PDF resmi dan cek SHA-256\nevidence build        # PDF menjadi korpus per pasal\nevidence eval         # tulis eval/results.json\nevidence export       # tulis data situs"));
 
   clear(main).append(h("div", { class: "halaman halaman-lebar" },
     h("header", {}, h("h1", {}, "Evaluasi"),

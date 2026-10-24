@@ -73,7 +73,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
       h("button", { type: "button", role: "tab", data: { tab: k }, "aria-selected": String(k === "tanya"), onclick: () => setFokus(k) }, label)));
 
   root.append(paneSumber, paneTanya, paneBukti, tabs);
-  clear(main).append(root);
+  clear(main).append(h("h1", { class: "sr" }, "Ruang kerja: tanya jawab atas peraturan K3"), root);
   main.dataset.ready = "ruang";
 
   /* Pencarian */
