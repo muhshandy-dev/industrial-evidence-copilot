@@ -21,39 +21,41 @@ async function muatPustaka() {
   try { return await import(url); } finally { URL.revokeObjectURL(url); }
 }
 
-// Ukuran unduhan per kuantisasi (berkas ONNX dan tokenizer, dibulatkan).
-export const UKURAN_UNDUHAN_MB = { q4f16: 1240, q4: 1800 };
+export const UKURAN_UNDUHAN_MB = 1240; // model_q4f16.onnx dan tokenizer, dibulatkan
 
 let lib = null;
 let gen = null;
 
-// WebGPU wajib. GPU dengan shader-f16 memakai kuantisasi utama (q4f16); tanpa f16 memakai q4.
-// Keduanya dievaluasi dengan bobot dan prompt yang sama di GitHub Actions.
+// Jalur utama: WebGPU dengan shader-f16. Tanpa itu, model yang sama dapat dijalankan di CPU
+// (WebAssembly) atas pilihan pengguna; jauh lebih lambat, tetapi bobot dan prompt tetap sama
+// dengan evaluasi. Versi q4 tanpa f16 tidak dipakai: 1,8 GB gagal dimuat di memori WebAssembly.
 export async function periksaDukungan() {
   if (!("gpu" in navigator)) return { ok: false, alasan: "Peramban ini belum mendukung WebGPU." };
   let adapter = null;
   try { adapter = await navigator.gpu.requestAdapter(); } catch { adapter = null; }
   if (!adapter) return { ok: false, alasan: "WebGPU tidak tersedia di perangkat ini." };
-  return { ok: true, dtype: adapter.features.has("shader-f16") ? MODEL.dtype : MODEL.dtypeCadangan };
+  if (!adapter.features.has("shader-f16")) return { ok: false, alasan: "GPU perangkat ini tidak mendukung perhitungan f16 yang dibutuhkan model." };
+  return { ok: true };
 }
 
-let dtypeDipakai = null;
-export function dtypeAktif() { return dtypeDipakai; }
+let perangkatDipakai = null;
+export function perangkatAktif() { return perangkatDipakai; }
 
 export function sudahDimuat() { return gen !== null; }
 
 // onProgress menerima {file, loaded, total} dari transformers.js.
-export async function muatModel(dtype, onProgress) {
+// perangkat: "webgpu" atau "wasm" (CPU).
+export async function muatModel(perangkat, onProgress) {
   if (gen) return gen;
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
   gen = await lib.pipeline("text-generation", MODEL.id, {
     revision: MODEL.revision,
-    dtype,
-    device: "webgpu",
+    dtype: MODEL.dtype,
+    device: perangkat,
     progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
   });
-  dtypeDipakai = dtype;
+  perangkatDipakai = perangkat;
   return gen;
 }
 

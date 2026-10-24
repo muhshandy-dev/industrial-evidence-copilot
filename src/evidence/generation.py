@@ -38,10 +38,10 @@ NLI_MODEL = (
 NLI_AMBANG = 0.5  # peluang entailment minimum agar kalimat dianggap didukung
 JENDELA_KARAKTER = 900  # premis NLI: jendela ayat berurutan, supaya muat 512 token
 SETS = ("dev", "test", "stress", "injeksi", "sealed")
-# Kuantisasi utama (sama dengan MODEL.dtype di web/public/js/gen/prompt.js; diuji). Situs memakai
-# q4 bila GPU tidak mendukung f16, jadi konfigurasi itu juga dievaluasi.
+# Kuantisasi yang dipakai situs (sama dengan MODEL.dtype di web/public/js/gen/prompt.js; diuji).
+# Keluaran dengan kuantisasi lain disimpan terpisah sebagai pembanding.
 DTYPE_UTAMA = "q4f16"
-KONFIGURASI = ("bertahan", "polos", "bertahan-q4")
+KONFIGURASI = ("bertahan", "polos")
 
 
 def konfigurasi(varian: str, dtype: str) -> str:

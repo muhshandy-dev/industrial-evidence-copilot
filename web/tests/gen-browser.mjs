@@ -1,7 +1,7 @@
 // Uji asap mode generatif di Chromium sungguhan: CSP mengizinkan unduhan pustaka dan model,
 // model termuat lewat WebGPU, lalu satu pertanyaan dijawab dengan kalimat bersitasi atau
-// ditolak dengan alasan yang sah. Butuh internet dan GPU (atau WebGPU perangkat lunak), jadi
-// dijalankan di workflow terpisah, bukan di CI biasa.
+// ditolak dengan alasan yang sah. Runner GitHub tidak punya GPU dengan f16, jadi yang diuji di
+// sana adalah jalur CPU (WebAssembly); jalur WebGPU perlu diperiksa di perangkat sungguhan.
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import { startServer } from "./serve.mjs";
@@ -28,10 +28,9 @@ try {
   console.log("WebGPU:", gpu);
   await page.check("input[name=mode-jawab][value=generatif]");
   await page.waitForFunction(() => (document.querySelector(".mode-status")?.textContent ?? "").length > 0);
-  const tombol = page.locator(".mode-jawab button");
-  if (!(await tombol.isVisible())) {
-    throw new Error(`mode generatif tidak tersedia di runner: ${await page.textContent(".mode-status")}`);
-  }
+  // Runner tanpa GPU f16: pakai jalur CPU (model, kuantisasi, dan prompt yang sama).
+  const tombol = page.locator(".mode-jawab button:visible").first();
+  console.log("tombol:", await tombol.textContent());
   await tombol.click();
   await page.waitForFunction(() => /Model siap|gagal dimuat/.test(document.querySelector(".mode-status")?.textContent ?? ""), null, { timeout: 30 * 60 * 1000 });
   const status = await page.textContent(".mode-status");

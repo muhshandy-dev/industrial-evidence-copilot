@@ -8,11 +8,12 @@ const mb = (b) => Math.round(b / 1e6).toLocaleString("id-ID");
 
 export function createModePanel() {
   let mode = "kutipan";
-  let dtype = MODEL.dtype;
+  let perangkat = "webgpu";
   const status = h("p", { class: "mode-status", role: "status" });
   const batang = h("span", { class: "mode-batang-isi" });
   const kemajuan = h("div", { class: "mode-batang", hidden: true, "aria-hidden": "true" }, batang);
-  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: muat }, "Muat model");
+  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("webgpu") }, `Muat model (sekitar ${UKURAN_UNDUHAN_MB.toLocaleString("id-ID")} MB)`);
+  const tombolCpu = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("wasm") }, "Tetap jalankan di CPU (sangat lambat)");
   const pilih = (nilai, label, ket) => h("label", { class: "mode-pilih" },
     h("input", { type: "radio", name: "mode-jawab", value: nilai, checked: nilai === "kutipan", onchange: () => ganti(nilai) }),
     h("span", {}, h("strong", {}, label), h("span", { class: "catatan" }, ket)));
@@ -20,44 +21,48 @@ export function createModePanel() {
     h("legend", { class: "subjudul" }, "Mode jawaban"),
     pilih("kutipan", "Kutipan langsung", "Kalimat disalin persis dari pasal. Cepat, tanpa unduhan model."),
     pilih("generatif", "Generatif di perangkat Anda", `Model ${MODEL.id.split("/")[1]} menulis jawaban singkat dengan sitasi [n] ke pasal. Butuh WebGPU.`),
-    tombol, kemajuan, status);
+    tombol, tombolCpu, kemajuan, status);
 
   async function ganti(nilai) {
     mode = nilai;
     el.dataset.mode = nilai;
     tombol.hidden = true;
+    tombolCpu.hidden = true;
     status.textContent = "";
     if (nilai !== "generatif") return;
     if (sudahDimuat()) { status.textContent = "Model siap. Pertanyaan berikutnya dijawab secara generatif."; return; }
     const d = await periksaDukungan();
+    const unduh = "Bobot model diunduh dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, lalu disimpan di peramban. Pertanyaan Anda tetap diproses di perangkat ini.";
     if (!d.ok) {
-      status.textContent = `${d.alasan} Jawaban tetap memakai kutipan langsung.`;
+      tombolCpu.hidden = false;
+      status.textContent = `${d.alasan} Jawaban tetap memakai kutipan langsung. Model yang sama bisa dijalankan di CPU, tetapi satu jawaban dapat memakan beberapa menit dan membutuhkan memori besar (sekitar ${UKURAN_UNDUHAN_MB.toLocaleString("id-ID")} MB unduhan). ${unduh}`;
       return;
     }
-    dtype = d.dtype;
-    tombol.textContent = `Muat model (sekitar ${UKURAN_UNDUHAN_MB[dtype].toLocaleString("id-ID")} MB)`;
     tombol.hidden = false;
-    const varian = dtype === MODEL.dtype ? "" : " GPU ini tidak mendukung f16, jadi dipakai versi q4 yang lebih besar; versi ini juga dievaluasi.";
-    status.textContent = `Bobot model diunduh dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, lalu disimpan di peramban. Pertanyaan Anda tetap diproses di perangkat ini.${varian}`;
+    status.textContent = unduh;
   }
 
-  async function muat() {
+  async function muat(p) {
+    perangkat = p;
     tombol.disabled = true;
+    tombolCpu.disabled = true;
     kemajuan.hidden = false;
     const per = new Map();
     status.textContent = "Mengunduh model…";
     try {
-      await muatModel(dtype, (p) => {
+      await muatModel(perangkat, (p) => {
         per.set(p.file, [p.loaded, p.total]);
         const [a, b] = [...per.values()].reduce(([x, y], [l, t]) => [x + l, y + t], [0, 0]);
         batang.style.width = `${b ? Math.round((a / b) * 100) : 0}%`;
         status.textContent = `Mengunduh model: ${mb(a)} dari ${mb(b)} MB`;
       });
       tombol.hidden = true;
+      tombolCpu.hidden = true;
       kemajuan.hidden = true;
-      status.textContent = "Model siap. Pertanyaan berikutnya dijawab secara generatif.";
+      status.textContent = perangkat === "webgpu" ? "Model siap. Pertanyaan berikutnya dijawab secara generatif." : "Model siap di CPU. Pertanyaan berikutnya dijawab secara generatif; mohon bersabar, prosesnya lambat.";
     } catch (err) {
       tombol.disabled = false;
+      tombolCpu.disabled = false;
       kemajuan.hidden = true;
       status.textContent = `Model gagal dimuat (${err.message}). Jawaban tetap memakai kutipan langsung.`;
     }

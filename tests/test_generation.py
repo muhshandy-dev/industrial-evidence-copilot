@@ -9,10 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_dtype_utama_sama_dengan_situs():
     js = (ROOT / "web/public/js/gen/prompt.js").read_text(encoding="utf-8")
     assert re.search(r'dtype: "([^"]+)"', js).group(1) == G.DTYPE_UTAMA
-    assert re.search(r'dtypeCadangan: "([^"]+)"', js).group(1) == "q4"
     assert G.konfigurasi("bertahan", "q4f16") == "bertahan"
     assert G.konfigurasi("bertahan", "q4") == "bertahan-q4"
-    assert "bertahan-q4" in G.KONFIGURASI
 
 
 def test_jendela_nli_berurutan_dan_terbatas():

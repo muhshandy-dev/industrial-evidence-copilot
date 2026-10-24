@@ -5,8 +5,7 @@
 export const MODEL = {
   id: "onnx-community/Qwen2.5-1.5B-Instruct",
   revision: "d54957e3af1be04546436e874a60fe386041b244",
-  dtype: "q4f16", // kuantisasi utama: bobot 4-bit, aktivasi f16 (butuh WebGPU shader-f16)
-  dtypeCadangan: "q4", // bobot 4-bit, aktivasi f32, untuk GPU tanpa f16; dievaluasi terpisah
+  dtype: "q4f16", // bobot 4-bit, aktivasi f16; sama di peramban (WebGPU atau CPU) dan evaluasi
   lisensi: "Apache-2.0",
 };
 
