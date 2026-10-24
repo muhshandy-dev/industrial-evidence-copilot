@@ -27,15 +27,53 @@ export async function muatReranker(lib, device, onProgress) {
     lib.AutoTokenizer.from_pretrained(RERANKER.id, opsi),
     lib.AutoModelForSequenceClassification.from_pretrained(RERANKER.id, { ...opsi, dtype: RERANKER.dtype, device }),
   ]);
-  return { tokenizer, model };
+  const rr = { lib, tokenizer, model };
+  // Pasangan pendek tidak terpotong, jadi susunan manual harus sama persis dengan tokenizer.
+  const contoh = ["uji pasangan", "teks pasal pendek."];
+  const acuan = tokenizer(contoh[0], { text_pair: contoh[1] });
+  const manual = susun(rr, ...contoh);
+  if (Array.from(acuan.input_ids.data, Number).join() !== manual.ids.join()) {
+    throw new Error("susunan token reranker tidak sama dengan tokenizer");
+  }
+  rr.kunci = Object.keys(acuan);
+  return rr;
+}
+
+// Token pasangan dengan pemotongan "longest_first" seperti tokenizer Python yang dipakai evaluasi
+// (sentence-transformers CrossEncoder). Pemotongan bawaan transformers.js memotong ujung urutan
+// gabungan, termasuk token </s> penutup, sehingga skor pasal panjang berbeda dari evaluasi.
+// Susunan XLM-R: <s> tanya </s></s> pasal </s> (4 token khusus).
+function susun(rr, tanya, teks) {
+  const t = rr.tokenizer;
+  let a = t.encode(tanya, { add_special_tokens: false });
+  let b = t.encode(teks, { add_special_tokens: false });
+  const muat = MAX_TOKEN - 4;
+  if (a.length + b.length > muat) {
+    const separuh = Math.floor(muat / 2);
+    if (a.length <= separuh) b = b.slice(0, muat - a.length);
+    else if (b.length <= separuh) a = a.slice(0, muat - b.length);
+    else { a = a.slice(0, separuh); b = b.slice(0, muat - separuh); }
+  }
+  return { ids: [t.bos_token_id, ...a, t.sep_token_id, t.sep_token_id, ...b, t.sep_token_id] };
+}
+
+function tensor(rr, baris) {
+  const panjang = baris[0].length;
+  return new rr.lib.Tensor("int64", BigInt64Array.from(baris.flat(), BigInt), [baris.length, panjang]);
 }
 
 // Skor logit untuk setiap (pertanyaan, teks), urutan sama dengan masukan.
 export async function skorPasangan(rr, tanya, teks) {
   const out = [];
+  const pad = rr.tokenizer.pad_token_id;
   for (let i = 0; i < teks.length; i += BATCH) {
-    const bagian = teks.slice(i, i + BATCH);
-    const masuk = rr.tokenizer(bagian.map(() => tanya), { text_pair: bagian, padding: true, truncation: true, max_length: MAX_TOKEN });
+    const ids = teks.slice(i, i + BATCH).map((x) => susun(rr, tanya, x).ids);
+    const L = Math.max(...ids.map((x) => x.length));
+    const masuk = {
+      input_ids: tensor(rr, ids.map((x) => [...x, ...Array(L - x.length).fill(pad)])),
+      attention_mask: tensor(rr, ids.map((x) => [...x.map(() => 1), ...Array(L - x.length).fill(0)])),
+    };
+    if (rr.kunci.includes("token_type_ids")) masuk.token_type_ids = tensor(rr, ids.map(() => Array(L).fill(0)));
     const { logits } = await rr.model(masuk);
     out.push(...Array.from(logits.data, Number));
   }
