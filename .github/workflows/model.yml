@@ -4,6 +4,10 @@ name: Model
 # Hasilnya disimpan di eval/cache/ dan di-commit ke cabang yang sama, sehingga evaluasi
 # biasa (CI) dapat diulang tanpa mengunduh model.
 on:
+  # Push yang mengubah berkas ini menjalankan tahap embed (juga mendaftarkan workflow ke GitHub).
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/model.yml"]
   workflow_dispatch:
     inputs:
       tahap:
@@ -17,6 +21,9 @@ permissions:
 concurrency:
   group: model-${{ github.ref }}
   cancel-in-progress: false
+
+env:
+  TAHAP: ${{ inputs.tahap || 'embed' }}
 
 jobs:
   model:
@@ -37,10 +44,10 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -e ".[dev,model]"
       - name: Embedding
-        if: inputs.tahap == 'embed' || inputs.tahap == 'semua'
+        if: env.TAHAP == 'embed' || env.TAHAP == 'semua'
         run: evidence embed
       - name: Reranker
-        if: inputs.tahap == 'rerank' || inputs.tahap == 'semua'
+        if: env.TAHAP == 'rerank' || env.TAHAP == 'semua'
         run: evidence rerank
       - name: Evaluasi dan ekspor
         run: |
@@ -53,5 +60,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add eval/cache eval/results.json web/public/data
           if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
-          git commit -m "Model: perbarui cache (${{ inputs.tahap }}) dan hasil evaluasi"
+          git commit -m "Model: perbarui cache ($TAHAP) dan hasil evaluasi"
           git push
