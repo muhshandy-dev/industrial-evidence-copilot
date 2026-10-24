@@ -369,6 +369,9 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
             if s == "test" and varian == "bertahan":
                 res["sampel_validasi_manual"] = manual_sample(recs, by_id)
         out[varian] = res
+        out.setdefault("model_per_konfigurasi", {})[varian] = {
+            k: parsed[0][k] for k in ("model", "revisi", "dtype")
+        }
         if varian == "bertahan":
             out["model"] = {k: parsed[0][k] for k in ("model", "revisi", "dtype")}
     return out if any_output else None

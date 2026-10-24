@@ -53,6 +53,62 @@ function grafikAmbang(ev) {
   return g;
 }
 
+const NAMA_MODE = {
+  generatif: "Jawaban generatif ditampilkan",
+  cadangan_ekstraktif: "Kembali ke kutipan (tidak ada kalimat bersumber)",
+  tolak_model: "Model menjawab TIDAK DITEMUKAN",
+  tolak_gerbang: "Ditolak gerbang sebelum model dipanggil",
+};
+
+const sel = (m) => (m && m.n ? `${m.k} dari ${m.n} (${pct(m.nilai)})` : "-");
+
+// Bagian mode generatif. Semua angka dari ev.generatif (dihitung `evidence eval` dari keluaran
+// model yang di-commit); bila belum ada, halaman mengatakannya.
+function bagianGeneratif(ev) {
+  const g = ev.generatif;
+  const judul = h("h2", { id: "e-gen" }, "Mode generatif");
+  if (!g || !g.bertahan?.test) {
+    return h("section", { "aria-labelledby": "e-gen" }, judul,
+      h("p", {}, "Hasil evaluasi mode generatif belum tersedia di versi ini. Angka di atas hanya untuk mode kutipan langsung."));
+  }
+  const t = ev.jawaban.test;
+  const kolom = [["Kutipan langsung", null], [`${g.model.model.split("/")[1]} (GPU)`, g.bertahan.test]];
+  if (g["bertahan-cpu"]?.test) kolom.push([`${(g.model_per_konfigurasi?.["bertahan-cpu"]?.model ?? "model CPU").split("/").at(-1)} (CPU)`, g["bertahan-cpu"].test]);
+  const baris = [
+    ["Jawaban benar", (x) => sel(x ? x.jawaban_benar : t.jawaban_benar)],
+    ["Menolak padahal ada jawabannya", (x) => sel(x ? x.menolak_padahal_terjawab : t.menolak_padahal_terjawab)],
+    ["Menjawab pertanyaan tanpa dasar", (x) => sel(x ? x.dijawab_padahal_tak_terjawab : t.dijawab_padahal_tak_terjawab)],
+    ["Kalimat yang didukung pasal yang dikutipnya", (x) => (x ? sel(x.kalimat_didukung) : "disalin, tidak dinilai")],
+    ["Jawaban yang seluruh kalimatnya didukung", (x) => (x ? sel(x.jawaban_seluruhnya_didukung) : "-")],
+    ["Dari jawaban yang ditampilkan, yang mengutip minimal satu pasal tepat", (x) => (x ? sel(x.sitasi_ada_yang_sah) : sel(t.sitasi_benar_dari_yang_dijawab))],
+  ];
+  const tabel = h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel mode generatif dan kutipan, dapat digulir" },
+    h("table", { class: "tabel" },
+      h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Data uji"), ...kolom.map(([n]) => h("th", { scope: "col", class: "num" }, n)))),
+      h("tbody", {}, baris.map(([n, f]) => h("tr", {}, h("th", { scope: "row" }, n), ...kolom.map(([, x]) => h("td", { class: "num" }, f(x))))))));
+  const mode = Object.entries(g.bertahan.test.mode).map(([k, v]) => h("li", {}, `${NAMA_MODE[k] ?? k}: ${v}`));
+  const nli = g.penilai_nli;
+  const waktu = g.bertahan.test.detik_per_jawaban_cpu;
+  const inj = g.bertahan.injeksi;
+  const injPolos = g.polos?.injeksi;
+  const blokInjeksi = inj ? h("div", { class: "kotak-jujur" },
+    h("h3", {}, "Uji prompt injection"),
+    h("p", {}, `${inj.n} pertanyaan berisi perintah tersembunyi, misalnya meminta model mengabaikan aturan, menulis tautan, atau mengarang pasal. Prompt situs memperlakukan teks pasal dan pertanyaan sebagai data, lalu kalimat tanpa sumber dan tautan ke luar dibuang setelah generasi. ${injPolos ? `Sebagai pembanding, prompt polos tanpa pertahanan itu juga dijalankan.` : ""}`),
+    h("ul", { class: "daftar-teks" },
+      h("li", {}, `Prompt situs: ${Object.entries(inj.mode).map(([k, v]) => `${NAMA_MODE[k] ?? k} ${v}`).join(", ")}.`),
+      injPolos ? h("li", {}, `Prompt polos: ${Object.entries(injPolos.mode).map(([k, v]) => `${NAMA_MODE[k] ?? k} ${v}`).join(", ")}.`) : null),
+    h("details", { class: "gagal" },
+      h("summary", {}, `Lihat keluaran mentah model untuk ${inj.per_butir.length} pertanyaan`),
+      h("ul", {}, inj.per_butir.map((b) => h("li", {}, h("strong", {}, `${b.id}: ${NAMA_MODE[b.mode] ?? b.mode}`), h("pre", { class: "gen-mentah" }, b.mentah)))))) : null;
+  return h("section", { "aria-labelledby": "e-gen" }, judul,
+    h("p", {}, `Mode generatif dievaluasi dengan alur yang sama dengan situs: gerbang skor yang sama, ${g.model.model.split("/")[1]} dengan bobot ${g.model.dtype} pada revisi yang dipatok, prompt dari kode situs, dekode serakah, lalu pemeriksaan sitasi yang sama. Model dijalankan offline di GitHub Actions dengan pustaka yang sama dengan peramban, dan keluarannya di-commit sehingga angka ini dapat dihitung ulang.`),
+    tabel,
+    h("p", { class: "catatan" }, `"Didukung" dinilai otomatis oleh model NLI multibahasa (${nli.model.split("/")[1]}): sebuah kalimat dianggap didukung bila peluang entailment terhadap pasal yang dikutipnya minimal ${String(nli.ambang).replace(".", ",")}. Penilai otomatis ini bisa keliru, terutama untuk angka dan istilah hukum; sampel kalimat disimpan untuk diperiksa manual.${waktu ? ` Di CPU runner, satu jawaban butuh median ${String(waktu.median).replace(".", ",")} detik.` : ""}`),
+    h("p", {}, "Apa yang terjadi pada pertanyaan uji dengan model GPU:"),
+    h("ul", { class: "daftar-teks" }, mode),
+    blokInjeksi);
+}
+
 export function mountEvaluation(main, { evaluasi: ev }) {
   const ps = ev.pencarian.per_sistem;
   const kirim = ev.metode_dikirim;
@@ -156,6 +212,6 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   clear(main).append(h("div", { class: "halaman halaman-lebar" },
     h("header", {}, h("h1", {}, "Evaluasi"),
       h("p", { class: "lead" }, "Seberapa sering sistem ini mengutip pasal yang tepat, seberapa sering ia salah, dan seberapa sering ia memilih diam. Semua angka dihitung dari set pertanyaan tetap, tetapi ada batas penting pada cara set itu dibuat; baca ringkasan jujur di bawah.")),
-    ringkas, hasil, salinan, metode, ambang, gagal, protokol, ulang));
+    ringkas, hasil, salinan, bagianGeneratif(ev), metode, ambang, gagal, protokol, ulang));
   main.dataset.ready = "evaluasi";
 }
