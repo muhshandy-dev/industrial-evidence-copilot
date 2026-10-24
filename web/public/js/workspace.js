@@ -5,8 +5,8 @@ import { extractAnswer } from "./answer.js";
 import { createReader } from "./reader.js";
 import { wait, motionOn } from "./motion.js";
 import { createModePanel } from "./gen/panel.js";
-import { bacaJawaban, pasalUntukPrompt, periksa, susunPesan, K_PASAL, MODEL } from "./gen/prompt.js";
-import { bangkitkan, perangkatAktif } from "./gen/runtime.js";
+import { bacaJawaban, pasalUntukPrompt, periksa, susunPesan, K_PASAL } from "./gen/prompt.js";
+import { bangkitkan, modelUntuk, perangkatAktif } from "./gen/runtime.js";
 
 const num = (x) => x.toFixed(1).replace(".", ",");
 
@@ -109,7 +109,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     const trace = buildTrace(tokens, top, scores, generatif);
     const lolos = generatif || !ans.abstain;
     const kepala = h("span", { class: "label-mode" }, generatif ? "Jawaban generatif" : lolos ? "Jawaban ekstraktif" : "Tidak menjawab");
-    const ringkas = h("span", {}, generatif ? `${MODEL.id.split("/")[1]}, di ${perangkatAktif() === "webgpu" ? "GPU" : "CPU"} perangkat ini` : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
+    const ringkas = h("span", {}, generatif ? `${modelUntuk(perangkatAktif()).id.split("/")[1]}, di ${perangkatAktif() === "webgpu" ? "GPU" : "CPU"} perangkat ini` : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
     card.append(h("div", { class: "jawaban-kepala" },
       kepala,
       ringkas,

@@ -2,7 +2,7 @@
 // Pustaka transformers.js dan runtime ONNX diunduh dari jsDelivr, bobot model dari Hugging Face,
 // semuanya pada versi yang dipatok dan hanya setelah pengguna menekan tombol muat. Kode pustaka
 // diperiksa SHA-256-nya sebelum dijalankan. Pertanyaan tidak pernah dikirim ke server mana pun.
-import { MODEL, MAX_TOKEN_BARU } from "./prompt.js";
+import { MODEL, MODEL_CPU, MAX_TOKEN_BARU } from "./prompt.js";
 
 // Diperiksa oleh scripts/check-build.mjs terhadap paket npm yang terpasang (versi dan SHA-256).
 export const PUSTAKA = {
@@ -21,14 +21,14 @@ export async function muatPustaka() {
   try { return await import(url); } finally { URL.revokeObjectURL(url); }
 }
 
-export const UKURAN_UNDUHAN_MB = 1240; // model_q4f16.onnx dan tokenizer, dibulatkan
+// Ukuran unduhan (model_q4f16.onnx dan tokenizer, dibulatkan) per jalur.
+export const UKURAN_UNDUHAN_MB = { webgpu: 1240, wasm: 500 };
 
 let lib = null;
 let gen = null;
 
-// Jalur utama: WebGPU dengan shader-f16. Tanpa itu, model yang sama dapat dijalankan di CPU
-// (WebAssembly) atas pilihan pengguna; jauh lebih lambat, tetapi bobot dan prompt tetap sama
-// dengan evaluasi. Versi q4 tanpa f16 tidak dipakai: 1,8 GB gagal dimuat di memori WebAssembly.
+// Jalur utama: WebGPU dengan shader-f16 dan model 1,5B. Tanpa itu, pengguna dapat memilih jalur
+// CPU (WebAssembly) dengan model 0,5B; keduanya dievaluasi dengan prompt yang sama.
 export async function periksaDukungan() {
   if (!("gpu" in navigator)) return { ok: false, alasan: "Peramban ini belum mendukung WebGPU." };
   let adapter = null;
@@ -40,6 +40,7 @@ export async function periksaDukungan() {
 
 let perangkatDipakai = null;
 export function perangkatAktif() { return perangkatDipakai; }
+export function modelUntuk(perangkat) { return perangkat === "webgpu" ? MODEL : MODEL_CPU; }
 
 export function sudahDimuat() { return gen !== null; }
 
@@ -49,9 +50,10 @@ export async function muatModel(perangkat, onProgress) {
   if (gen) return gen;
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
-  gen = await lib.pipeline("text-generation", MODEL.id, {
-    revision: MODEL.revision,
-    dtype: MODEL.dtype,
+  const m = modelUntuk(perangkat);
+  gen = await lib.pipeline("text-generation", m.id, {
+    revision: m.revision,
+    dtype: m.dtype,
     device: perangkat,
     progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
   });

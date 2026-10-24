@@ -28,7 +28,7 @@ try {
   console.log("WebGPU:", gpu);
   await page.check("input[name=mode-jawab][value=generatif]");
   await page.waitForFunction(() => (document.querySelector(".mode-status")?.textContent ?? "").length > 0);
-  // Runner tanpa GPU f16: pakai jalur CPU (model, kuantisasi, dan prompt yang sama).
+  // Runner tanpa GPU f16: pakai jalur CPU (model 0,5B, kuantisasi dan prompt yang sama).
   const tombol = page.locator(".mode-jawab button:visible").first();
   console.log("tombol:", await tombol.textContent());
   await tombol.click();

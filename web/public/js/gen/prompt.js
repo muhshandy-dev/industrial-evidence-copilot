@@ -2,12 +2,22 @@
 // Modul ini dipakai apa adanya oleh situs (peramban) dan oleh evaluasi offline
 // (web/scripts/generate.mjs di GitHub Actions), jadi prompt yang diuji sama dengan yang dipakai.
 
+// Model utama untuk WebGPU. Bobot 4-bit dengan aktivasi f16, sama di peramban dan evaluasi.
 export const MODEL = {
   id: "onnx-community/Qwen2.5-1.5B-Instruct",
   revision: "d54957e3af1be04546436e874a60fe386041b244",
-  dtype: "q4f16", // bobot 4-bit, aktivasi f16; sama di peramban (WebGPU atau CPU) dan evaluasi
+  dtype: "q4f16",
   lisensi: "Apache-2.0",
 };
+// Model jalur CPU (WebAssembly). Model 1,5B gagal dimuat di memori WebAssembly (bad_alloc pada
+// uji Chromium), jadi perangkat tanpa WebGPU f16 memakai versi 0,5B yang dievaluasi terpisah.
+export const MODEL_CPU = {
+  id: "onnx-community/Qwen2.5-0.5B-Instruct",
+  revision: "22942cb7d7ba4cc81bb4673549ca4d4614469b5e",
+  dtype: "q4f16",
+  lisensi: "Apache-2.0",
+};
+export const MODELS = { [MODEL.id]: MODEL, [MODEL_CPU.id]: MODEL_CPU };
 
 export const K_PASAL = 4; // jumlah pasal teratas yang diberikan ke model
 export const MAX_KARAKTER_PASAL = 1800; // pasal lebih panjang dipotong
@@ -117,10 +127,10 @@ export function periksa(hasil, pasal) {
   return { status: simpan.length ? "jawab" : "tanpa_dasar", kalimat: simpan, dibuang };
 }
 
-// Sidik prompt (pesan, model, dtype, batas token). Keluaran evaluasi yang sidiknya berbeda dari
-// prompt saat ini dianggap basi dan tidak dihitung.
-export async function promptSha(pesan, dtype = MODEL.dtype) {
-  const data = new TextEncoder().encode(JSON.stringify({ pesan, model: MODEL, dtype, max: MAX_TOKEN_BARU }));
+// Sidik prompt (pesan, model dengan revisi dan dtype, batas token). Keluaran evaluasi yang
+// sidiknya berbeda dari prompt saat ini dianggap basi dan tidak dihitung.
+export async function promptSha(pesan, model = MODEL) {
+  const data = new TextEncoder().encode(JSON.stringify({ pesan, model, max: MAX_TOKEN_BARU }));
   const buf = await crypto.subtle.digest("SHA-256", data);
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
 }

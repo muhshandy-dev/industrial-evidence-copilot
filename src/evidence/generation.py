@@ -38,14 +38,16 @@ NLI_MODEL = (
 NLI_AMBANG = 0.5  # peluang entailment minimum agar kalimat dianggap didukung
 JENDELA_KARAKTER = 900  # premis NLI: jendela ayat berurutan, supaya muat 512 token
 SETS = ("dev", "test", "stress", "injeksi", "sealed")
-# Kuantisasi yang dipakai situs (sama dengan MODEL.dtype di web/public/js/gen/prompt.js; diuji).
-# Keluaran dengan kuantisasi lain disimpan terpisah sebagai pembanding.
+# Model situs (sama dengan MODEL dan MODEL_CPU di web/public/js/gen/prompt.js; diuji).
+MODEL_UTAMA = "onnx-community/Qwen2.5-1.5B-Instruct"  # WebGPU
+MODEL_CPU = "onnx-community/Qwen2.5-0.5B-Instruct"  # jalur CPU (WebAssembly)
 DTYPE_UTAMA = "q4f16"
-KONFIGURASI = ("bertahan", "polos")
+# bertahan: prompt situs dengan model utama; polos: pembanding injeksi; bertahan-cpu: model CPU.
+KONFIGURASI = ("bertahan", "polos", "bertahan-cpu")
 
 
-def konfigurasi(varian: str, dtype: str) -> str:
-    return varian if dtype == DTYPE_UTAMA else f"{varian}-{dtype}"
+def konfigurasi(varian: str, model: str) -> str:
+    return {MODEL_UTAMA: varian, MODEL_CPU: f"{varian}-cpu"}.get(model, f"{varian}-lain")
 
 
 def gen_dir(root: Path, varian: str) -> Path:

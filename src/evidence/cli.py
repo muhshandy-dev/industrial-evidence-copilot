@@ -233,7 +233,7 @@ def cmd_gen_merge(args: argparse.Namespace) -> int:
         for line in Path(f).read_text(encoding="utf-8").splitlines():
             if line.strip():
                 r = json.loads(line)
-                new.setdefault((konfigurasi(r["varian"], r["dtype"]), r["set"]), {})[r["id"]] = r
+                new.setdefault((konfigurasi(r["varian"], r["model"]), r["set"]), {})[r["id"]] = r
     for (varian, s), recs in sorted(new.items()):
         path = gen_dir(ROOT, varian) / f"{s}.jsonl"
         old = {}

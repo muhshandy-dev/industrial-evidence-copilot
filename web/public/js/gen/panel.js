@@ -1,8 +1,10 @@
 // Pilihan mode jawaban di ruang kerja: kutipan langsung (bawaan) atau generatif di perangkat.
 // Model generatif hanya diunduh setelah pengguna menekan tombol muat.
 import { h } from "../dom.js";
-import { MODEL } from "./prompt.js";
+import { MODEL, MODEL_CPU } from "./prompt.js";
 import { UKURAN_UNDUHAN_MB, muatModel, periksaDukungan, sudahDimuat } from "./runtime.js";
+
+const nama = (m) => m.id.split("/")[1];
 
 const mb = (b) => Math.round(b / 1e6).toLocaleString("id-ID");
 
@@ -12,15 +14,15 @@ export function createModePanel() {
   const status = h("p", { class: "mode-status", role: "status" });
   const batang = h("span", { class: "mode-batang-isi" });
   const kemajuan = h("div", { class: "mode-batang", hidden: true, "aria-hidden": "true" }, batang);
-  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("webgpu") }, `Muat model (sekitar ${UKURAN_UNDUHAN_MB.toLocaleString("id-ID")} MB)`);
-  const tombolCpu = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("wasm") }, "Tetap jalankan di CPU (sangat lambat)");
+  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("webgpu") }, `Muat model (sekitar ${UKURAN_UNDUHAN_MB.webgpu.toLocaleString("id-ID")} MB)`);
+  const tombolCpu = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("wasm") }, `Pakai model kecil di CPU (sekitar ${UKURAN_UNDUHAN_MB.wasm.toLocaleString("id-ID")} MB, lambat)`);
   const pilih = (nilai, label, ket) => h("label", { class: "mode-pilih" },
     h("input", { type: "radio", name: "mode-jawab", value: nilai, checked: nilai === "kutipan", onchange: () => ganti(nilai) }),
     h("span", {}, h("strong", {}, label), h("span", { class: "catatan" }, ket)));
   const el = h("fieldset", { class: "mode-jawab" },
     h("legend", { class: "subjudul" }, "Mode jawaban"),
     pilih("kutipan", "Kutipan langsung", "Kalimat disalin persis dari pasal. Cepat, tanpa unduhan model."),
-    pilih("generatif", "Generatif di perangkat Anda", `Model ${MODEL.id.split("/")[1]} menulis jawaban singkat dengan sitasi [n] ke pasal. Butuh WebGPU.`),
+    pilih("generatif", "Generatif di perangkat Anda", `Model bahasa menulis jawaban singkat dengan sitasi [n] ke pasal: ${nama(MODEL)} di GPU (WebGPU), atau ${nama(MODEL_CPU)} di CPU.`),
     tombol, tombolCpu, kemajuan, status);
 
   async function ganti(nilai) {
@@ -35,7 +37,7 @@ export function createModePanel() {
     const unduh = "Bobot model diunduh dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, lalu disimpan di peramban. Pertanyaan Anda tetap diproses di perangkat ini.";
     if (!d.ok) {
       tombolCpu.hidden = false;
-      status.textContent = `${d.alasan} Jawaban tetap memakai kutipan langsung. Model yang sama bisa dijalankan di CPU, tetapi satu jawaban dapat memakan beberapa menit dan membutuhkan memori besar (sekitar ${UKURAN_UNDUHAN_MB.toLocaleString("id-ID")} MB unduhan). ${unduh}`;
+      status.textContent = `${d.alasan} Jawaban tetap memakai kutipan langsung. Sebagai gantinya, model yang lebih kecil (${nama(MODEL_CPU)}) bisa dijalankan di CPU. Hasilnya lebih lemah dan satu jawaban dapat memakan beberapa menit; angkanya dilaporkan terpisah di halaman Evaluasi. ${unduh}`;
       return;
     }
     tombol.hidden = false;
@@ -59,7 +61,7 @@ export function createModePanel() {
       tombol.hidden = true;
       tombolCpu.hidden = true;
       kemajuan.hidden = true;
-      status.textContent = perangkat === "webgpu" ? "Model siap. Pertanyaan berikutnya dijawab secara generatif." : "Model siap di CPU. Pertanyaan berikutnya dijawab secara generatif; mohon bersabar, prosesnya lambat.";
+      status.textContent = perangkat === "webgpu" ? "Model siap. Pertanyaan berikutnya dijawab secara generatif." : `Model ${nama(MODEL_CPU)} siap di CPU. Pertanyaan berikutnya dijawab secara generatif; mohon bersabar, prosesnya lambat.`;
     } catch (err) {
       tombol.disabled = false;
       tombolCpu.disabled = false;
