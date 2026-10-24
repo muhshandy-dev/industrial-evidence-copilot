@@ -1,0 +1,9 @@
+{"tanya": "Berapa umur minimal peserta ujian juru las?", "gaya": "leksikal", "jenis": "angka", "gold": ["permenaker-2-1982#pasal-4"], "kunci": ["berumur", "18", "tahun"]}
+{"tanya": "Kapan seorang juru las dianggap tidak terampil lagi?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-2-1982#pasal-3"], "kunci": ["6", "bulan", "tidak", "melakukan", "pekerjaan", "las"]}
+{"tanya": "Posisi percobaan las apa saja yang harus dilulusi juru las kelas II?", "gaya": "parafrase", "jenis": "daftar", "gold": ["permenaker-2-1982#pasal-10"], "kunci": ["kelas", "II", "1G", "4G"]}
+{"tanya": "Urutan pengujian contoh percobaan las dimulai dari apa?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["permenaker-2-1982#pasal-13"], "kunci": ["sifat", "tampak", "radiografis", "makroskopis", "mekanis"]}
+{"tanya": "Seberapa sering buku kerja juru las harus diperlihatkan kepada pegawai pengawas?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-2-1982#pasal-31"], "kunci": ["3", "bulan", "buku", "kerja"]}
+{"tanya": "Siapa yang mengeluarkan sertifikat juru las?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-2-1982#pasal-29"], "kunci": ["sertifikat", "dikeluarkan", "direktur"]}
+{"tanya": "Apakah juru las kelas III boleh mengerjakan pekerjaan las kelas I?", "gaya": "parafrase", "jenis": "larangan", "gold": ["permenaker-2-1982#pasal-6"], "kunci": ["kelas", "III", "dilarang"]}
+{"tanya": "Apa sanksi bagi pengurus yang tidak menaati aturan kualifikasi juru las?", "gaya": "parafrase", "jenis": "sanksi", "gold": ["permenaker-2-1982#pasal-33"], "kunci": ["kurungan", "3", "denda"]}
+{"tanya": "Jika juru las gagal dua kali dalam ujian, apa yang harus dilakukan?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["permenaker-2-1982#pasal-12"], "kunci": ["ujian", "ulang", "latihan"]}

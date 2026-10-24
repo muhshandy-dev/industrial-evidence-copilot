@@ -1,0 +1,27 @@
+# Header respons Cloudflare Pages. Situs sepenuhnya statis: tanpa skrip atau gaya sebaris, tanpa permintaan pihak ketiga.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+# HTML, CSS, dan JS selalu diperiksa ulang ke server (murah berkat ETag),
+# supaya pengunjung tidak pernah mendapat CSS lama dengan JS baru setelah deploy.
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/css/*
+  Cache-Control: no-cache
+/js/*
+  Cache-Control: no-cache
+
+/fonts/*
+  Cache-Control: public, max-age=2592000
+
+/data/*
+  Cache-Control: public, max-age=300

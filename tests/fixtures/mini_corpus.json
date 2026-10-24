@@ -1,0 +1,21 @@
+{
+  "catatan": "Korpus tiruan hanya untuk uji paritas Python/JavaScript. Bukan peraturan asli dan tidak dipakai untuk evaluasi apa pun.",
+  "chunks": [
+    "Pasal 1\n1. Pengusaha adalah orang yang menjalankan usaha.\n2. Pekerja adalah orang yang bekerja dan menerima upah.",
+    "Pasal 2\n(1) Pengusaha wajib menyediakan alat pelindung diri bagi pekerja.\n(2) Alat pelindung diri diberikan secara cuma-cuma.",
+    "Pasal 3\n(1) Bejana tekan wajib diperiksa secara berkala oleh pegawai pengawas.\n(2) Pemeriksaan dilakukan paling sedikit satu kali dalam setahun.",
+    "Pasal 4\nSetiap kecelakaan kerja wajib dilaporkan kepada kepala dinas dalam waktu dua kali dua puluh empat jam.",
+    "Pasal 5\n(1) Lift penumpang wajib memiliki sertifikat pemeriksaan.\n(2) Sertifikat berlaku untuk jangka waktu yang ditetapkan pengawas.",
+    "Pasal 6\nTempat kerja wajib memiliki sarana pemadam kebakaran yang mudah dijangkau.",
+    "Pasal 7\n(1) Pekerja berhak menolak pekerjaan yang berbahaya.\n(2) Penolakan tidak boleh mengurangi hak pekerja.",
+    "Pasal 8\nPengurus perusahaan wajib membentuk panitia pembina keselamatan dan kesehatan kerja."
+  ],
+  "queries": [
+    "apakah pengusaha harus menyediakan alat pelindung diri",
+    "berapa kali bejana tekan diperiksa",
+    "lapor kecelakaan kerja berapa jam",
+    "sertifikat lift",
+    "resep nasi goreng",
+    "pemadam kebakaran tempat kerja"
+  ]
+}

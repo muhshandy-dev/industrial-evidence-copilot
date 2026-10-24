@@ -1,0 +1,9 @@
+{"tanya": "Apakah APD harus dibeli sendiri oleh pekerja atau disediakan oleh perusahaan?", "gaya": "parafrase", "jenis": "kewajiban", "gold": ["permenaker-8-2010#pasal-2"], "kunci": ["pengusaha", "wajib", "cuma-cuma"]}
+{"tanya": "Apa saja yang termasuk alat pelindung diri menurut Permenaker tentang APD?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-8-2010#pasal-3"], "kunci": ["pelindung", "kepala", "telinga", "kaki"]}
+{"tanya": "Kalau helm atau APD sudah retak, apakah masih boleh dipakai?", "gaya": "parafrase", "jenis": "larangan", "gold": ["permenaker-8-2010#pasal-8"], "kunci": ["rusak", "retak", "dibuang"]}
+{"tanya": "Boleh tidak pekerja menolak bekerja kalau APD yang diberikan tidak memenuhi syarat?", "gaya": "parafrase", "jenis": "hak", "gold": ["permenaker-8-2010#pasal-6"], "kunci": ["berhak", "keberatan"]}
+{"tanya": "Apa saja yang termasuk dalam manajemen APD di tempat kerja?", "gaya": "leksikal", "jenis": "prosedur", "gold": ["permenaker-8-2010#pasal-7"], "kunci": ["identifikasi", "pemilihan", "pelatihan", "inspeksi"]}
+{"tanya": "APD yang kedaluwarsa dan mengandung bahan berbahaya harus diapakan, dan dokumen apa yang dibuat?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["permenaker-8-2010#pasal-8"], "kunci": ["dimusnahkan", "berita", "acara", "pemusnahan"]}
+{"tanya": "Siapa yang mengawasi ditaatinya peraturan tentang alat pelindung diri?", "gaya": "leksikal", "jenis": "faktual", "gold": ["permenaker-8-2010#pasal-10"], "kunci": ["pengawas", "ketenagakerjaan"]}
+{"tanya": "Apakah perusahaan wajib memasang rambu yang menyatakan kewajiban memakai APD?", "gaya": "parafrase", "jenis": "kewajiban", "gold": ["permenaker-8-2010#pasal-5"], "kunci": ["mengumumkan", "rambu-rambu"]}
+{"tanya": "APD yang disediakan perusahaan harus memenuhi standar apa?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-8-2010#pasal-2"], "kunci": ["sni", "standar"]}

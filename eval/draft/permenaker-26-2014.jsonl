@@ -1,0 +1,10 @@
+{"tanya": "Perusahaan dengan berapa pekerja yang wajib menerapkan SMK3?", "gaya": "leksikal", "jenis": "angka", "gold": ["permenaker-26-2014#pasal-2"], "kunci": ["100", "pekerja/buruh"], "gold_alt": ["pp-50-2012#pasal-5"]}
+{"tanya": "Berapa lama keputusan penunjukan Lembaga Audit SMK3 berlaku?", "gaya": "leksikal", "jenis": "angka", "gold": ["permenaker-26-2014#pasal-6"], "kunci": ["3", "tahun", "diperpanjang"]}
+{"tanya": "Ada berapa kriteria yang harus dipenuhi pada audit SMK3 tingkat lanjutan?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-26-2014#pasal-20"], "kunci": ["lanjutan", "166", "kriteria"]}
+{"tanya": "Dalam berapa lama temuan kritikal audit SMK3 harus dikoreksi?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-26-2014#pasal-26"], "kunci": ["1x24", "jam", "koreksi"]}
+{"tanya": "Berapa batas waktu perbaikan untuk temuan kategori mayor dalam audit SMK3?", "gaya": "parafrase", "jenis": "angka", "gold": ["permenaker-26-2014#pasal-27"], "kunci": ["mayor", "1", "bulan"]}
+{"tanya": "Perusahaan yang mencapai nilai penerapan SMK3 85 persen ke atas mendapat penghargaan apa?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-26-2014#pasal-30"], "kunci": ["sertifikat", "emas"]}
+{"tanya": "Siapa yang menanggung biaya audit eksternal SMK3?", "gaya": "leksikal", "jenis": "kewajiban", "gold": ["permenaker-26-2014#pasal-31"], "kunci": ["biaya", "dibebankan", "perusahaan", "diaudit"]}
+{"tanya": "Apa yang dilarang bagi Lembaga Audit SMK3 yang sudah ditunjuk Menteri?", "gaya": "leksikal", "jenis": "larangan", "gold": ["permenaker-26-2014#pasal-8"], "kunci": ["dilarang", "konsultasi"]}
+{"tanya": "Kepada siapa perusahaan mengajukan keberatan jika tidak setuju dengan hasil audit SMK3?", "gaya": "parafrase", "jenis": "prosedur", "gold": ["permenaker-26-2014#pasal-29"], "kunci": ["keberatan", "direktur", "jenderal"]}
+{"tanya": "Peraturan apa yang dicabut ketika aturan penilaian SMK3 tahun 2014 mulai berlaku?", "gaya": "parafrase", "jenis": "faktual", "gold": ["permenaker-26-2014#pasal-33"], "kunci": ["dicabut", "per.05/men/1996"]}
