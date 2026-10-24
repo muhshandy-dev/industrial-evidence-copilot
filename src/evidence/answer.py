@@ -5,7 +5,8 @@ unit di korpus, jadi tidak mungkin ada kalimat karangan. Risiko yang tersisa buk
 karangan, melainkan salah pilih pasal atau menjawab padahal korpus tidak memuat jawabannya;
 keduanya diukur di evaluasi.
 
-Dua keputusan, keduanya dipilih dari split dev (lihat docs/evaluasi.md):
+Dua keputusan, dibuat setelah run pertama dari analisis split dev; test juga sudah terlihat
+saat itu (lihat docs/evaluasi.md):
 - Gerbang penolakan memakai skor BM25 pasal teratas, bukan kecocokan kata, karena skor
   BM25 lebih baik memisahkan pertanyaan yang terjawab dari yang tidak.
 - Kutipan hanya diambil dari pasal peringkat 1, supaya sitasi selalu sama dengan hasil
