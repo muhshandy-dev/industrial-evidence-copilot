@@ -1319,6 +1319,237 @@
    "belum_dibangkitkan": 0,
    "generatif_benar": 7
   },
+  "k3-llama-3.3-70b": {
+   "n": 53,
+   "mode": {
+    "tolak_model": 5,
+    "generatif": 48
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 44,
+    "nilai": 0.88,
+    "bawah": 0.762,
+    "atas": 0.9438
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.5615
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 2,
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 48,
+    "k": 48,
+    "nilai": 1.0,
+    "bawah": 0.9259,
+    "atas": 1.0
+   },
+   "sitasi_semua_sah": {
+    "n": 48,
+    "k": 47,
+    "nilai": 0.9792,
+    "bawah": 0.891,
+    "atas": 0.9963
+   },
+   "kalimat_didukung": {
+    "n": 52,
+    "k": 43,
+    "nilai": 0.8269,
+    "bawah": 0.7027,
+    "atas": 0.9062
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 48,
+    "k": 39,
+    "nilai": 0.8125,
+    "bawah": 0.6806,
+    "atas": 0.8981
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 52,
+    "k": 43,
+    "nilai": 0.8269,
+    "bawah": 0.7027,
+    "atas": 0.9062
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.0676
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 1.2,
+    "p90": 2.1
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 44
+  },
+  "k3-llama-4-scout": {
+   "n": 53,
+   "mode": {
+    "tolak_model": 6,
+    "generatif": 47
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 42,
+    "nilai": 0.84,
+    "bawah": 0.7149,
+    "atas": 0.9166
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.5615
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 3,
+    "nilai": 0.06,
+    "bawah": 0.0206,
+    "atas": 0.1622
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 47,
+    "k": 47,
+    "nilai": 1.0,
+    "bawah": 0.9244,
+    "atas": 1.0
+   },
+   "sitasi_semua_sah": {
+    "n": 47,
+    "k": 43,
+    "nilai": 0.9149,
+    "bawah": 0.8007,
+    "atas": 0.9664
+   },
+   "kalimat_didukung": {
+    "n": 56,
+    "k": 42,
+    "nilai": 0.75,
+    "bawah": 0.6231,
+    "atas": 0.8448
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 47,
+    "k": 33,
+    "nilai": 0.7021,
+    "bawah": 0.5602,
+    "atas": 0.8135
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 56,
+    "k": 42,
+    "nilai": 0.75,
+    "bawah": 0.6231,
+    "atas": 0.8448
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.0676
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 0.9,
+    "p90": 1.9
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 42
+  },
+  "k3-mistral-small-3.1": {
+   "n": 53,
+   "mode": {
+    "tolak_model": 5,
+    "generatif": 48
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 43,
+    "nilai": 0.86,
+    "bawah": 0.7381,
+    "atas": 0.9305
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.5615
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 2,
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 48,
+    "k": 48,
+    "nilai": 1.0,
+    "bawah": 0.9259,
+    "atas": 1.0
+   },
+   "sitasi_semua_sah": {
+    "n": 48,
+    "k": 47,
+    "nilai": 0.9792,
+    "bawah": 0.891,
+    "atas": 0.9963
+   },
+   "kalimat_didukung": {
+    "n": 53,
+    "k": 44,
+    "nilai": 0.8302,
+    "bawah": 0.7077,
+    "atas": 0.908
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 48,
+    "k": 39,
+    "nilai": 0.8125,
+    "bawah": 0.6806,
+    "atas": 0.8981
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 53,
+    "k": 44,
+    "nilai": 0.8302,
+    "bawah": 0.7077,
+    "atas": 0.908
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.0676
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 1.2,
+    "p90": 3.0
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 43
+  },
   "k4": {
    "n": 53,
    "mode": {
