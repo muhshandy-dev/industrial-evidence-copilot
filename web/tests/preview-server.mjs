@@ -54,6 +54,7 @@ try {
   console.log("mode:", mode, "\nkepala:", await page.textContent(".jawaban-kepala"), "\nisi:", isi);
   console.log("pesan:", await page.locator(".gen-tunggu").textContent().catch(() => "-"));
   console.log("POST /api/jawab:", jawabApi.join(" | ") || "tidak ada");
+  if (jawabApi.some((x) => x.includes("kuota_habis"))) throw new Error("kuota harian gratis Workers AI habis; ulangi setelah 07.00 WIB (00.00 UTC). Situs sudah kembali ke kutipan langsung.");
   assert.equal(mode, "generatif", "pertanyaan yang jelas terjawab harus dijawab model server");
   assert.equal(await page.getAttribute(".jawaban[data-selesai=ya]", "data-jalur"), "server");
   assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat tanpa sitasi");

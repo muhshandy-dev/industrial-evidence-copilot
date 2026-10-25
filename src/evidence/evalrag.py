@@ -142,10 +142,14 @@ def build_systems(corpus: Corpus, root: Path | None = None) -> dict[str, System]
         firsts = [
             k for k in out if "+" not in k and (k == "bm25_konteks" or k.startswith("hybrid_e5"))
         ]
+        # Varian 8-bit memakai repositori yang sama, jadi labelnya perlu penanda sendiri.
+        nama_r = repo.split("/")[-1] + (
+            " 8-bit (ditolak, skor bergantung CPU)" if rkey.endswith("_q8") else ""
+        )
         for first in firsts:
             f = out[first]
             out[f"{first}+{rkey}"] = System(
-                f"{first}+{rkey}", f"{f.label} + rerank {repo.split('/')[-1]}", f.retriever,
+                f"{first}+{rkey}", f"{f.label} + rerank {nama_r}", f.retriever,
                 f.method, True, f.dense, rc, situs=False,
                 layak_peramban=f.layak_peramban and r_situs,
             )  # fmt: skip

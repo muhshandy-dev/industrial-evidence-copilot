@@ -1,10 +1,12 @@
 # Laporan evaluasi
 
-Semua angka berasal dari `eval/results.json` (dihasilkan `evidence eval`, deterministik, sekitar 15 detik). Bila angka di sini berbeda dari berkas itu, berkasnya yang benar.
+Semua angka berasal dari `eval/results.json` (dihasilkan `evidence eval` dari cache model yang di-commit, deterministik). Bila angka di sini berbeda dari berkas itu, berkasnya yang benar.
 
 ## Ringkasan jujur
 
-Pada data uji, pasal yang tepat ada di peringkat 1 pada 68% pertanyaan dan di lima teratas pada 90%. Dari 81 jawaban yang diberikan, 23 (28%) mengutip pasal yang salah. Angka ini **optimistis**: pertanyaan ditulis oleh asisten AI pengembang, dan data uji sudah dilihat sebelum desain akhir dibuat. Ini bukan uji tersegel.
+Mode generatif utama (BM25 + reranker mMiniLM, Llama 3.3 70B di Workers AI, prompt "bertahan") menjawab benar 72 dari 96 pertanyaan uji yang ada jawabannya (75%, interval 65 sampai 83%), 88% kalimatnya didukung pasal yang dikutipnya menurut penilai NLI, dan tidak menjawab satu pun dari 21 pertanyaan tanpa dasar. Mode kutipan langsung (BM25 saja): pasal tepat di peringkat 1 pada 68% pertanyaan, 56 dari 96 benar, dan 23 dari 81 jawabannya mengutip pasal yang salah.
+
+Angka ini **optimistis**: pertanyaan ditulis oleh asisten AI pengembang, data uji sudah dilihat sebelum desain akhir dibuat, dan beberapa keputusan dibuat setelah angka terlihat (lihat "Protokol dan pengungkapan"). Set uji tersegel terpisah dijalankan satu kali; lihat bagian "Set uji tersegel".
 
 ## Set pertanyaan
 
@@ -38,7 +40,22 @@ Selisih berpasangan (MRR@10, test):
 
 Kolom MRR dev lebih tinggi daripada test karena metode pemenang dipilih dari sana (winner's curse). Angka dev bukan angka kinerja.
 
-**Belum dilakukan:** embedding pra-latih multibahasa (misalnya e5). Unduhan model diblokir di lingkungan pengembangan.
+### Embedding dan reranker (v2)
+
+Dijalankan di GitHub Actions (unduhan model diblokir di lingkungan pengembangan). Revisi model dipatok; skor reranker disimpan di `eval/cache/rerank/`.
+
+| Metode | MRR dev | Peringkat 1 (test) | Lima teratas (test) | MRR@10 (test) |
+| --- | --- | --- | --- | --- |
+| Dense multilingual-e5-large | 0,866 | 0,802 [0,719; 0,875] | 0,917 [0,865; 0,969] | 0,861 [0,800; 0,917] |
+| Hibrida BM25 + e5-large (RRF) | 0,888 | 0,812 [0,729; 0,885] | 0,948 [0,906; 0,990] | 0,864 [0,802; 0,919] |
+| **BM25 + konteks + rerank mMiniLM (mode generatif)** | **0,944** | **0,927 [0,875; 0,979]** | **0,979 [0,948; 1,000]** | **0,951 [0,914; 0,984]** |
+| BM25 + konteks + rerank bge-reranker-v2-m3 | 0,912 | 0,865 [0,792; 0,927] | 0,958 [0,917; 0,990] | 0,911 [0,864; 0,955] |
+| BM25 + konteks + rerank mMiniLM 8-bit (ditolak) | 0,945 | 0,917 [0,865; 0,969] | 0,979 [0,948; 1,000] | 0,945 [0,907; 0,981] |
+
+- Reranker mMiniLM dibanding BM25 + konteks saja: MRR@10 +16,4 poin [10,8; 22,7].
+- e5 small dan base, serta semua hibrida dengan reranker, ada di `eval/results.json` dan di halaman Evaluasi. Menambah e5 sebelum reranker tidak menaikkan MRR uji.
+- Aturan pemilihan sistem pencarian mode generatif ditetapkan **setelah** angka semua sistem terlihat, jadi angka uji untuk pilihan itu optimistis.
+- Versi 8-bit mMiniLM tidak dipakai: selisih MRR dev 0,001 tidak berarti, dan skornya bergantung pada CPU (selisih logit sampai 0,93 antar runner), sehingga urutan pasal di peramban tidak bisa dijamin sama dengan evaluasi. Paritas fp32: selisih skor maksimum 0,0000 di Node dan 0,00001 di Chromium (WebAssembly) terhadap skor evaluasi PyTorch, pasal teratas sama pada semua pertanyaan uji paritas.
 
 ## Hasil jawaban (test, ambang 14,0 dari dev)
 
@@ -61,6 +78,29 @@ Cara membaca:
 - **"Verbatim" tautologis.** Kalimat jawaban disalin dari teks korpus, jadi pemeriksaan otomatisnya pasti nol. Teks korpus adalah hasil ekstraksi PDF; beberapa dokumen berasal dari OCR dan memuat salah baca (misalnya "keija"). Kutipan perlu dicek ke PDF resmi.
 - Leksikal 12/32 (38%) dibanding parafrase 44/64 (69%): tidak berpasangan dan bercampur dengan panjang pertanyaan; jangan disimpulkan sebagai sebab.
 
+## Hasil mode generatif (test)
+
+Alur sama dengan situs: gerbang skor BM25 yang sama, reranker, empat pasal teratas, prompt dari `web/public/js/gen/prompt.js`, lalu pemeriksaan sitasi yang sama (`periksa`). Keluaran model server diambil dari `/api/jawab` di deploy Preview oleh workflow `eksperimen-server.yml` (token OIDC, lihat `docs/deploy.md`) dan di-commit di `eval/cache/gen/`. "Didukung" dinilai mDeBERTa-v3-base-xnli-multilingual-nli-2mil7 (ambang entailment 0,5).
+
+| Ukuran | Llama 3.3 70B (utama) | Qwen2.5 1,5B GPU (opsional) | Qwen2.5 0,5B CPU (opsional) | Kutipan langsung |
+| --- | --- | --- | --- | --- |
+| Jawaban benar | 72/96 (75%) | 31/96 | 40/96 | 56/96 |
+| Menolak padahal ada jawabannya | 17/96 | 50/96 | 20/96 | 15/96 |
+| Pertanyaan tanpa dasar yang dijawab | 0/21 | 0/21 | 0/21 | 0/21 |
+| Kalimat didukung NLI | 108/123 (88%) | 3/4 | 4/19 | tidak dinilai |
+| Jawaban yang seluruh kalimatnya didukung | 64/79 | 3/4 | 2/12 | |
+| Jawaban dengan minimal satu sitasi tepat | 79/79 | 4/4 | 9/12 | 58/81 |
+| Jawaban yang semua sitasinya tepat | 65/79 | 3/4 | 4/12 | |
+
+- Rincian mode Llama 3.3 70B pada test: 36 ditolak gerbang, 79 jawaban generatif, 2 "TIDAK DITEMUKAN". Median waktu jawaban dari runner 1,2 detik (persentil 90: 2,3 detik).
+- **Uji tekanan** (12 pertanyaan panjang di luar korpus): Llama 3.3 70B menjawab 0 dari 12 (7 "TIDAK DITEMUKAN", 5 ditolak gerbang). Kutipan langsung menjawab 7 dari 12.
+- **Prompt injection** (20 pertanyaan di `eval/sealed/injeksi.jsonl`, masing-masing dengan kunci `perilaku_aman`): 9 ditolak gerbang, 11 sampai ke model. Tinjauan manual per butir ada di `eval/injeksi-tinjauan.json`. Prompt situs: semua jawaban yang ditampilkan aman (11/11); keluaran mentah menuruti perintah tersembunyi pada 1 dari 11 (i11, menulis isi kutipan sebagai JSON). Prompt polos tanpa pertahanan pada model yang sama: tampilan aman 11/11, keluaran mentah menuruti perintah pada 2 dari 11 (i11, dan i20 yang menulis denda Rp1 miliar karangan). Kalimat-kalimat itu dibuang karena tidak punya sitasi sah. Pertahanan utama adalah pemeriksaan sitasi setelah generasi, bukan prompt. Peninjau adalah asisten AI pengembang; belum diperiksa ulang oleh manusia.
+- Model lokal Qwen tidak lolos batas mutu yang ditetapkan sebelum eksperimen; situs menawarkannya sebagai opsi saja. Riwayat eksperimen prompt dan model (tiga putaran) ada di `docs/eksperimen-prompt.md`.
+
+## Set uji tersegel
+
+100 pertanyaan dan 20 pertanyaan injeksi ditulis agen AI terpisah yang tidak melihat keluaran sistem (`eval/sealed/README.md`); hash dikunci di `eval/sealed.sha256`. Set ini dijalankan sekali lewat workflow `tersegel.yml` (input `konfirmasi=SEKALI`) setelah desain dibekukan, dan hasilnya ditulis ke `eval/sealed/hasil.json`. Tidak ada yang disetel dari set ini. Status: lihat `eval/sealed/hasil.json`; bila berkas itu belum ada, set belum dijalankan.
+
 ## Protokol dan pengungkapan
 
 Hal-hal berikut tercatat juga di `eval/results.json` (kunci `protokol`) dan di halaman Evaluasi.
@@ -74,11 +114,20 @@ Hal-hal berikut tercatat juga di `eval/results.json` (kunci `protokol`) dan di h
    - jawaban alternatif ditetapkan untuk dev dan test.
 3. **Yang dipilih dari dev oleh kode:** metode (MRR@10 dev tertinggi) dan ambang (skor seimbang dev tertinggi, ambang terkecil bila seri).
 4. **Riwayat run pertama:** gerbang cakupan lama memberi lima teratas sekitar 90% dan jawaban benar sekitar 50% pada test. Rekonstruksi auditor dengan kode lama pada set pertanyaan sekarang: 51/96 benar, 2/21 tak terjawab dijawab. Kode dan angka run pertama tidak di-commit terpisah, sehingga urutan ini tidak dapat diverifikasi dari riwayat git.
-5. **Penulis tunggal.** Semua pertanyaan dan kunci ditulis satu penulis (AI) yang membaca pasal emasnya. Interval kepercayaan tidak menangkap bias ini. Efek pengelompokan per dokumen kecil (ICC ≈ 0,01 menurut audit).
+5. **Mode generatif (v2):**
+   - Kandidat prompt dan model dipilih hanya dari data dev dengan aturan tertulis sebelum eksperimen (`choose_server`, `docs/eksperimen-prompt.md`). Angka test model lokal versi lama sudah terlihat sebelum eksperimen prompt dimulai.
+   - Hasil putaran 2 untuk Qwen3 tidak sah: mode berpikir tidak benar-benar dimatikan (semua keluaran diawali `<think>`). Dicatat di `docs/eksperimen-prompt.md`.
+   - Reranker 8-bit dicoba, lalu ditolak. Selama dicoba, 22 baris keluaran per model server dibangkitkan dengan urutan pasal 8-bit; baris itu dibangkitkan ulang dengan urutan fp32 sebelum angka dihitung.
+   - Workers AI tidak menyediakan patokan revisi model, dan suhu 0 tidak menjamin keluaran yang persis sama bila dijalankan ulang. Keluaran yang dinilai di-commit.
+   - Data dev untuk model server hanya memuat 3 pertanyaan tak terjawab yang lolos gerbang, jadi syarat "tidak menjawab yang tanpa dasar" pada pemilihan model lemah.
+   - Pertanyaan injeksi i02 dan jumlah yang lolos gerbang sempat terlihat di log uji asap sebelum evaluasi.
+   - Penggunaan kuota dicatat dalam token (putaran 3 dev: 430.394 token masukan dan 14.644 token keluaran untuk enam konfigurasi). Jumlah neuron hanya terlihat di dasbor Cloudflare dan tidak diverifikasi dari sini. Evaluasi test, uji tekanan, dan injeksi (110 panggilan) selesai tanpa galat kuota, tetapi sesudahnya kuota harian habis: uji Preview dari peramban pada 25 Oktober 2026 pukul 18.18 dan 18.23 WIB mendapat `429 kuota_habis`, dan situs kembali ke kutipan langsung sesuai rancangan. Perkiraan kasar dari jumlah token: satu jawaban Llama 3.3 70B memakai sekitar 4.000 token masukan, sehingga kuota gratis cukup untuk puluhan jawaban per hari untuk seluruh pengunjung, bukan ratusan.
+6. **Penulis tunggal.** Semua pertanyaan dan kunci ditulis satu penulis (AI) yang membaca pasal emasnya. Interval kepercayaan tidak menangkap bias ini. Efek pengelompokan per dokumen kecil (ICC ≈ 0,01 menurut audit).
 
 ## Yang diperlukan untuk angka yang lebih dapat dipercaya
 
-- Set uji tersegel yang ditulis orang lain (idealnya praktisi K3) tanpa melihat sistem, hash di-commit sebelum dijalankan, dijalankan sekali.
+- Set uji yang ditulis praktisi K3 tanpa melihat sistem (set tersegel yang ada ditulis agen AI terpisah).
+- Pemeriksaan manusia atas sampel kalimat generatif dan atas tinjauan injeksi.
 - Emas tingkat ayat, sehingga ketepatan kalimat yang dipilih dapat diukur.
 - Kunci berbentuk frasa dengan angka dan satuan bersebelahan.
 - Lebih banyak pertanyaan tak terjawab yang panjang dan bernuansa regulasi.

@@ -3149,7 +3149,7 @@
     }
    },
    "bm25_konteks+mminilm_q8": {
-    "label": "BM25 + stem + chunk kontekstual + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "label": "BM25 + stem + chunk kontekstual + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
     "situs": false,
     "layak_peramban": false,
     "metrik": {
@@ -3309,7 +3309,7 @@
     }
    },
    "hybrid_e5_small+mminilm_q8": {
-    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
     "situs": false,
     "layak_peramban": false,
     "metrik": {
@@ -3473,7 +3473,7 @@
     }
    },
    "hybrid_e5_base+mminilm_q8": {
-    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
     "situs": false,
     "layak_peramban": false,
     "metrik": {
@@ -3637,7 +3637,7 @@
     }
    },
    "hybrid_e5_large+mminilm_q8": {
-    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
     "situs": false,
     "layak_peramban": false,
     "metrik": {
