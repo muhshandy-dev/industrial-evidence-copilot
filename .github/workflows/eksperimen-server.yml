@@ -21,6 +21,9 @@ on:
       batas:
         description: "Batas pertanyaan per model (kosong = semua); untuk uji asap"
         default: ""
+      endpoint:
+        description: "Pages Function Preview (kosong = REST API dengan secret Cloudflare)"
+        default: "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/api/jawab"
 
 permissions:
   contents: write
@@ -33,6 +36,7 @@ env:
   VARIAN: ${{ inputs.varian }}
   MODEL: ${{ inputs.model }}
   BATAS: ${{ inputs.batas }}
+  ENDPOINT: ${{ inputs.endpoint }}
 
 jobs:
   jalankan:
@@ -49,6 +53,18 @@ jobs:
           node-version: "22"
       - run: pip install -e .
       - run: evidence gen-input --set dev --out web/masukan.jsonl && wc -l web/masukan.jsonl
+      - name: Periksa binding AI di Preview
+        if: env.ENDPOINT != ''
+        run: |
+          # Tunggu sampai deploy Preview memuat versi fungsi yang melaporkan binding (paling lama 10 menit).
+          for i in $(seq 1 20); do
+            j=$(curl -fsS "$ENDPOINT" || true)
+            echo "$j"
+            if echo "$j" | grep -q '"binding":true'; then exit 0; fi
+            if echo "$j" | grep -q '"binding":false'; then echo "::error::Binding Workers AI (AI) belum terpasang di Preview"; exit 1; fi
+            sleep 30
+          done
+          echo "::error::Endpoint Preview tidak menjawab"; exit 1
       - name: Bangkitkan lewat Workers AI
         id: gen
         working-directory: web
@@ -64,7 +80,7 @@ jobs:
               if [ -f "../eval/cache/gen/$v-$m/dev.jsonl" ]; then cp "../eval/cache/gen/$v-$m/dev.jsonl" "$f"; fi
               rc=0
               node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" \
-                --lolos ${BATAS:+--batas "$BATAS"} || rc=$?
+                --lolos ${BATAS:+--batas "$BATAS"} ${ENDPOINT:+--endpoint "$ENDPOINT"} || rc=$?
               if [ "$rc" = 3 ]; then kuota=1; break 2; fi
               if [ "$rc" != 0 ]; then exit "$rc"; fi
             done

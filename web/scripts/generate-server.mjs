@@ -1,9 +1,12 @@
-// Generasi offline untuk evaluasi model server (Cloudflare Workers AI, REST API) dengan prompt,
-// badan permintaan, dan pembacaan sitasi yang sama dengan Pages Function situs.
-// Butuh CLOUDFLARE_ACCOUNT_ID dan CLOUDFLARE_API_TOKEN (secret GitHub Actions).
+// Generasi offline untuk evaluasi model server (Cloudflare Workers AI) dengan prompt, badan
+// permintaan, dan pembacaan sitasi yang sama dengan Pages Function situs. Dua jalur:
+// - --endpoint URL: memanggil /api/jawab di deploy Preview (binding AI yang sama dengan situs;
+//   tanpa secret). Fungsi menyusun prompt sendiri; sidik prompt dihitung ulang di sini.
+// - tanpa --endpoint: REST API, butuh CLOUDFLARE_ACCOUNT_ID dan CLOUDFLARE_API_TOKEN.
 //
 //   node scripts/generate-server.mjs --in masukan.jsonl --out keluaran.jsonl --model llama-3.3-70b
-//                                    [--varian bertahan] [--set dev] [--lolos] [--batas N]
+//                                    [--endpoint https://…/api/jawab] [--varian bertahan] [--set dev]
+//                                    [--lolos] [--batas N]
 //
 // Bila kuota harian gratis habis, skrip berhenti dengan kode 3 tanpa membuang keluaran yang sudah
 // ada; run berikutnya melanjutkan (baris dengan prompt_sha yang sama dilewati).
@@ -15,14 +18,14 @@ const { values: a } = parseArgs({
   options: {
     in: { type: "string" }, out: { type: "string" }, varian: { type: "string", default: "bertahan" },
     model: { type: "string" }, set: { type: "string" }, batas: { type: "string" },
-    lolos: { type: "boolean", default: false },
+    lolos: { type: "boolean", default: false }, endpoint: { type: "string" },
   },
 });
 const M = MODEL_SERVER_KANDIDAT[a.model];
 if (!M) throw new Error(`model server tidak dikenal: ${a.model}`);
 const akun = process.env.CLOUDFLARE_ACCOUNT_ID;
 const token = process.env.CLOUDFLARE_API_TOKEN;
-if (!akun || !token) throw new Error("CLOUDFLARE_ACCOUNT_ID dan CLOUDFLARE_API_TOKEN wajib diisi");
+if (!a.endpoint && (!akun || !token)) throw new Error("CLOUDFLARE_ACCOUNT_ID dan CLOUDFLARE_API_TOKEN wajib diisi (atau pakai --endpoint)");
 
 const korpus = JSON.parse(readFileSync(new URL("../public/data/korpus.json", import.meta.url)));
 const baris = readFileSync(a.in, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l))
@@ -35,6 +38,22 @@ const sudah = new Set(existsSync(a.out)
 
 class KuotaHabis extends Error {}
 const tunggu = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Lewat Pages Function Preview: badan berisi pertanyaan dan nomor pasal, bukan prompt.
+async function panggilEndpoint(r, pasal) {
+  const badan = { tanya: r.tanya, pasal: pasal.map((p) => p.id), model: a.model, varian: a.varian };
+  for (let coba = 0; ; coba++) {
+    const res = await fetch(a.endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(badan) });
+    const j = await res.json().catch(() => ({}));
+    if (res.ok) {
+      if (j.pasal?.join() !== badan.pasal.join() || j.varian !== a.varian || j.model !== M.id) throw new Error(`respons fungsi tidak cocok: ${JSON.stringify(j).slice(0, 200)}`);
+      return { response: j.mentah, usage: j.usage };
+    }
+    if (res.status === 429) throw new KuotaHabis(JSON.stringify(j));
+    if (res.status >= 500 && coba < 4) { await tunggu(2000 * 2 ** coba); continue; }
+    throw new Error(`fungsi HTTP ${res.status}: ${JSON.stringify(j)}`);
+  }
+}
 
 async function panggil(badan) {
   const url = `https://api.cloudflare.com/client/v4/accounts/${akun}/ai/run/${M.id}`;
@@ -59,7 +78,7 @@ for (const r of baris) {
   if (sudah.has(`${r.id}:${sha}`)) continue;
   const t = Date.now();
   let hasil;
-  try { hasil = await panggil(permintaanServer(pesan)); }
+  try { hasil = a.endpoint ? await panggilEndpoint(r, pasal) : await panggil(permintaanServer(pesan)); }
   catch (e) {
     if (e instanceof KuotaHabis) { console.log(`kuota harian habis setelah ${n} panggilan: ${e.message}`); process.exit(3); }
     throw e;

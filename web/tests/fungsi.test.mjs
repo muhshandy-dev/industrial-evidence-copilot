@@ -31,7 +31,7 @@ const minta = (badan, headers = {}) => new Request(`${asal}/api/jawab`, { method
 
 test("nonaktif selama MODEL_SERVER null", async () => {
   const f = await muatFungsi(false);
-  assert.deepEqual(await f.onRequestGet().json(), { aktif: false, model: null });
+  assert.deepEqual(await f.onRequestGet({ env: {} }).json(), { aktif: false, model: null, binding: false });
   const r = await f.onRequestPost({ request: minta({ tanya: "apa itu APD?", pasal: ids }), env: env({}) });
   assert.equal(r.status, 503);
 });
@@ -76,4 +76,25 @@ test("kuota habis menjadi 429, galat lain 502", async () => {
   assert.equal((await f.onRequestPost({ request: minta({ tanya: "Apa itu APD?", pasal: ids }), env: env(habis) })).status, 429);
   const rusak = { run: async () => { throw new Error("internal"); } };
   assert.equal((await f.onRequestPost({ request: minta({ tanya: "Apa itu APD?", pasal: ids }), env: env(rusak) })).status, 502);
+});
+
+test("Preview boleh memilih kandidat model dan varian; produksi tidak", async () => {
+  const f = await muatFungsi(false);
+  const panggilan = [];
+  const ai = { run: async (model, badan) => { panggilan.push([model, badan]); return { response: "Ya [1].", usage: { prompt_tokens: 10 } }; } };
+  assert.equal((await f.onRequestGet({ env: env(ai) }).json()).binding, true);
+  assert.equal((await f.onRequestGet({ env: {} }).json()).binding, false);
+  const r = await f.onRequestPost({ request: minta({ tanya: "Apa kewajiban pengurus?", pasal: ids, model: "llama-4-scout", varian: "k3" }), env: env(ai) });
+  assert.equal(r.status, 200);
+  const j = await r.json();
+  assert.equal(j.model, "@cf/meta/llama-4-scout-17b-16e-instruct");
+  assert.equal(j.varian, "k3");
+  assert.deepEqual(j.usage, { prompt_tokens: 10 });
+  assert.equal(panggilan[0][1].messages.length, 4); // k3: contoh sebagai giliran percakapan
+  const salah = await f.onRequestPost({ request: minta({ tanya: "Apa itu APD?", pasal: ids, model: "gpt-lain" }), env: env(ai) });
+  assert.equal(salah.status, 400);
+  const prod = `https://${f.HOST_PRODUKSI}`;
+  const req = new Request(`${prod}/api/jawab`, { method: "POST", headers: { origin: prod }, body: JSON.stringify({ tanya: "Apa itu APD?", pasal: ids, model: "gemma-3-12b" }) });
+  assert.equal((await f.onRequestPost({ request: req, env: env(ai) })).status, 403);
+  assert.equal(panggilan.length, 1);
 });
