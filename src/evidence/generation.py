@@ -55,22 +55,33 @@ DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt
 SISTEM_GENERATIF = "bm25_konteks+mminilm"
 
 
-# bertahan: prompt situs dengan model utama; polos: pembanding injeksi; bertahan-cpu: model CPU.
-KONFIGURASI = ("bertahan", "polos", "bertahan-cpu")
+# Model server Cloudflare Workers AI (MODEL_SERVER_KANDIDAT di prompt.js), putaran 3.
+MODEL_SERVER = {
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": "llama-3.3-70b",
+    "@cf/meta/llama-4-scout-17b-16e-instruct": "llama-4-scout",
+    "@cf/mistralai/mistral-small-3.1-24b-instruct": "mistral-small-3.1",
+}
+
+# Model dan varian prompt mode server situs: (kunci model, varian), sama dengan MODEL_SERVER dan
+# VARIAN_SERVER di prompt.js (diuji). None sampai putaran 3 memilih (choose_server).
+SERVER_SITUS: tuple[str, str] | None = None
+
+
+def konfigurasi_server() -> str | None:
+    return None if SERVER_SITUS is None else f"{SERVER_SITUS[1]}-{SERVER_SITUS[0]}"
+
+
+# bertahan: prompt situs dengan model lokal utama; polos: pembanding injeksi; bertahan-cpu: model
+# CPU. Mode server menambah konfigurasinya sendiri dan pembanding polos dengan model yang sama.
+KONFIGURASI = ("bertahan", "polos", "bertahan-cpu") + (
+    () if SERVER_SITUS is None else (konfigurasi_server(), f"polos-{SERVER_SITUS[0]}")
+)
 
 
 # Model kandidat eksperimen (MODEL_KANDIDAT di prompt.js), belum dipakai situs.
 MODEL_KANDIDAT = {
     "onnx-community/Qwen3-1.7B-ONNX": "qwen3-1.7b",
     "onnx-community/Qwen3-4B-ONNX": "qwen3-4b",
-}
-
-
-# Model server Cloudflare Workers AI (MODEL_SERVER_KANDIDAT di prompt.js), putaran 3.
-MODEL_SERVER = {
-    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": "llama-3.3-70b",
-    "@cf/meta/llama-4-scout-17b-16e-instruct": "llama-4-scout",
-    "@cf/mistralai/mistral-small-3.1-24b-instruct": "mistral-small-3.1",
 }
 
 

@@ -6,7 +6,9 @@
 //
 //   node scripts/generate-server.mjs --in masukan.jsonl --out keluaran.jsonl --model llama-3.3-70b
 //                                    --endpoint https://…/api/jawab [--varian bertahan] [--set dev]
-//                                    [--lolos] [--batas N]
+//                                    [--lolos] [--batas N] [--senyap]
+//
+// --senyap: isi jawaban tidak dicetak ke log (untuk set tersegel).
 //
 // Bila kuota harian gratis habis, skrip berhenti dengan kode 3 tanpa membuang keluaran yang sudah
 // ada; run berikutnya melanjutkan (baris dengan prompt_sha yang sama dilewati).
@@ -20,6 +22,7 @@ const { values: a } = parseArgs({
     in: { type: "string" }, out: { type: "string" }, varian: { type: "string", default: "bertahan" },
     model: { type: "string" }, set: { type: "string" }, batas: { type: "string" },
     lolos: { type: "boolean", default: false }, endpoint: { type: "string" },
+    senyap: { type: "boolean", default: false },
   },
 });
 const M = MODEL_SERVER_KANDIDAT[a.model];
@@ -58,7 +61,7 @@ async function panggilEndpoint(r, pasal) {
     const res = await fetch(a.endpoint, { method: "POST", headers, body: JSON.stringify(badan) });
     const j = await res.json().catch(() => ({}));
     if (res.ok) {
-      if (j.pasal?.join() !== badan.pasal.join() || j.varian !== a.varian || j.model !== M.id) throw new Error(`respons fungsi tidak cocok: ${JSON.stringify(j).slice(0, 200)}`);
+      if (j.pasal?.join() !== badan.pasal.join() || j.varian !== a.varian || j.model !== M.id) throw new Error(`respons fungsi tidak cocok: ${JSON.stringify({ ...j, mentah: undefined }).slice(0, 200)}`);
       return { response: j.mentah, usage: j.usage };
     }
     if (res.status === 429) throw new KuotaHabis(JSON.stringify(j));
@@ -92,6 +95,6 @@ for (const r of baris) {
   };
   appendFileSync(a.out, JSON.stringify(rec) + "\n");
   n++;
-  console.log(`${r.id} ${rec.detik}s ${rec.token_prompt}+${rec.token_keluar} tok: ${mentah.slice(0, 100).replace(/\n/g, " ")}`);
+  console.log(`${r.id} ${rec.detik}s ${rec.token_prompt}+${rec.token_keluar} tok${a.senyap ? "" : `: ${mentah.slice(0, 100).replace(/\n/g, " ")}`}`);
 }
 console.log(`${n} panggilan baru, ${((Date.now() - t0) / 60000).toFixed(1)} menit`);

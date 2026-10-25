@@ -8,7 +8,7 @@ export const OIDC_ISS = "https://token.actions.githubusercontent.com";
 export const OIDC_AUD = "industrial-evidence-copilot-evaluasi";
 export const OIDC_REPO = "muhshandy-dev/industrial-evidence-copilot";
 // Workflow yang boleh memakai jalur evaluasi.
-export const OIDC_WORKFLOW = [".github/workflows/eksperimen-server.yml"];
+export const OIDC_WORKFLOW = [".github/workflows/eksperimen-server.yml", ".github/workflows/tersegel.yml"];
 const JWKS_URL = `${OIDC_ISS}/.well-known/jwks`;
 
 const dariB64url = (s) => {

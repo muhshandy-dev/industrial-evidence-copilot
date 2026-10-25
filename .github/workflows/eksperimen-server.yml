@@ -16,8 +16,11 @@ on:
   workflow_dispatch:
     inputs:
       varian:
-        description: "Prompt (dipisah koma): bertahan, k3"
+        description: "Prompt (dipisah koma): bertahan, k3, polos (polos hanya untuk set injeksi)"
         default: "bertahan"
+      set:
+        description: "Set evaluasi (dipisah koma): dev, test, stress, injeksi. Set tersegel hanya lewat workflow Tersegel"
+        default: "dev"
       model:
         description: "Model: llama-4-scout, mistral-small-3.1, llama-3.3-70b (dipisah koma)"
         default: "llama-4-scout,mistral-small-3.1,llama-3.3-70b"
@@ -38,6 +41,7 @@ concurrency:
 
 env:
   VARIAN: ${{ inputs.varian }}
+  SET: ${{ inputs.set || 'dev' }}
   MODEL: ${{ inputs.model }}
   BATAS: ${{ inputs.batas }}
   ENDPOINT: ${{ inputs.endpoint }}
@@ -56,7 +60,7 @@ jobs:
         with:
           node-version: "22"
       - run: pip install -e .
-      - run: evidence gen-input --set dev --out web/masukan.jsonl && wc -l web/masukan.jsonl
+      - run: evidence gen-input --set "$SET" --out web/masukan.jsonl && wc -l web/masukan.jsonl
       - name: Periksa binding AI di Preview
         run: |
           # Tunggu sampai deploy Preview memuat versi fungsi yang melaporkan binding (paling lama 10 menit).
@@ -76,10 +80,12 @@ jobs:
           for v in ${VARIAN//,/ }; do
             for m in ${MODEL//,/ }; do
               f="keluaran-$v-$m.jsonl"
-              # Lanjutkan dari keluaran yang sudah di-commit (baris yang sama dilewati).
-              if [ -f "../eval/cache/gen/$v-$m/dev.jsonl" ]; then cp "../eval/cache/gen/$v-$m/dev.jsonl" "$f"; fi
+              # Lanjutkan dari keluaran yang sudah di-commit (baris dengan prompt yang sama dilewati).
+              cat ../eval/cache/gen/$v-$m/*.jsonl > "$f" 2>/dev/null || true
+              # Varian polos hanya pembanding pertahanan injeksi.
+              s="$SET"; if [ "$v" = polos ]; then s=injeksi; fi
               rc=0
-              node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" \
+              node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" --set "$s" \
                 --lolos ${BATAS:+--batas "$BATAS"} --endpoint "$ENDPOINT" || rc=$?
               if [ "$rc" = 3 ]; then kuota=1; break 2; fi
               # Galat lain: hentikan, tetapi keluaran yang sudah ada tetap dinilai dan di-commit.

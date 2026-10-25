@@ -28,8 +28,11 @@ from . import metrics as M
 from .evalset import read_questions, relevant, validate
 
 SET_FILES = ("sealed/questions.jsonl", "sealed/injeksi.jsonl")
-# Konfigurasi generatif yang dievaluasi pada set tersegel: prompt situs, dua model situs.
-KONFIGURASI_TERSEGEL = ("bertahan", "bertahan-cpu")
+# Konfigurasi generatif yang dievaluasi pada set tersegel: prompt situs dengan model situs (server
+# bila sudah dipilih, dan dua model lokal).
+KONFIGURASI_TERSEGEL = ("bertahan", "bertahan-cpu") + (
+    () if generation.SERVER_SITUS is None else (generation.konfigurasi_server(),)
+)
 
 
 def result_path(root: Path) -> Path:

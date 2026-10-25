@@ -16,6 +16,9 @@ on:
       shards:
         description: "Jumlah shard paralel"
         default: "8"
+      endpoint:
+        description: "Pages Function Preview untuk model server (Workers AI)"
+        default: "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/api/jawab"
 
 permissions:
   contents: write
@@ -95,9 +98,45 @@ jobs:
           path: web/keluaran.jsonl
           if-no-files-found: ignore
 
+  # Model server situs (Workers AI) lewat Pages Function Preview dengan token OIDC. Isi jawaban tidak
+  # dicetak ke log. Bila kuota harian habis, job gagal, hasil tersegel tidak ditulis, dan workflow
+  # dapat dijalankan lagi setelah kuota pulih.
+  bangkitkan-server:
+    needs: siapkan
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: masukan
+          path: web
+      - name: Model server situs
+        env:
+          ENDPOINT: ${{ inputs.endpoint }}
+        run: |
+          pilihan=$(node -e 'import("./public/js/gen/prompt.js").then((p) => { const k = Object.keys(p.MODEL_SERVER_KANDIDAT).find((x) => p.MODEL_SERVER_KANDIDAT[x] === p.MODEL_SERVER); if (!k) { console.error("MODEL_SERVER belum dipilih"); process.exit(1); } console.log(k, p.VARIAN_SERVER); })')
+          read -r m v <<< "$pilihan"
+          node scripts/generate-server.mjs --in masukan.jsonl --out keluaran-server.jsonl --model "$m" --varian "$v" \
+            --lolos --senyap --endpoint "$ENDPOINT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keluaran-server
+          path: web/keluaran-server.jsonl
+
   gabung:
-    needs: bangkitkan
-    if: github.event_name == 'workflow_dispatch' && needs.bangkitkan.result == 'success'
+    needs: [bangkitkan, bangkitkan-server]
+    if: github.event_name == 'workflow_dispatch' && needs.bangkitkan.result == 'success' && needs.bangkitkan-server.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -121,7 +160,7 @@ jobs:
         with:
           pattern: keluaran-*
           path: keluaran
-      - run: evidence gen-merge keluaran/*/keluaran.jsonl
+      - run: evidence gen-merge keluaran/*/*.jsonl
       - run: evidence nli
       - name: Evaluasi tersegel (sekali)
         run: evidence eval-sealed run

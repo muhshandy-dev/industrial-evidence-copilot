@@ -20,6 +20,14 @@ def test_dtype_utama_sama_dengan_situs():
         assert f'"{kunci}": {{ id: "{model}"' in js
         assert G.konfigurasi("bertahan", model) == f"bertahan-{kunci}"
     assert set(G.URUTAN_SERVER) == set(G.MODEL_SERVER.values())
+    # Pilihan mode server sama di Python dan situs.
+    m = re.search(r"export const MODEL_SERVER = (null|MODEL_SERVER_KANDIDAT\[\"([^\"]+)\"\]);", js)
+    v = re.search(r'export const VARIAN_SERVER = "([^"]+)";', js)
+    assert m and v
+    if G.SERVER_SITUS is None:
+        assert m.group(1) == "null"
+    else:
+        assert (m.group(2), v.group(1)) == G.SERVER_SITUS
 
 
 def test_jendela_nli_berurutan_dan_terbatas():
