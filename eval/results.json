@@ -5775,6 +5775,11 @@
     "model": "onnx-community/Qwen2.5-0.5B-Instruct",
     "revisi": "22942cb7d7ba4cc81bb4673549ca4d4614469b5e",
     "dtype": "q4"
+   },
+   "bertahan-llama-3.3-70b": {
+    "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "revisi": null,
+    "dtype": null
    }
   },
   "polos": {
@@ -6429,6 +6434,85 @@
       "mentah": "Dengan demikian, syarat-syarat yang harus dipenuhi oleh teknisi bejana tekanan meliputi:\n\n1. Berpendidikan minimal SMK Jurusan Teknik/SMA\n2. Berbadan sehat menurut keterangan dokter\n3. Umur paling rendah 21 (dua puluh satu) tahun\n4. Hasil Penyakit Kehatian SMK Jurusan Teknik/SMA\n5. Nilai PI, PO, V, dan n yang diterima dari Menteri K3\n6. Lulusan yang memenuhi syarat 1-5\n7. Hasil Penyakit Kehatian SMK Jurusan Teknik/SMA\n8. Nilai PI, PO, V, dan n yang diterima dari Menteri K3\n9. Hasil Penyakit Kehatian SMK Jurusan Teknik/SMA\n10. Nilai PI, PO, V, dan n yang diterima dari"
      }
     ]
+   }
+  },
+  "bertahan-llama-3.3-70b": {
+   "dev": {
+    "n": 104,
+    "mode": {
+     "tolak_model": 5,
+     "tolak_gerbang": 51,
+     "generatif": 48
+    },
+    "jawaban_benar": {
+     "n": 65,
+     "k": 43,
+     "nilai": 0.6615,
+     "bawah": 0.5404,
+     "atas": 0.7647
+    },
+    "dijawab_padahal_tak_terjawab": {
+     "n": 39,
+     "k": 0,
+     "nilai": 0.0,
+     "bawah": 0.0,
+     "atas": 0.0897
+    },
+    "menolak_padahal_terjawab": {
+     "n": 65,
+     "k": 17,
+     "nilai": 0.2615,
+     "bawah": 0.1702,
+     "atas": 0.3795
+    },
+    "sitasi_ada_yang_sah": {
+     "n": 48,
+     "k": 48,
+     "nilai": 1.0,
+     "bawah": 0.9259,
+     "atas": 1.0
+    },
+    "sitasi_semua_sah": {
+     "n": 48,
+     "k": 41,
+     "nilai": 0.8542,
+     "bawah": 0.7283,
+     "atas": 0.9275
+    },
+    "kalimat_didukung": {
+     "n": 78,
+     "k": 66,
+     "nilai": 0.8462,
+     "bawah": 0.7501,
+     "atas": 0.9097
+    },
+    "jawaban_seluruhnya_didukung": {
+     "n": 48,
+     "k": 36,
+     "nilai": 0.75,
+     "bawah": 0.6122,
+     "atas": 0.8508
+    },
+    "kalimat_didukung_sebelum_pemeriksaan": {
+     "n": 78,
+     "k": 66,
+     "nilai": 0.8462,
+     "bawah": 0.7501,
+     "atas": 0.9097
+    },
+    "jawaban_dengan_kalimat_tanpa_sitasi": {
+     "n": 104,
+     "k": 1,
+     "nilai": 0.0096,
+     "bawah": 0.0017,
+     "atas": 0.0525
+    },
+    "nli_belum_dihitung": 0,
+    "detik_per_jawaban_cpu": {
+     "median": 1.5,
+     "p90": 3.6
+    },
+    "belum_dibangkitkan": 0
    }
   }
  },

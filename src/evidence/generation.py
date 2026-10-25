@@ -64,7 +64,7 @@ MODEL_SERVER = {
 
 # Model dan varian prompt mode server situs: (kunci model, varian), sama dengan MODEL_SERVER dan
 # VARIAN_SERVER di prompt.js (diuji). None sampai putaran 3 memilih (choose_server).
-SERVER_SITUS: tuple[str, str] | None = None
+SERVER_SITUS: tuple[str, str] | None = ("llama-3.3-70b", "bertahan")
 
 
 def konfigurasi_server() -> str | None:

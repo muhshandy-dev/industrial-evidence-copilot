@@ -47,9 +47,10 @@ export const MODEL_SERVER_KANDIDAT = {
   "llama-4-scout": { id: "@cf/meta/llama-4-scout-17b-16e-instruct", nama: "Llama 4 Scout 17B-16E Instruct", penyedia: "workers-ai", lisensi: "Llama 4 Community License" },
   "mistral-small-3.1": { id: "@cf/mistralai/mistral-small-3.1-24b-instruct", nama: "Mistral Small 3.1 24B Instruct", penyedia: "workers-ai", lisensi: "Apache-2.0" },
 };
-// Model server yang dipakai situs: belum ada sampai putaran 3 memilih. Selama null, Pages
-// Function menolak permintaan dan situs tidak menawarkan mode server.
-export const MODEL_SERVER = null;
+// Model server yang dipakai situs, dipilih putaran 3 dengan aturan choose_server
+// (docs/eksperimen-prompt.md). Selama null, Pages Function menolak permintaan dan situs tidak
+// menawarkan mode server.
+export const MODEL_SERVER = MODEL_SERVER_KANDIDAT["llama-3.3-70b"];
 // Varian prompt untuk model server (dipilih bersama modelnya).
 export const VARIAN_SERVER = "bertahan";
 export const MODELS = Object.fromEntries([MODEL, MODEL_CPU, ...Object.values(MODEL_KANDIDAT), ...Object.values(MODEL_SERVER_KANDIDAT)].map((m) => [m.id, m]));
@@ -243,7 +244,9 @@ export function periksa(hasil, pasal) {
 // Sidik prompt (pesan, model dengan revisi dan dtype, batas token). Keluaran evaluasi yang
 // sidiknya berbeda dari prompt saat ini dianggap basi dan tidak dihitung.
 export async function promptSha(pesan, model = MODEL) {
-  const data = new TextEncoder().encode(JSON.stringify({ pesan, model, max: MAX_TOKEN_BARU }));
+  // Nama tampilan tidak ikut sidik: mengubahnya tidak mengubah prompt atau model yang dipanggil.
+  const { nama: _nama, ...m } = model;
+  const data = new TextEncoder().encode(JSON.stringify({ pesan, model: m, max: MAX_TOKEN_BARU }));
   const buf = await crypto.subtle.digest("SHA-256", data);
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
 }

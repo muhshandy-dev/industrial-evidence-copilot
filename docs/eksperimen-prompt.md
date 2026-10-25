@@ -172,7 +172,51 @@ suhu 0 tidak menjamin keluaran yang persis sama di setiap panggilan. Keluaran me
 supaya angka dapat dihitung ulang.
 
 Workflow `Eksperimen model server` (dispatch) memanggil `/api/jawab` di deploy Preview (binding AI
-yang sama dengan situs; Preview boleh memilih kandidat model, produksi tidak). Jalur cadangan: REST
-API dengan secret `CLOUDFLARE_ACCOUNT_ID` dan
-`CLOUDFLARE_API_TOKEN`. Bila kuota habis di tengah jalan, keluaran yang sudah ada di-commit dan run
-berikutnya melanjutkan.
+yang sama dengan situs). Pilihan kandidat model hanya diterima di Preview dan hanya dengan token
+OIDC GitHub Actions dari workflow evaluasi repositori ini (`server/oidc.js`), jadi tidak ada secret
+Cloudflare. Bila kuota habis di tengah jalan, keluaran yang sudah ada di-commit dan run berikutnya
+melanjutkan.
+
+## Hasil putaran 3
+
+Dev, 53 pertanyaan yang sama (50 terjawab, 3 tak terjawab yang lolos gerbang). Urutan pasal dari
+BM25 dengan konteks dan reranker mMiniLM fp32, sama dengan situs. Semua keluaran dibangkitkan pada
+25 Oktober 2026 lewat jalur Preview, dalam kuota gratis (tidak ada galat kuota).
+
+| Konfigurasi | Generatif benar | Mode generatif | Tak terjawab yang dijawab | Didukung NLI | Sitasi semua sah | Terjawab tapi ditolak |
+| --- | --- | --- | --- | --- | --- | --- |
+| bertahan, Qwen2.5-1.5B (pembanding) | 0 | 0 | 0 | 0 dari 0 | 0 dari 0 | 24 |
+| bertahan, Llama 4 Scout | 32 | 42 | 0 | 36 dari 53 (68%) | 35 dari 42 | 1 |
+| bertahan, Mistral Small 3.1 24B | 39 | 46 | 0 | 45 dari 54 (83%) | 44 dari 46 | 4 |
+| **bertahan, Llama 3.3 70B** | **43** | 48 | 0 | 66 dari 78 (85%) | 41 dari 48 | 2 |
+| k3, Llama 4 Scout | 42 | 47 | 0 | 42 dari 56 (75%) | 43 dari 47 | 3 |
+| k3, Mistral Small 3.1 24B | 43 | 48 | 0 | 44 dari 53 (83%) | 47 dari 48 | 2 |
+| k3, Llama 3.3 70B | 44 | 48 | 0 | 43 dari 52 (83%) | 47 dari 48 | 2 |
+
+Sumber: `eval/eksperimen-prompt.json` (`terpilih_putaran_3`), keluaran mentah di
+`eval/cache/gen/<konfigurasi>/dev.jsonl`.
+
+**Terpilih menurut aturan: prompt bertahan dengan Llama 3.3 70B.** Llama 4 Scout gugur di syarat
+NLI (68% dan 75%, di bawah 80%). Empat konfigurasi lain lolos semua syarat. Nilai tertinggi 44
+(k3 + Llama 3.3 70B); bertahan + Llama 3.3 70B (43) dan k3 + Mistral (43) masih dalam selisih satu,
+dan aturan seri mendahulukan prompt bertahan. Ketiganya praktis setara di dev; pilihan ini mengikuti
+aturan, bukan bukti bahwa ia jelas lebih baik.
+
+Kualitas bahasa Indonesia (pemeriksaan manual atas 53 keluaran terpilih, bukan metrik otomatis):
+kalimatnya baku dan mudah dibaca, angka dan satuan disalin dari pasal. Kelemahan yang terlihat:
+sebagian jawaban menambah kalimat penegas yang tidak perlu ("Ini berarti ...", "Aturan ini
+ditegaskan dalam ..."), dan ada salah ketik kecil (q070: "pekerjaannya" untuk "pekerjanya").
+
+Catatan proses putaran 3:
+
+- Gemma 3 12B diganti Mistral Small 3.1 sebelum hasil apa pun terlihat (lihat aturan di atas).
+- Sempat dicoba reranker 8-bit (`model_quint8_avx2`) untuk memperkecil unduhan dari sekitar 510 MB
+  menjadi 160 MB. Ia memenuhi aturan MRR@10 dev yang ditulis sebelumnya (0,945 berbanding 0,944),
+  tetapi ditolak karena skornya bergantung pada CPU: dihitung ulang di runner lain dengan kode yang
+  sama, selisih logitnya sampai 0,93, sehingga urutan pasal di perangkat pengunjung tidak dapat
+  dijamin sama dengan evaluasi. Prompt bertahan sempat dibangkitkan dengan urutan 8-bit; 22
+  pertanyaan per model yang urutannya berbeda dibangkitkan ulang dengan urutan fp32 sebelum angka
+  di atas dihitung.
+- Penggunaan kuota dicatat sebagai token (`token_prompt`, `token_keluar` per baris). Total enam
+  konfigurasi: sekitar 430 ribu token masukan dan 15 ribu token keluaran. Workers AI menghitung
+  kuota dalam neuron; angka neuron pastinya terlihat di dasbor Cloudflare, bukan di repositori ini.

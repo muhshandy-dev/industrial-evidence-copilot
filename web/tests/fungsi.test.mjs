@@ -16,10 +16,10 @@ async function muatFungsi(aktif) {
   cpSync(join(akar, "functions"), join(d, "functions"), { recursive: true });
   cpSync(join(akar, "server"), join(d, "server"), { recursive: true });
   cpSync(join(akar, "web/public/js/gen"), join(d, "web/public/js/gen"), { recursive: true });
-  if (aktif) {
-    const p = join(d, "web/public/js/gen/prompt.js");
-    writeFileSync(p, readFileSync(p, "utf8").replace("export const MODEL_SERVER = null;", 'export const MODEL_SERVER = MODEL_SERVER_KANDIDAT["mistral-small-3.1"];'));
-  }
+  const p = join(d, "web/public/js/gen/prompt.js");
+  const isi = readFileSync(p, "utf8").replace(/export const MODEL_SERVER = [^;]+;/,
+    aktif ? 'export const MODEL_SERVER = MODEL_SERVER_KANDIDAT["mistral-small-3.1"];' : "export const MODEL_SERVER = null;");
+  writeFileSync(p, isi);
   return import(join(d, "functions/api/jawab.js"));
 }
 
@@ -163,4 +163,12 @@ test("pengunjung: Origin wajib dan batas permintaan per menit", async () => {
   assert.deepEqual(status, [...Array(f.BATAS_PER_MENIT).fill(200), 429]);
   const lain = minta({ tanya: "Apa itu APD?", pasal: ids }, { "cf-connecting-ip": "203.0.113.10" });
   assert.equal((await f.onRequestPost({ request: lain, env: env(ai) })).status, 200);
+});
+
+test("nama tampilan model tidak mengubah sidik prompt", async () => {
+  const { MODEL_SERVER_KANDIDAT, promptSha } = await import("../public/js/gen/prompt.js");
+  const m = MODEL_SERVER_KANDIDAT["llama-3.3-70b"];
+  const pesan = [{ role: "user", content: "uji" }];
+  assert.equal(await promptSha(pesan, m), await promptSha(pesan, { ...m, nama: "lain" }));
+  assert.notEqual(await promptSha(pesan, m), await promptSha(pesan, { ...m, id: "@cf/lain" }));
 });
