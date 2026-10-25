@@ -112,4 +112,28 @@ Kode: `choose_config` di `src/evidence/generation.py`, diuji.
 
 ## Hasil putaran 2
 
-Belum ada.
+Dev, 53 pertanyaan yang sama. Kolom sama dengan putaran 1. Waktu = median detik per jawaban di
+runner CPU GitHub Actions (bukan waktu di perangkat pengguna).
+
+| Konfigurasi | Generatif benar | Mode generatif | Tak terjawab yang dijawab | Didukung NLI | Waktu CPU |
+| --- | --- | --- | --- | --- | --- |
+| bertahan, Qwen2.5-1.5B (pembanding) | 0 | 0 | 0 | 0 dari 0 | |
+| k1, Qwen2.5-1.5B | 10 | 24 | 1 | 20 dari 37 (54%) | |
+| k3, Qwen2.5-1.5B | 20 | 40 | 2 | 27 dari 41 (66%) | |
+| bertahan, Qwen3-1.7B | 2 | 9 | 1 | 6 dari 15 (40%) | 78 |
+| k1, Qwen3-1.7B | 4 | 17 | 1 | 8 dari 26 (31%) | 85 |
+| k3, Qwen3-1.7B | 2 | 5 | 1 | 2 dari 5 (40%) | 90 |
+| bertahan, Qwen3-4B | 11 | 22 | 1 | 18 dari 30 (60%) | 149 |
+| k1, Qwen3-4B | 10 | 17 | 1 | 9 dari 23 (39%) | 169 |
+| k3, Qwen3-4B | 7 | 17 | 1 | 12 dari 21 (57%) | 171 |
+
+Sumber: `eval/eksperimen-prompt.json` (`terpilih_putaran_2`).
+
+**Menurut aturan putaran 2, tidak ada konfigurasi yang lolos.** Semua kandidat Qwen3 menjawab satu
+pertanyaan tak terjawab (pembanding: 0), dan tidak ada yang mencapai 80% kalimat didukung NLI.
+Qwen3-4B memang menulis sitasi yang lebih rapi (21 dari 22 jawaban generatif bersitasi sah untuk
+prompt bertahan), tetapi hanya 60% kalimatnya didukung, unduhannya sekitar 2,8 GB (q4f16), dan
+satu jawaban butuh sekitar 2,5 menit di CPU runner.
+
+Kesimpulan putaran 2: model yang muat di peramban (sampai 4B) belum memenuhi standar kebenaran
+yang ditetapkan. Keputusan lokasi model dikembalikan ke pemilik proyek, sesuai aturan di atas.
