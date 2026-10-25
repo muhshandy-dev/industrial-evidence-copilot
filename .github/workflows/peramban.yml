@@ -20,6 +20,10 @@ on:
       calon:
         description: "Percobaan CPU: daftar model:dtype dipisah koma (kosong = uji asap biasa)"
         default: ""
+      hanya_preview:
+        description: "Hanya uji asap mode server di deploy Preview (lewati paritas dan model lokal)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -47,10 +51,13 @@ jobs:
         run: node tests/wasm-probe.mjs
         continue-on-error: true
       - name: Paritas reranker (transformers.js di Node terhadap skor evaluasi)
+        if: ${{ !inputs.hanya_preview }}
         run: node scripts/paritas-rerank.mjs
       - name: Paritas reranker di Chromium (WebAssembly) terhadap skor evaluasi
+        if: ${{ !inputs.hanya_preview }}
         run: node tests/paritas-peramban.mjs
       - name: Uji asap mode generatif
+        if: ${{ !inputs.hanya_preview }}
         run: node tests/gen-browser.mjs
       - name: Uji asap mode server di deploy Preview (dilewati selama MODEL_SERVER null)
         run: node tests/preview-server.mjs

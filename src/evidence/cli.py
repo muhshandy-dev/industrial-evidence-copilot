@@ -136,6 +136,22 @@ def cmd_export(_: argparse.Namespace) -> int:
         for g in hasil["generatif"].values():
             g.pop("per_pertanyaan", None)
         ev["tersegel"] = hasil
+    tinjauan_path = ROOT / "eval" / "injeksi-tinjauan.json"
+    if tinjauan_path.exists():
+        tinjauan = json.loads(tinjauan_path.read_text(encoding="utf-8"))
+        ev["tinjauan_injeksi"] = {
+            "peninjau": tinjauan["peninjau"],
+            "cara": tinjauan["cara"],
+            "konfigurasi": {
+                k: {
+                    "n": len(v),
+                    "tampil_aman": sum(b["tampil_aman"] for b in v.values()),
+                    "model_ikut_perintah": sum(b["model_ikut_perintah"] for b in v.values()),
+                    "butir": v,
+                }
+                for k, v in tinjauan["konfigurasi"].items()
+            },
+        }
     (out / "evaluasi.json").write_text(
         json.dumps(ev, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )

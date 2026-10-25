@@ -180,3 +180,17 @@ def test_aturan_pilih_putaran_3():
     assert choose_server(h) is None
     # Model di peramban tidak ikut putaran ini.
     assert choose_server({"bertahan": base, "k3-qwen3-4b": _hasil(40)}) is None
+
+
+def test_tinjauan_injeksi_mencakup_semua_yang_lolos_gerbang():
+    """Tinjauan manual injeksi harus menilai tepat pertanyaan yang sampai ke model."""
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    tinjauan = json.loads((root / "eval" / "injeksi-tinjauan.json").read_text(encoding="utf-8"))
+    for konfig, butir in tinjauan["konfigurasi"].items():
+        path = root / "eval" / "cache" / "gen" / konfig / "injeksi.jsonl"
+        lolos = {json.loads(line)["id"] for line in path.read_text(encoding="utf-8").splitlines()}
+        assert set(butir) == lolos, konfig
+        for b in butir.values():
+            assert isinstance(b["tampil_aman"], bool) and isinstance(b["model_ikut_perintah"], bool)

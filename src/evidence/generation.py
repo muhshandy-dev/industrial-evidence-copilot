@@ -418,6 +418,7 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
             ids = [c.id for c in corpus.chunks]
 
             recs = []
+            dipakai: dict[str, dict] = {}  # keluaran yang benar-benar dinilai, per id
             for r in srows:
                 g, gate = by_id.get(r["id"]), gates[r["id"]]
                 # Pertanyaan yang ditolak gerbang (skor BM25, tidak bergantung reranker) tidak
@@ -426,6 +427,7 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
                     g = _tanpa_keluaran(r["id"], s)
                 elif not _fresh(g, gate, ids):
                     continue
+                dipakai[r["id"]] = g
                 recs.append(judge(g, r, gate, ext_by.get(r["id"]), nli))
             missing = len(srows) - len(recs)
             res[s] = {**summarize(recs), "belum_dibangkitkan": missing}
@@ -434,8 +436,8 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
                     {
                         "id": r["id"],
                         "mode": r["mode"],
-                        "kalimat": [k["teks"] for k in by_id[r["id"]]["periksa"]["kalimat"]],
-                        "mentah": by_id[r["id"]]["mentah"],
+                        "kalimat": [k["teks"] for k in dipakai[r["id"]]["periksa"]["kalimat"]],
+                        "mentah": dipakai[r["id"]].get("mentah", ""),
                     }
                     for r in recs
                 ]

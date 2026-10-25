@@ -31,6 +31,13 @@ const page = await browser.newPage();
 const galat = [];
 page.on("console", (m) => { if (m.type() === "error") galat.push(m.text()); });
 page.on("pageerror", (e) => galat.push(String(e)));
+// Catat jawaban /api/jawab supaya kegagalan bisa didiagnosis dari log.
+const jawabApi = [];
+page.on("response", async (r) => {
+  if (!r.url().endsWith("/api/jawab") || r.request().method() !== "POST") return;
+  const badan = await r.text().catch(() => "");
+  jawabApi.push(`${r.status()} ${badan.slice(0, 300)}`);
+});
 try {
   const res = await page.goto(`${BASE}/`);
   assert.ok(res.headers()["content-security-policy"], "header CSP tidak ada");
@@ -45,6 +52,8 @@ try {
   const mode = await page.getAttribute(".jawaban[data-selesai=ya]", "data-mode");
   const isi = (await page.textContent(".jawaban")).slice(0, 600);
   console.log("mode:", mode, "\nkepala:", await page.textContent(".jawaban-kepala"), "\nisi:", isi);
+  console.log("pesan:", await page.locator(".gen-tunggu").textContent().catch(() => "-"));
+  console.log("POST /api/jawab:", jawabApi.join(" | ") || "tidak ada");
   assert.equal(mode, "generatif", "pertanyaan yang jelas terjawab harus dijawab model server");
   assert.equal(await page.getAttribute(".jawaban[data-selesai=ya]", "data-jalur"), "server");
   assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat tanpa sitasi");
