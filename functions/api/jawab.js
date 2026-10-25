@@ -84,6 +84,8 @@ export async function onRequestPost({ request, env }) {
     return json({ mentah: teksServer(hasil), model: model.id, varian, pasal: pasal.map((p) => p.id), usage: hasil?.usage ?? null });
   } catch (e) {
     if (kuotaHabis(e)) return json({ galat: "kuota_habis" }, 429);
-    return json({ galat: "model_gagal" }, 502);
+    // Rincian galat hanya di Preview, untuk diagnosis evaluasi.
+    const rinci = new URL(request.url).hostname === HOST_PRODUKSI ? {} : { rinci: String(e?.message ?? e).slice(0, 300) };
+    return json({ galat: "model_gagal", ...rinci }, 502);
   }
 }
