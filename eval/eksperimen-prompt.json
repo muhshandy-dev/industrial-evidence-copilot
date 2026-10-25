@@ -9,31 +9,31 @@
  "terjawab": 50,
  "hasil": {
   "bertahan": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 16,
-    "tolak_model": 15
+    "tolak_model": 26,
+    "cadangan_ekstraktif": 27
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 13,
-    "nilai": 0.4194,
-    "bawah": 0.2642,
-    "atas": 0.5923
+    "n": 50,
+    "k": 24,
+    "nilai": 0.48,
+    "bawah": 0.348,
+    "atas": 0.6149
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
+    "n": 3,
     "k": 0,
     "nilai": 0.0,
     "bawah": 0.0,
-    "atas": 1.0
+    "atas": 0.5615
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
-    "k": 16,
-    "nilai": 0.5161,
-    "bawah": 0.3484,
-    "atas": 0.6803
+    "n": 50,
+    "k": 24,
+    "nilai": 0.48,
+    "bawah": 0.348,
+    "atas": 0.6149
    },
    "sitasi_ada_yang_sah": {
     "n": 0,
@@ -71,251 +71,251 @@
     "atas": 1.0
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 8,
-    "nilai": 0.2581,
-    "bawah": 0.137,
-    "atas": 0.4325
+    "n": 53,
+    "k": 18,
+    "nilai": 0.3396,
+    "bawah": 0.2269,
+    "atas": 0.4741
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 27.8,
-    "p90": 38.7
+    "median": 28.4,
+    "p90": 44.1
    },
-   "belum_dibangkitkan": 22,
+   "belum_dibangkitkan": 0,
    "generatif_benar": 0
   },
   "bertahan-cpu": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 20,
-    "generatif": 8,
-    "tolak_model": 3
+    "cadangan_ekstraktif": 36,
+    "generatif": 13,
+    "tolak_model": 4
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 17,
-    "nilai": 0.5484,
-    "bawah": 0.3777,
-    "atas": 0.7084
+    "n": 50,
+    "k": 31,
+    "nilai": 0.62,
+    "bawah": 0.4815,
+    "atas": 0.7414
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 2,
+    "nilai": 0.6667,
+    "bawah": 0.2077,
+    "atas": 0.9385
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
-    "k": 3,
-    "nilai": 0.0968,
-    "bawah": 0.0335,
-    "atas": 0.249
+    "n": 50,
+    "k": 4,
+    "nilai": 0.08,
+    "bawah": 0.0315,
+    "atas": 0.1884
    },
    "sitasi_ada_yang_sah": {
-    "n": 8,
-    "k": 8,
-    "nilai": 1.0,
-    "bawah": 0.6756,
-    "atas": 1.0
+    "n": 12,
+    "k": 11,
+    "nilai": 0.9167,
+    "bawah": 0.6461,
+    "atas": 0.9851
    },
    "sitasi_semua_sah": {
-    "n": 8,
-    "k": 5,
-    "nilai": 0.625,
-    "bawah": 0.3057,
-    "atas": 0.8632
+    "n": 12,
+    "k": 8,
+    "nilai": 0.6667,
+    "bawah": 0.3906,
+    "atas": 0.8619
    },
    "kalimat_didukung": {
-    "n": 18,
-    "k": 2,
-    "nilai": 0.1111,
-    "bawah": 0.031,
-    "atas": 0.328
+    "n": 24,
+    "k": 3,
+    "nilai": 0.125,
+    "bawah": 0.0434,
+    "atas": 0.31
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 8,
+    "n": 13,
     "k": 1,
-    "nilai": 0.125,
-    "bawah": 0.0224,
-    "atas": 0.4709
+    "nilai": 0.0769,
+    "bawah": 0.0137,
+    "atas": 0.3331
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 19,
-    "k": 2,
-    "nilai": 0.1053,
-    "bawah": 0.0294,
-    "atas": 0.3139
+    "n": 25,
+    "k": 3,
+    "nilai": 0.12,
+    "bawah": 0.0417,
+    "atas": 0.2996
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 23,
-    "nilai": 0.7419,
-    "bawah": 0.5675,
-    "atas": 0.863
+    "n": 53,
+    "k": 43,
+    "nilai": 0.8113,
+    "bawah": 0.6864,
+    "atas": 0.8941
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
     "median": 13.5,
-    "p90": 21.1
+    "p90": 25.5
    },
-   "belum_dibangkitkan": 22,
+   "belum_dibangkitkan": 0,
    "generatif_benar": 0
   },
   "bertahan-qwen3-1.7b": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 26,
-    "generatif": 5
+    "cadangan_ekstraktif": 44,
+    "generatif": 9
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 20,
-    "nilai": 0.6452,
-    "bawah": 0.4695,
-    "atas": 0.7888
+    "n": 50,
+    "k": 36,
+    "nilai": 0.72,
+    "bawah": 0.5833,
+    "atas": 0.8253
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 2,
-    "nilai": 0.0645,
-    "bawah": 0.0179,
-    "atas": 0.2072
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
    },
    "sitasi_ada_yang_sah": {
-    "n": 5,
-    "k": 4,
-    "nilai": 0.8,
-    "bawah": 0.3755,
-    "atas": 0.9638
+    "n": 9,
+    "k": 7,
+    "nilai": 0.7778,
+    "bawah": 0.4526,
+    "atas": 0.9368
    },
    "sitasi_semua_sah": {
-    "n": 5,
-    "k": 4,
-    "nilai": 0.8,
-    "bawah": 0.3755,
-    "atas": 0.9638
+    "n": 9,
+    "k": 6,
+    "nilai": 0.6667,
+    "bawah": 0.3542,
+    "atas": 0.8794
    },
    "kalimat_didukung": {
-    "n": 8,
-    "k": 2,
-    "nilai": 0.25,
-    "bawah": 0.0715,
-    "atas": 0.5907
+    "n": 15,
+    "k": 6,
+    "nilai": 0.4,
+    "bawah": 0.1982,
+    "atas": 0.6425
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 5,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 0.4345
+    "n": 9,
+    "k": 1,
+    "nilai": 0.1111,
+    "bawah": 0.0199,
+    "atas": 0.435
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 8,
-    "k": 2,
-    "nilai": 0.25,
-    "bawah": 0.0715,
-    "atas": 0.5907
+    "n": 15,
+    "k": 6,
+    "nilai": 0.4,
+    "bawah": 0.1982,
+    "atas": 0.6425
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 31,
-    "nilai": 1.0,
-    "bawah": 0.8897,
-    "atas": 1.0
+    "n": 53,
+    "k": 52,
+    "nilai": 0.9811,
+    "bawah": 0.9006,
+    "atas": 0.9967
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 82.7,
-    "p90": 106.7
+    "median": 78.2,
+    "p90": 107.0
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 1
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 2
   },
   "bertahan-qwen3-4b": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 18,
-    "generatif": 13
+    "cadangan_ekstraktif": 31,
+    "generatif": 22
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 17,
-    "nilai": 0.5484,
-    "bawah": 0.3777,
-    "atas": 0.7084
+    "n": 50,
+    "k": 33,
+    "nilai": 0.66,
+    "bawah": 0.5215,
+    "atas": 0.7756
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 2,
-    "nilai": 0.0645,
-    "bawah": 0.0179,
-    "atas": 0.2072
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
    },
    "sitasi_ada_yang_sah": {
-    "n": 13,
-    "k": 12,
-    "nilai": 0.9231,
-    "bawah": 0.6669,
-    "atas": 0.9863
+    "n": 22,
+    "k": 21,
+    "nilai": 0.9545,
+    "bawah": 0.782,
+    "atas": 0.9919
    },
    "sitasi_semua_sah": {
-    "n": 13,
-    "k": 12,
-    "nilai": 0.9231,
-    "bawah": 0.6669,
-    "atas": 0.9863
+    "n": 22,
+    "k": 21,
+    "nilai": 0.9545,
+    "bawah": 0.782,
+    "atas": 0.9919
    },
    "kalimat_didukung": {
-    "n": 16,
-    "k": 10,
-    "nilai": 0.625,
-    "bawah": 0.3864,
-    "atas": 0.8152
+    "n": 30,
+    "k": 18,
+    "nilai": 0.6,
+    "bawah": 0.4232,
+    "atas": 0.7541
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 13,
-    "k": 7,
-    "nilai": 0.5385,
-    "bawah": 0.2914,
-    "atas": 0.7679
+    "n": 22,
+    "k": 12,
+    "nilai": 0.5455,
+    "bawah": 0.3466,
+    "atas": 0.7308
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 16,
-    "k": 10,
-    "nilai": 0.625,
-    "bawah": 0.3864,
-    "atas": 0.8152
+    "n": 30,
+    "k": 18,
+    "nilai": 0.6,
+    "bawah": 0.4232,
+    "atas": 0.7541
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 31,
+    "n": 53,
+    "k": 53,
     "nilai": 1.0,
-    "bawah": 0.8897,
+    "bawah": 0.9324,
     "atas": 1.0
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 151.9,
-    "p90": 214.6
+    "median": 149.3,
+    "p90": 217.8
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 5
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 11
   },
   "bertahan-llama-3.3-70b": {
    "n": 53,
@@ -353,17 +353,17 @@
    },
    "sitasi_semua_sah": {
     "n": 48,
-    "k": 40,
-    "nilai": 0.8333,
-    "bawah": 0.7042,
-    "atas": 0.913
+    "k": 41,
+    "nilai": 0.8542,
+    "bawah": 0.7283,
+    "atas": 0.9275
    },
    "kalimat_didukung": {
-    "n": 79,
-    "k": 67,
-    "nilai": 0.8481,
-    "bawah": 0.753,
-    "atas": 0.9109
+    "n": 78,
+    "k": 66,
+    "nilai": 0.8462,
+    "bawah": 0.7501,
+    "atas": 0.9097
    },
    "jawaban_seluruhnya_didukung": {
     "n": 48,
@@ -373,11 +373,11 @@
     "atas": 0.8508
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 79,
-    "k": 67,
-    "nilai": 0.8481,
-    "bawah": 0.753,
-    "atas": 0.9109
+    "n": 78,
+    "k": 66,
+    "nilai": 0.8462,
+    "bawah": 0.7501,
+    "atas": 0.9097
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
     "n": 53,
@@ -388,8 +388,8 @@
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 1.6,
-    "p90": 6.7
+    "median": 1.5,
+    "p90": 3.6
    },
    "belum_dibangkitkan": 0,
    "generatif_benar": 43
@@ -398,15 +398,15 @@
    "n": 53,
    "mode": {
     "tolak_model": 4,
-    "generatif": 43,
-    "cadangan_ekstraktif": 6
+    "generatif": 42,
+    "cadangan_ekstraktif": 7
    },
    "jawaban_benar": {
     "n": 50,
-    "k": 39,
-    "nilai": 0.78,
-    "bawah": 0.6476,
-    "atas": 0.8725
+    "k": 38,
+    "nilai": 0.76,
+    "bawah": 0.6259,
+    "atas": 0.857
    },
    "dijawab_padahal_tak_terjawab": {
     "n": 3,
@@ -423,54 +423,54 @@
     "atas": 0.105
    },
    "sitasi_ada_yang_sah": {
-    "n": 43,
-    "k": 42,
-    "nilai": 0.9767,
-    "bawah": 0.8794,
-    "atas": 0.9959
+    "n": 42,
+    "k": 41,
+    "nilai": 0.9762,
+    "bawah": 0.8768,
+    "atas": 0.9958
    },
    "sitasi_semua_sah": {
-    "n": 43,
+    "n": 42,
     "k": 35,
-    "nilai": 0.814,
-    "bawah": 0.6738,
-    "atas": 0.9026
+    "nilai": 0.8333,
+    "bawah": 0.694,
+    "atas": 0.9168
    },
    "kalimat_didukung": {
-    "n": 55,
-    "k": 39,
-    "nilai": 0.7091,
-    "bawah": 0.5786,
-    "atas": 0.8123
+    "n": 53,
+    "k": 36,
+    "nilai": 0.6792,
+    "bawah": 0.5452,
+    "atas": 0.7891
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 43,
-    "k": 30,
-    "nilai": 0.6977,
-    "bawah": 0.5489,
-    "atas": 0.814
+    "n": 42,
+    "k": 29,
+    "nilai": 0.6905,
+    "bawah": 0.5397,
+    "atas": 0.8093
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 55,
-    "k": 39,
-    "nilai": 0.7091,
-    "bawah": 0.5786,
-    "atas": 0.8123
+    "n": 53,
+    "k": 36,
+    "nilai": 0.6792,
+    "bawah": 0.5452,
+    "atas": 0.7891
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
     "n": 53,
-    "k": 8,
-    "nilai": 0.1509,
-    "bawah": 0.0785,
-    "atas": 0.2705
+    "k": 9,
+    "nilai": 0.1698,
+    "bawah": 0.092,
+    "atas": 0.2923
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 0.9,
-    "p90": 1.9
+    "median": 1.0,
+    "p90": 2.3
    },
    "belum_dibangkitkan": 0,
-   "generatif_benar": 34
+   "generatif_benar": 32
   },
   "bertahan-mistral-small-3.1": {
    "n": 53,
@@ -514,11 +514,11 @@
     "atas": 0.988
    },
    "kalimat_didukung": {
-    "n": 55,
-    "k": 46,
-    "nilai": 0.8364,
-    "bawah": 0.7174,
-    "atas": 0.9114
+    "n": 54,
+    "k": 45,
+    "nilai": 0.8333,
+    "bawah": 0.7126,
+    "atas": 0.9098
    },
    "jawaban_seluruhnya_didukung": {
     "n": 46,
@@ -528,11 +528,11 @@
     "atas": 0.9091
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 55,
-    "k": 46,
-    "nilai": 0.8364,
-    "bawah": 0.7174,
-    "atas": 0.9114
+    "n": 54,
+    "k": 45,
+    "nilai": 0.8333,
+    "bawah": 0.7126,
+    "atas": 0.9098
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
     "n": 53,
@@ -544,937 +544,937 @@
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
     "median": 1.2,
-    "p90": 3.5
+    "p90": 3.3
    },
    "belum_dibangkitkan": 0,
    "generatif_benar": 39
   },
   "k1": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "generatif": 15,
-    "tolak_model": 2,
-    "cadangan_ekstraktif": 14
+    "tolak_model": 4,
+    "generatif": 24,
+    "cadangan_ekstraktif": 25
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 16,
-    "nilai": 0.5161,
-    "bawah": 0.3484,
-    "atas": 0.6803
+    "n": 50,
+    "k": 29,
+    "nilai": 0.58,
+    "bawah": 0.4423,
+    "atas": 0.7062
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
-    "k": 4,
-    "nilai": 0.129,
-    "bawah": 0.0513,
-    "atas": 0.2885
+    "n": 50,
+    "k": 5,
+    "nilai": 0.1,
+    "bawah": 0.0435,
+    "atas": 0.2136
    },
    "sitasi_ada_yang_sah": {
-    "n": 15,
-    "k": 14,
-    "nilai": 0.9333,
-    "bawah": 0.7018,
-    "atas": 0.9881
+    "n": 24,
+    "k": 22,
+    "nilai": 0.9167,
+    "bawah": 0.7415,
+    "atas": 0.9768
    },
    "sitasi_semua_sah": {
-    "n": 15,
-    "k": 13,
-    "nilai": 0.8667,
-    "bawah": 0.6212,
-    "atas": 0.9626
+    "n": 24,
+    "k": 18,
+    "nilai": 0.75,
+    "bawah": 0.551,
+    "atas": 0.88
    },
    "kalimat_didukung": {
-    "n": 24,
-    "k": 13,
-    "nilai": 0.5417,
-    "bawah": 0.3507,
-    "atas": 0.7211
+    "n": 37,
+    "k": 20,
+    "nilai": 0.5405,
+    "bawah": 0.3838,
+    "atas": 0.6896
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 15,
-    "k": 8,
-    "nilai": 0.5333,
-    "bawah": 0.3012,
-    "atas": 0.7519
+    "n": 24,
+    "k": 12,
+    "nilai": 0.5,
+    "bawah": 0.3143,
+    "atas": 0.6857
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 24,
-    "k": 13,
-    "nilai": 0.5417,
-    "bawah": 0.3507,
-    "atas": 0.7211
+    "n": 37,
+    "k": 20,
+    "nilai": 0.5405,
+    "bawah": 0.3838,
+    "atas": 0.6896
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 14,
-    "nilai": 0.4516,
-    "bawah": 0.2916,
-    "atas": 0.6223
+    "n": 53,
+    "k": 24,
+    "nilai": 0.4528,
+    "bawah": 0.3266,
+    "atas": 0.5855
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 48.6,
-    "p90": 85.0
+    "median": 46.1,
+    "p90": 103.0
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 6
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 10
   },
   "k1-cpu": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 14,
-    "generatif": 17
+    "generatif": 31,
+    "cadangan_ekstraktif": 22
    },
    "jawaban_benar": {
+    "n": 50,
+    "k": 23,
+    "nilai": 0.46,
+    "bawah": 0.3297,
+    "atas": 0.596
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 3,
+    "nilai": 1.0,
+    "bawah": 0.4385,
+    "atas": 1.0
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 1,
+    "nilai": 0.02,
+    "bawah": 0.0035,
+    "atas": 0.105
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 28,
+    "k": 27,
+    "nilai": 0.9643,
+    "bawah": 0.8229,
+    "atas": 0.9937
+   },
+   "sitasi_semua_sah": {
+    "n": 28,
+    "k": 21,
+    "nilai": 0.75,
+    "bawah": 0.5664,
+    "atas": 0.8732
+   },
+   "kalimat_didukung": {
+    "n": 50,
+    "k": 22,
+    "nilai": 0.44,
+    "bawah": 0.3116,
+    "atas": 0.5769
+   },
+   "jawaban_seluruhnya_didukung": {
     "n": 31,
     "k": 12,
     "nilai": 0.3871,
     "bawah": 0.2373,
     "atas": 0.5618
    },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 50,
+    "k": 22,
+    "nilai": 0.44,
+    "bawah": 0.3116,
+    "atas": 0.5769
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 40,
+    "nilai": 0.7547,
+    "bawah": 0.6243,
+    "atas": 0.8507
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 25.3,
+    "p90": 39.6
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 5
+  },
+  "k1-qwen3-1.7b": {
+   "n": 53,
+   "mode": {
+    "cadangan_ekstraktif": 36,
+    "generatif": 17
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 33,
+    "nilai": 0.66,
+    "bawah": 0.5215,
+    "atas": 0.7756
+   },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 1,
-    "nilai": 0.0323,
-    "bawah": 0.0057,
-    "atas": 0.1619
+    "nilai": 0.02,
+    "bawah": 0.0035,
+    "atas": 0.105
    },
    "sitasi_ada_yang_sah": {
+    "n": 16,
+    "k": 11,
+    "nilai": 0.6875,
+    "bawah": 0.444,
+    "atas": 0.8584
+   },
+   "sitasi_semua_sah": {
+    "n": 16,
+    "k": 7,
+    "nilai": 0.4375,
+    "bawah": 0.231,
+    "atas": 0.6682
+   },
+   "kalimat_didukung": {
+    "n": 26,
+    "k": 8,
+    "nilai": 0.3077,
+    "bawah": 0.165,
+    "atas": 0.4999
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 17,
+    "k": 3,
+    "nilai": 0.1765,
+    "bawah": 0.0619,
+    "atas": 0.4103
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 26,
+    "k": 8,
+    "nilai": 0.3077,
+    "bawah": 0.165,
+    "atas": 0.4999
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 53,
+    "k": 51,
+    "nilai": 0.9623,
+    "bawah": 0.8725,
+    "atas": 0.9896
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 85.0,
+    "p90": 113.7
+   },
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 4
+  },
+  "k1-qwen3-4b": {
+   "n": 53,
+   "mode": {
+    "cadangan_ekstraktif": 36,
+    "generatif": 17
+   },
+   "jawaban_benar": {
+    "n": 50,
+    "k": 37,
+    "nilai": 0.74,
+    "bawah": 0.6045,
+    "atas": 0.8413
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
+   },
+   "menolak_padahal_terjawab": {
+    "n": 50,
+    "k": 2,
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 17,
+    "k": 17,
+    "nilai": 1.0,
+    "bawah": 0.8157,
+    "atas": 1.0
+   },
+   "sitasi_semua_sah": {
     "n": 17,
     "k": 16,
     "nilai": 0.9412,
     "bawah": 0.7302,
     "atas": 0.9895
    },
-   "sitasi_semua_sah": {
-    "n": 17,
-    "k": 13,
-    "nilai": 0.7647,
-    "bawah": 0.5274,
-    "atas": 0.9044
-   },
    "kalimat_didukung": {
-    "n": 26,
-    "k": 12,
-    "nilai": 0.4615,
-    "bawah": 0.2876,
-    "atas": 0.6454
+    "n": 23,
+    "k": 9,
+    "nilai": 0.3913,
+    "bawah": 0.2216,
+    "atas": 0.5921
    },
    "jawaban_seluruhnya_didukung": {
     "n": 17,
-    "k": 8,
-    "nilai": 0.4706,
-    "bawah": 0.2617,
-    "atas": 0.6904
+    "k": 7,
+    "nilai": 0.4118,
+    "bawah": 0.2161,
+    "atas": 0.6399
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 26,
-    "k": 12,
-    "nilai": 0.4615,
-    "bawah": 0.2876,
-    "atas": 0.6454
+    "n": 23,
+    "k": 9,
+    "nilai": 0.3913,
+    "bawah": 0.2216,
+    "atas": 0.5921
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 23,
-    "nilai": 0.7419,
-    "bawah": 0.5675,
-    "atas": 0.863
-   },
-   "nli_belum_dihitung": 0,
-   "detik_per_jawaban_cpu": {
-    "median": 21.5,
-    "p90": 40.0
-   },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 2
-  },
-  "k1-qwen3-1.7b": {
-   "n": 31,
-   "mode": {
-    "generatif": 11,
-    "cadangan_ekstraktif": 20
-   },
-   "jawaban_benar": {
-    "n": 31,
-    "k": 19,
-    "nilai": 0.6129,
-    "bawah": 0.4382,
-    "atas": 0.7627
-   },
-   "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
-   },
-   "menolak_padahal_terjawab": {
-    "n": 31,
-    "k": 1,
-    "nilai": 0.0323,
-    "bawah": 0.0057,
-    "atas": 0.1619
-   },
-   "sitasi_ada_yang_sah": {
-    "n": 11,
-    "k": 8,
-    "nilai": 0.7273,
-    "bawah": 0.4344,
-    "atas": 0.9025
-   },
-   "sitasi_semua_sah": {
-    "n": 11,
-    "k": 6,
-    "nilai": 0.5455,
-    "bawah": 0.2801,
-    "atas": 0.7873
-   },
-   "kalimat_didukung": {
-    "n": 16,
-    "k": 5,
-    "nilai": 0.3125,
-    "bawah": 0.1416,
-    "atas": 0.556
-   },
-   "jawaban_seluruhnya_didukung": {
-    "n": 11,
-    "k": 2,
-    "nilai": 0.1818,
-    "bawah": 0.0514,
-    "atas": 0.477
-   },
-   "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 16,
-    "k": 5,
-    "nilai": 0.3125,
-    "bawah": 0.1416,
-    "atas": 0.556
-   },
-   "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 29,
-    "nilai": 0.9355,
-    "bawah": 0.7928,
-    "atas": 0.9821
-   },
-   "nli_belum_dihitung": 0,
-   "detik_per_jawaban_cpu": {
-    "median": 85.0,
-    "p90": 111.5
-   },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 4
-  },
-  "k1-qwen3-4b": {
-   "n": 31,
-   "mode": {
-    "cadangan_ekstraktif": 20,
-    "generatif": 11
-   },
-   "jawaban_benar": {
-    "n": 31,
-    "k": 21,
-    "nilai": 0.6774,
-    "bawah": 0.5014,
-    "atas": 0.8143
-   },
-   "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
-   },
-   "menolak_padahal_terjawab": {
-    "n": 31,
-    "k": 2,
-    "nilai": 0.0645,
-    "bawah": 0.0179,
-    "atas": 0.2072
-   },
-   "sitasi_ada_yang_sah": {
-    "n": 11,
-    "k": 11,
+    "n": 53,
+    "k": 53,
     "nilai": 1.0,
-    "bawah": 0.7412,
-    "atas": 1.0
-   },
-   "sitasi_semua_sah": {
-    "n": 11,
-    "k": 10,
-    "nilai": 0.9091,
-    "bawah": 0.6226,
-    "atas": 0.9838
-   },
-   "kalimat_didukung": {
-    "n": 17,
-    "k": 6,
-    "nilai": 0.3529,
-    "bawah": 0.1731,
-    "atas": 0.587
-   },
-   "jawaban_seluruhnya_didukung": {
-    "n": 11,
-    "k": 4,
-    "nilai": 0.3636,
-    "bawah": 0.1517,
-    "atas": 0.6462
-   },
-   "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 17,
-    "k": 6,
-    "nilai": 0.3529,
-    "bawah": 0.1731,
-    "atas": 0.587
-   },
-   "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 31,
-    "nilai": 1.0,
-    "bawah": 0.8897,
+    "bawah": 0.9324,
     "atas": 1.0
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 170.2,
-    "p90": 229.1
+    "median": 168.7,
+    "p90": 230.4
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 7
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 10
   },
   "k2": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 12,
-    "generatif": 19
+    "generatif": 30,
+    "cadangan_ekstraktif": 23
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 15,
-    "nilai": 0.4839,
-    "bawah": 0.3197,
-    "atas": 0.6516
+    "n": 50,
+    "k": 30,
+    "nilai": 0.6,
+    "bawah": 0.4618,
+    "atas": 0.7239
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 2,
+    "nilai": 0.6667,
+    "bawah": 0.2077,
+    "atas": 0.9385
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 2,
-    "nilai": 0.0645,
-    "bawah": 0.0179,
-    "atas": 0.2072
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
    },
    "sitasi_ada_yang_sah": {
-    "n": 19,
-    "k": 16,
-    "nilai": 0.8421,
-    "bawah": 0.6243,
-    "atas": 0.9448
+    "n": 29,
+    "k": 22,
+    "nilai": 0.7586,
+    "bawah": 0.5789,
+    "atas": 0.8778
    },
    "sitasi_semua_sah": {
-    "n": 19,
-    "k": 15,
-    "nilai": 0.7895,
-    "bawah": 0.5667,
-    "atas": 0.9149
+    "n": 29,
+    "k": 20,
+    "nilai": 0.6897,
+    "bawah": 0.5077,
+    "atas": 0.8272
    },
    "kalimat_didukung": {
-    "n": 27,
-    "k": 14,
-    "nilai": 0.5185,
-    "bawah": 0.3399,
-    "atas": 0.6926
+    "n": 42,
+    "k": 24,
+    "nilai": 0.5714,
+    "bawah": 0.4221,
+    "atas": 0.7088
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 19,
-    "k": 10,
-    "nilai": 0.5263,
-    "bawah": 0.3171,
-    "atas": 0.7267
+    "n": 30,
+    "k": 17,
+    "nilai": 0.5667,
+    "bawah": 0.392,
+    "atas": 0.7262
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 27,
-    "k": 14,
-    "nilai": 0.5185,
-    "bawah": 0.3399,
-    "atas": 0.6926
+    "n": 42,
+    "k": 24,
+    "nilai": 0.5714,
+    "bawah": 0.4221,
+    "atas": 0.7088
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 21,
-    "nilai": 0.6774,
-    "bawah": 0.5014,
-    "atas": 0.8143
+    "n": 53,
+    "k": 35,
+    "nilai": 0.6604,
+    "bawah": 0.5259,
+    "atas": 0.7731
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 57.2,
-    "p90": 88.7
+    "median": 57.7,
+    "p90": 98.7
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 9
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 15
   },
   "k2-cpu": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "generatif": 31
+    "generatif": 53
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 12,
-    "nilai": 0.3871,
-    "bawah": 0.2373,
-    "atas": 0.5618
+    "n": 50,
+    "k": 21,
+    "nilai": 0.42,
+    "bawah": 0.2938,
+    "atas": 0.5577
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
+    "n": 3,
+    "k": 3,
+    "nilai": 1.0,
+    "bawah": 0.4385,
     "atas": 1.0
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 0,
     "nilai": 0.0,
     "bawah": 0.0,
-    "atas": 0.1103
+    "atas": 0.0713
    },
    "sitasi_ada_yang_sah": {
-    "n": 31,
-    "k": 28,
-    "nilai": 0.9032,
-    "bawah": 0.751,
-    "atas": 0.9665
+    "n": 50,
+    "k": 47,
+    "nilai": 0.94,
+    "bawah": 0.8378,
+    "atas": 0.9794
    },
    "sitasi_semua_sah": {
-    "n": 31,
-    "k": 11,
-    "nilai": 0.3548,
-    "bawah": 0.2112,
-    "atas": 0.5305
+    "n": 50,
+    "k": 18,
+    "nilai": 0.36,
+    "bawah": 0.2414,
+    "atas": 0.4986
    },
    "kalimat_didukung": {
-    "n": 43,
-    "k": 5,
-    "nilai": 0.1163,
-    "bawah": 0.0507,
-    "atas": 0.2448
+    "n": 71,
+    "k": 11,
+    "nilai": 0.1549,
+    "bawah": 0.0888,
+    "atas": 0.2565
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 31,
-    "k": 4,
-    "nilai": 0.129,
-    "bawah": 0.0513,
-    "atas": 0.2885
+    "n": 53,
+    "k": 8,
+    "nilai": 0.1509,
+    "bawah": 0.0785,
+    "atas": 0.2705
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 43,
-    "k": 5,
-    "nilai": 0.1163,
-    "bawah": 0.0507,
-    "atas": 0.2448
+    "n": 71,
+    "k": 11,
+    "nilai": 0.1549,
+    "bawah": 0.0888,
+    "atas": 0.2565
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 19,
-    "nilai": 0.6129,
-    "bawah": 0.4382,
-    "atas": 0.7627
+    "n": 53,
+    "k": 33,
+    "nilai": 0.6226,
+    "bawah": 0.4881,
+    "atas": 0.7406
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 29.5,
-    "p90": 39.7
+    "median": 30.0,
+    "p90": 40.8
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 12
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 21
   },
   "k3": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "generatif": 25,
-    "cadangan_ekstraktif": 6
+    "generatif": 40,
+    "cadangan_ekstraktif": 13
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 18,
-    "nilai": 0.5806,
-    "bawah": 0.4077,
-    "atas": 0.7358
+    "n": 50,
+    "k": 30,
+    "nilai": 0.6,
+    "bawah": 0.4618,
+    "atas": 0.7239
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 2,
+    "nilai": 0.6667,
+    "bawah": 0.2077,
+    "atas": 0.9385
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 1,
-    "nilai": 0.0323,
-    "bawah": 0.0057,
-    "atas": 0.1619
+    "nilai": 0.02,
+    "bawah": 0.0035,
+    "atas": 0.105
    },
    "sitasi_ada_yang_sah": {
-    "n": 25,
-    "k": 20,
-    "nilai": 0.8,
-    "bawah": 0.6087,
-    "atas": 0.9114
+    "n": 38,
+    "k": 30,
+    "nilai": 0.7895,
+    "bawah": 0.6365,
+    "atas": 0.8893
    },
    "sitasi_semua_sah": {
-    "n": 25,
-    "k": 20,
-    "nilai": 0.8,
-    "bawah": 0.6087,
-    "atas": 0.9114
+    "n": 38,
+    "k": 30,
+    "nilai": 0.7895,
+    "bawah": 0.6365,
+    "atas": 0.8893
    },
    "kalimat_didukung": {
-    "n": 26,
-    "k": 18,
-    "nilai": 0.6923,
-    "bawah": 0.5001,
-    "atas": 0.835
+    "n": 41,
+    "k": 27,
+    "nilai": 0.6585,
+    "bawah": 0.5055,
+    "atas": 0.7844
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 25,
-    "k": 17,
-    "nilai": 0.68,
-    "bawah": 0.4841,
-    "atas": 0.8279
+    "n": 40,
+    "k": 26,
+    "nilai": 0.65,
+    "bawah": 0.4951,
+    "atas": 0.7787
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 26,
-    "k": 18,
-    "nilai": 0.6923,
-    "bawah": 0.5001,
-    "atas": 0.835
+    "n": 41,
+    "k": 27,
+    "nilai": 0.6585,
+    "bawah": 0.5055,
+    "atas": 0.7844
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 8,
-    "nilai": 0.2581,
-    "bawah": 0.137,
-    "atas": 0.4325
+    "n": 53,
+    "k": 17,
+    "nilai": 0.3208,
+    "bawah": 0.2109,
+    "atas": 0.4548
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
     "median": 46.2,
-    "p90": 70.8
+    "p90": 92.5
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 14
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 20
   },
   "k3-cpu": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "generatif": 27,
-    "cadangan_ekstraktif": 4
+    "generatif": 41,
+    "cadangan_ekstraktif": 12
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 11,
-    "nilai": 0.3548,
-    "bawah": 0.2112,
-    "atas": 0.5305
+    "n": 50,
+    "k": 20,
+    "nilai": 0.4,
+    "bawah": 0.2761,
+    "atas": 0.5382
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 2,
+    "nilai": 0.6667,
+    "bawah": 0.2077,
+    "atas": 0.9385
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 0,
     "nilai": 0.0,
     "bawah": 0.0,
-    "atas": 0.1103
+    "atas": 0.0713
    },
    "sitasi_ada_yang_sah": {
-    "n": 27,
-    "k": 25,
-    "nilai": 0.9259,
-    "bawah": 0.7663,
-    "atas": 0.9794
+    "n": 39,
+    "k": 37,
+    "nilai": 0.9487,
+    "bawah": 0.8311,
+    "atas": 0.9858
    },
    "sitasi_semua_sah": {
-    "n": 27,
-    "k": 17,
-    "nilai": 0.6296,
-    "bawah": 0.4423,
-    "atas": 0.7847
+    "n": 39,
+    "k": 25,
+    "nilai": 0.641,
+    "bawah": 0.4842,
+    "atas": 0.7726
    },
    "kalimat_didukung": {
-    "n": 52,
-    "k": 20,
-    "nilai": 0.3846,
-    "bawah": 0.2647,
-    "atas": 0.5204
+    "n": 69,
+    "k": 29,
+    "nilai": 0.4203,
+    "bawah": 0.3111,
+    "atas": 0.5379
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 27,
-    "k": 9,
-    "nilai": 0.3333,
-    "bawah": 0.1864,
-    "atas": 0.5218
+    "n": 41,
+    "k": 16,
+    "nilai": 0.3902,
+    "bawah": 0.2566,
+    "atas": 0.5427
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 52,
-    "k": 20,
-    "nilai": 0.3846,
-    "bawah": 0.2647,
-    "atas": 0.5204
+    "n": 69,
+    "k": 29,
+    "nilai": 0.4203,
+    "bawah": 0.3111,
+    "atas": 0.5379
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 18,
-    "nilai": 0.5806,
-    "bawah": 0.4077,
-    "atas": 0.7358
+    "n": 53,
+    "k": 28,
+    "nilai": 0.5283,
+    "bawah": 0.3966,
+    "atas": 0.6562
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 24.4,
-    "p90": 38.2
+    "median": 25.3,
+    "p90": 39.7
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 7
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 9
   },
   "k3-qwen3-1.7b": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 28,
-    "generatif": 3
+    "cadangan_ekstraktif": 48,
+    "generatif": 5
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 23,
-    "nilai": 0.7419,
-    "bawah": 0.5675,
-    "atas": 0.863
+    "n": 50,
+    "k": 42,
+    "nilai": 0.84,
+    "bawah": 0.7149,
+    "atas": 0.9166
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 2,
-    "nilai": 0.0645,
-    "bawah": 0.0179,
-    "atas": 0.2072
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
    },
    "sitasi_ada_yang_sah": {
-    "n": 3,
-    "k": 2,
-    "nilai": 0.6667,
-    "bawah": 0.2077,
-    "atas": 0.9385
+    "n": 4,
+    "k": 3,
+    "nilai": 0.75,
+    "bawah": 0.3006,
+    "atas": 0.9544
    },
    "sitasi_semua_sah": {
-    "n": 3,
-    "k": 2,
-    "nilai": 0.6667,
-    "bawah": 0.2077,
-    "atas": 0.9385
+    "n": 4,
+    "k": 3,
+    "nilai": 0.75,
+    "bawah": 0.3006,
+    "atas": 0.9544
    },
    "kalimat_didukung": {
-    "n": 3,
-    "k": 1,
-    "nilai": 0.3333,
-    "bawah": 0.0615,
-    "atas": 0.7923
+    "n": 5,
+    "k": 2,
+    "nilai": 0.4,
+    "bawah": 0.1176,
+    "atas": 0.7693
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 3,
-    "k": 1,
-    "nilai": 0.3333,
-    "bawah": 0.0615,
-    "atas": 0.7923
+    "n": 5,
+    "k": 2,
+    "nilai": 0.4,
+    "bawah": 0.1176,
+    "atas": 0.7693
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 3,
-    "k": 1,
-    "nilai": 0.3333,
-    "bawah": 0.0615,
-    "atas": 0.7923
+    "n": 5,
+    "k": 2,
+    "nilai": 0.4,
+    "bawah": 0.1176,
+    "atas": 0.7693
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 31,
+    "n": 53,
+    "k": 53,
     "nilai": 1.0,
-    "bawah": 0.8897,
+    "bawah": 0.9324,
     "atas": 1.0
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 91.0,
-    "p90": 114.4
+    "median": 90.1,
+    "p90": 115.8
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 1
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 2
   },
   "k3-qwen3-4b": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 21,
-    "generatif": 10
+    "cadangan_ekstraktif": 36,
+    "generatif": 17
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 20,
-    "nilai": 0.6452,
-    "bawah": 0.4695,
-    "atas": 0.7888
+    "n": 50,
+    "k": 34,
+    "nilai": 0.68,
+    "bawah": 0.5419,
+    "atas": 0.7924
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 1,
+    "nilai": 0.3333,
+    "bawah": 0.0615,
+    "atas": 0.7923
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 2,
-    "nilai": 0.0645,
-    "bawah": 0.0179,
-    "atas": 0.2072
+    "nilai": 0.04,
+    "bawah": 0.011,
+    "atas": 0.1346
    },
    "sitasi_ada_yang_sah": {
-    "n": 10,
-    "k": 10,
+    "n": 17,
+    "k": 17,
     "nilai": 1.0,
-    "bawah": 0.7225,
+    "bawah": 0.8157,
     "atas": 1.0
    },
    "sitasi_semua_sah": {
-    "n": 10,
-    "k": 10,
-    "nilai": 1.0,
-    "bawah": 0.7225,
-    "atas": 1.0
+    "n": 17,
+    "k": 16,
+    "nilai": 0.9412,
+    "bawah": 0.7302,
+    "atas": 0.9895
    },
    "kalimat_didukung": {
-    "n": 12,
-    "k": 8,
-    "nilai": 0.6667,
-    "bawah": 0.3906,
-    "atas": 0.8619
+    "n": 21,
+    "k": 12,
+    "nilai": 0.5714,
+    "bawah": 0.3655,
+    "atas": 0.7553
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 10,
-    "k": 6,
-    "nilai": 0.6,
-    "bawah": 0.3127,
-    "atas": 0.8318
+    "n": 17,
+    "k": 9,
+    "nilai": 0.5294,
+    "bawah": 0.3096,
+    "atas": 0.7383
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 12,
-    "k": 8,
-    "nilai": 0.6667,
-    "bawah": 0.3906,
-    "atas": 0.8619
+    "n": 21,
+    "k": 12,
+    "nilai": 0.5714,
+    "bawah": 0.3655,
+    "atas": 0.7553
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 31,
+    "n": 53,
+    "k": 53,
     "nilai": 1.0,
-    "bawah": 0.8897,
+    "bawah": 0.9324,
     "atas": 1.0
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 176.4,
-    "p90": 227.7
+    "median": 170.9,
+    "p90": 228.8
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 5
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 7
   },
   "k4": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "generatif": 15,
-    "cadangan_ekstraktif": 16
+    "generatif": 24,
+    "cadangan_ekstraktif": 29
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 19,
-    "nilai": 0.6129,
-    "bawah": 0.4382,
-    "atas": 0.7627
+    "n": 50,
+    "k": 35,
+    "nilai": 0.7,
+    "bawah": 0.5625,
+    "atas": 0.809
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
+    "n": 3,
+    "k": 3,
+    "nilai": 1.0,
+    "bawah": 0.4385,
     "atas": 1.0
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 1,
-    "nilai": 0.0323,
-    "bawah": 0.0057,
-    "atas": 0.1619
+    "nilai": 0.02,
+    "bawah": 0.0035,
+    "atas": 0.105
    },
    "sitasi_ada_yang_sah": {
-    "n": 15,
-    "k": 11,
-    "nilai": 0.7333,
-    "bawah": 0.4805,
-    "atas": 0.891
+    "n": 22,
+    "k": 16,
+    "nilai": 0.7273,
+    "bawah": 0.5185,
+    "atas": 0.8685
    },
    "sitasi_semua_sah": {
-    "n": 15,
-    "k": 9,
-    "nilai": 0.6,
-    "bawah": 0.3575,
-    "atas": 0.8018
+    "n": 22,
+    "k": 12,
+    "nilai": 0.5455,
+    "bawah": 0.3466,
+    "atas": 0.7308
    },
    "kalimat_didukung": {
-    "n": 24,
-    "k": 11,
-    "nilai": 0.4583,
-    "bawah": 0.2789,
-    "atas": 0.6493
+    "n": 38,
+    "k": 21,
+    "nilai": 0.5526,
+    "bawah": 0.3971,
+    "atas": 0.6985
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 15,
-    "k": 4,
-    "nilai": 0.2667,
-    "bawah": 0.109,
-    "atas": 0.5195
+    "n": 24,
+    "k": 9,
+    "nilai": 0.375,
+    "bawah": 0.2116,
+    "atas": 0.5729
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 24,
-    "k": 11,
-    "nilai": 0.4583,
-    "bawah": 0.2789,
-    "atas": 0.6493
+    "n": 38,
+    "k": 21,
+    "nilai": 0.5526,
+    "bawah": 0.3971,
+    "atas": 0.6985
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 13,
-    "nilai": 0.4194,
-    "bawah": 0.2642,
-    "atas": 0.5923
+    "n": 53,
+    "k": 24,
+    "nilai": 0.4528,
+    "bawah": 0.3266,
+    "atas": 0.5855
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 55.2,
-    "p90": 92.6
+    "median": 55.1,
+    "p90": 95.6
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 6
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 10
   },
   "k4-cpu": {
-   "n": 31,
+   "n": 53,
    "mode": {
-    "cadangan_ekstraktif": 11,
-    "generatif": 20
+    "generatif": 33,
+    "cadangan_ekstraktif": 20
    },
    "jawaban_benar": {
-    "n": 31,
-    "k": 15,
-    "nilai": 0.4839,
-    "bawah": 0.3197,
-    "atas": 0.6516
+    "n": 50,
+    "k": 25,
+    "nilai": 0.5,
+    "bawah": 0.3664,
+    "atas": 0.6336
    },
    "dijawab_padahal_tak_terjawab": {
-    "n": 0,
-    "k": 0,
-    "nilai": 0.0,
-    "bawah": 0.0,
-    "atas": 1.0
+    "n": 3,
+    "k": 2,
+    "nilai": 0.6667,
+    "bawah": 0.2077,
+    "atas": 0.9385
    },
    "menolak_padahal_terjawab": {
-    "n": 31,
+    "n": 50,
     "k": 0,
     "nilai": 0.0,
     "bawah": 0.0,
-    "atas": 0.1103
+    "atas": 0.0713
    },
    "sitasi_ada_yang_sah": {
-    "n": 20,
-    "k": 19,
-    "nilai": 0.95,
-    "bawah": 0.7639,
-    "atas": 0.9911
+    "n": 31,
+    "k": 30,
+    "nilai": 0.9677,
+    "bawah": 0.8381,
+    "atas": 0.9943
    },
    "sitasi_semua_sah": {
-    "n": 20,
-    "k": 15,
-    "nilai": 0.75,
-    "bawah": 0.5313,
-    "atas": 0.8881
+    "n": 31,
+    "k": 21,
+    "nilai": 0.6774,
+    "bawah": 0.5014,
+    "atas": 0.8143
    },
    "kalimat_didukung": {
-    "n": 34,
-    "k": 14,
-    "nilai": 0.4118,
-    "bawah": 0.2637,
-    "atas": 0.5778
+    "n": 62,
+    "k": 29,
+    "nilai": 0.4677,
+    "bawah": 0.3491,
+    "atas": 0.5902
    },
    "jawaban_seluruhnya_didukung": {
-    "n": 20,
-    "k": 10,
-    "nilai": 0.5,
-    "bawah": 0.2993,
-    "atas": 0.7007
+    "n": 33,
+    "k": 16,
+    "nilai": 0.4848,
+    "bawah": 0.325,
+    "atas": 0.6478
    },
    "kalimat_didukung_sebelum_pemeriksaan": {
-    "n": 34,
-    "k": 14,
-    "nilai": 0.4118,
-    "bawah": 0.2637,
-    "atas": 0.5778
+    "n": 62,
+    "k": 29,
+    "nilai": 0.4677,
+    "bawah": 0.3491,
+    "atas": 0.5902
    },
    "jawaban_dengan_kalimat_tanpa_sitasi": {
-    "n": 31,
-    "k": 17,
-    "nilai": 0.5484,
-    "bawah": 0.3777,
-    "atas": 0.7084
+    "n": 53,
+    "k": 37,
+    "nilai": 0.6981,
+    "bawah": 0.5646,
+    "atas": 0.8048
    },
    "nli_belum_dihitung": 0,
    "detik_per_jawaban_cpu": {
-    "median": 23.5,
-    "p90": 39.5
+    "median": 26.9,
+    "p90": 40.1
    },
-   "belum_dibangkitkan": 22,
-   "generatif_benar": 5
+   "belum_dibangkitkan": 0,
+   "generatif_benar": 7
   }
  },
- "terpilih": null,
- "terpilih_putaran_2": null,
+ "terpilih": "bertahan",
+ "terpilih_putaran_2": "bertahan",
  "terpilih_putaran_3": "bertahan-llama-3.3-70b"
 }
