@@ -24,11 +24,12 @@ RERANKERS: dict[str, tuple[str, str, bool]] = {
     ),
     "bge_m3": ("BAAI/bge-reranker-v2-m3", "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e", False),
     # Versi 8-bit mMiniLM (onnx/model_quint8_avx2.onnx di repositori yang sama). Skornya dihitung
-    # dengan kode situs (web/scripts/skor-rerank.mjs), bukan dengan `evidence rerank`.
+    # sekali dengan transformers.js di Node (skrip sudah dihapus; lihat riwayat git) dan disimpan
+    # sebagai bukti. Tidak layak situs: skornya bergantung pada CPU (lihat generation.py).
     "mminilm_q8": (
         "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
         "1427fd652930e4ba29e8149678df786c240d8825",
-        True,
+        False,
     ),
 }
 DARI_JS = {"mminilm_q8"}

@@ -1,17 +1,14 @@
 // Paritas reranker di Chromium sungguhan: skor reranker situs (bobot dan runtime WebAssembly yang
-// dipakai pengunjung) dibandingkan dengan cache skor yang dipakai evaluasi. Butuh unduhan dari
+// dipakai pengunjung) dibandingkan dengan skor evaluasi (PyTorch fp32). Butuh unduhan dari
 // jsDelivr dan Hugging Face, jadi dijalankan di GitHub Actions.
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { RERANKER } from "../public/js/gen/rerank.js";
 import { startServer } from "./serve.mjs";
 
 const akar = new URL("../../", import.meta.url);
-const baca = (k) => JSON.parse(readFileSync(new URL(`eval/cache/rerank/${k}/skor.json`, akar))).skor;
-const acuan = baca(RERANKER.kunci ?? "mminilm");
-const fp32 = baca("mminilm");
+const acuan = JSON.parse(readFileSync(new URL("eval/cache/rerank/mminilm/skor.json", akar))).skor;
 const kunci = (t) => createHash("sha256").update(t).digest("hex").slice(0, 16);
 const tanya = [
   "Berapa usia paling rendah untuk menjadi operator forklift kelas II?",
@@ -41,13 +38,15 @@ try {
   console.log("berkas model:", berkas.join(", "));
   let maks = 0;
   daftar.forEach(({ t, ids }, j) => {
-    const a = acuan[kunci(t)], f = fp32[kunci(t)];
+    const a = acuan[kunci(t)];
     const d = Math.max(...ids.map((id, i) => Math.abs(skor[j][i] - a[id])));
-    const df = Math.max(...ids.map((id, i) => Math.abs(skor[j][i] - f[id])));
+    const top = (f) => ids.reduce((x, y) => (f(y) > f(x) ? y : x));
+    assert.equal(top((id) => skor[j][ids.indexOf(id)]), top((id) => a[id]), `pasal teratas berbeda: ${t}`);
     maks = Math.max(maks, d);
-    console.log(`${d.toFixed(5)} (fp32 ${df.toFixed(5)})  ${t.slice(0, 60)}`);
+    console.log(`${d.toFixed(5)}  ${t.slice(0, 60)}`);
   });
-  assert.ok(maks < 1e-3, `skor reranker di peramban berbeda dari cache evaluasi (maks ${maks})`);
+  // Batas yang sama dengan uji paritas di Node (scripts/paritas-rerank.mjs).
+  assert.ok(maks < 0.02, `skor reranker di peramban berbeda dari evaluasi (maks ${maks})`);
   console.log("paritas reranker di peramban lolos");
 } finally {
   await browser.close();

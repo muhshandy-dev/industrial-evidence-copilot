@@ -41,7 +41,7 @@ try {
   // Pertanyaan dev dengan skor jauh di atas ambang (model benar-benar dipanggil) dan reranker
   // mengubah pasal teratas. Urutan yang diharapkan dihitung evaluasi Python dari cache reranker:
   // BM25 saja menaruh permenaker-4-2025#pasal-8 di peringkat 1.
-  const HARAP = ["permenaker-8-2020#pasal-153", "permenaker-8-2020#pasal-154", "permenaker-4-2025#pasal-8", "permenaker-8-2020#pasal-148"];
+  const HARAP = ["permenaker-8-2020#pasal-153", "permenaker-4-2025#pasal-8", "permenaker-8-2020#pasal-148", "permenaker-8-2020#pasal-154"];
   await page.fill("#pertanyaan", "Berapa usia paling rendah untuk menjadi operator forklift kelas II?");
   await page.press("#pertanyaan", "Enter");
   await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 30 * 60 * 1000 });

@@ -47,23 +47,12 @@ DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt
 # mMiniLM (ONNX yang sama di peramban, paritas diuji). Gerbang penolakan tetap skor BM25.
 # Aturan pilih: di antara sistem layak peramban, MRR@10 dev tertinggi; selisih di bawah 0,01
 # dianggap seri dan dipilih yang mengunduh model paling sedikit. Aturan ini ditetapkan setelah
-# angka dev dan test semua sistem terlihat (lihat docs/evaluasi.md). Reranker yang sama dalam versi
-# 8-bit menggantikan fp32 karena memenuhi pilih_reranker_situs (MRR@10 dev 0,945 vs 0,944).
-SISTEM_GENERATIF = "bm25_konteks+mminilm_q8"
-
-
-# Reranker situs: fp32 (471 MB) atau versi 8-bit (119 MB). Aturan ditulis sebelum skor 8-bit
-# dihitung: pakai 8-bit bila MRR@10 dev bm25_konteks+mminilm_q8 tidak lebih dari 0,01 di bawah
-# fp32; bila skornya belum ada atau selisihnya lebih besar, tetap fp32.
-def pilih_reranker_situs(per_sistem: dict) -> str:
-    def mrr(k: str) -> float | None:
-        s = per_sistem.get(k)
-        return s["metrik"]["dev"]["mrr@10"]["nilai"] if s else None
-
-    fp32, q8 = mrr("bm25_konteks+mminilm"), mrr("bm25_konteks+mminilm_q8")
-    if fp32 is not None and q8 is not None and q8 >= fp32 - 0.01:
-        return "bm25_konteks+mminilm_q8"
-    return "bm25_konteks+mminilm"
+# angka dev dan test semua sistem terlihat (lihat docs/evaluasi.md).
+# Versi 8-bit reranker yang sama (bm25_konteks+mminilm_q8) memenuhi aturan MRR@10 dev yang ditulis
+# sebelumnya (0,945 vs 0,944), tetapi ditolak karena skornya bergantung pada CPU: dihitung ulang di
+# runner lain, selisih logitnya sampai 0,93. Situs tidak dapat menjamin urutan yang sama dengan
+# evaluasi, jadi fp32 tetap dipakai. Skornya disimpan di eval/cache/rerank/mminilm_q8 sebagai bukti.
+SISTEM_GENERATIF = "bm25_konteks+mminilm"
 
 
 # bertahan: prompt situs dengan model utama; polos: pembanding injeksi; bertahan-cpu: model CPU.

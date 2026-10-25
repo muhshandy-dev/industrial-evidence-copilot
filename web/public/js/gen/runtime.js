@@ -27,7 +27,7 @@ export async function muatPustaka() {
 
 // Ukuran unduhan, dibulatkan: reranker (berkas ONNX dan tokenizer) untuk semua jalur generatif,
 // ditambah model generatif untuk jalur lokal (berkas ONNX menurut dtype dan tokenizer).
-const RERANKER_MB = RERANKER.berkas ? 160 : 510; // termasuk tokenizer (17 MB) dan runtime ONNX WebAssembly
+const RERANKER_MB = 510; // termasuk tokenizer (17 MB) dan runtime ONNX WebAssembly
 export const UKURAN_UNDUHAN_MB = { server: RERANKER_MB, webgpu: RERANKER_MB + 1240, wasm: RERANKER_MB + 800 };
 
 let lib = null;
