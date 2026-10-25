@@ -152,6 +152,23 @@ def cmd_export(_: argparse.Namespace) -> int:
                 for k, v in tinjauan["konfigurasi"].items()
             },
         }
+    nli_path = ROOT / "eval" / "nli-tinjauan.json"
+    if nli_path.exists():
+        t = json.loads(nli_path.read_text(encoding="utf-8"))
+        pos = [b for b in t["butir"] if b["nli_didukung"]]
+        neg = [b for b in t["butir"] if not b["nli_didukung"]]
+        ev["tinjauan_nli"] = {
+            "konfigurasi": t["konfigurasi"],
+            "peninjau": t["peninjau"],
+            "nli_didukung": {
+                "n": len(pos),
+                "manual_didukung": sum(b["manual_didukung"] for b in pos),
+            },
+            "nli_tidak": {
+                "n": len(neg),
+                "manual_tidak": sum(not b["manual_didukung"] for b in neg),
+            },
+        }
     (out / "evaluasi.json").write_text(
         json.dumps(ev, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )

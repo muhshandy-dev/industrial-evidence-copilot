@@ -6584,6 +6584,334 @@
     },
     "belum_dibangkitkan": 0
    },
+   "sampel_validasi_manual": [
+    {
+     "id": "q084",
+     "kalimat": "Peraturan Menteri Tenaga Kerja Nomor PER. 01/MEN/1988 tentang Kwalifikasi dan Syarat-Syarat Operator Pesawat Uap dicabut oleh Permenaker yang baru.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q084",
+     "kalimat": "Peraturan lama ini dinyatakan tidak berlaku saat Peraturan Menteri yang baru mulai berlaku.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q084",
+     "kalimat": "Peraturan lama ini digantikan oleh Permenaker No. 4 Tahun 2025 tentang Operator Pesawat Uap.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q095",
+     "kalimat": "Pencabutan Lisensi K3 ditetapkan oleh Direktur Jenderal berdasarkan rekomendasi hasil pemeriksaan Pengawas Ketenagakerjaan.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q095",
+     "kalimat": "Ketentuan pencabutan Lisensi K3 juga diatur dalam Permenaker No. 8 Tahun 2020.",
+     "sitasi": [
+      3
+     ],
+     "nli": false
+    },
+    {
+     "id": "q096",
+     "kalimat": "Jumlah minimal petugas K3 kimia di perusahaan berbahaya besar yang bekerja dengan sistem shift adalah 5 orang.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q101",
+     "kalimat": "Pemeriksaan dan pengkajian kecelakaan harus dilaksanakan terhadap setiap kecelakaan yang dilaporkan oleh pengurus atau pengusaha.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q106",
+     "kalimat": "Peraturan yang dicabut ketika aturan penilaian SMK3 tahun 2014 mulai berlaku adalah Peraturan Menteri Tenaga Kerja Nomor PER.05/MEN/1996, Peraturan Menteri Tenaga Kerja dan Transmigrasi Nomor PER.18/MEN/XI/2008, dan Keputusan Menteri Tenaga Kerja Nomor KEP.19/MEN/1997.",
+     "sitasi": [
+      4
+     ],
+     "nli": true
+    },
+    {
+     "id": "q109",
+     "kalimat": "Perusahaan dapat mengajukan keberatan kepada Direktur Jenderal jika tidak setuju dengan hasil audit SMK3.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q110",
+     "kalimat": "Luas lantai maksimum yang dilindungi satu kelompok alarm kebakaran adalah 1000 m2.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q110",
+     "kalimat": "Selain itu, juga disebutkan bahwa satu kelompok alarm kebakaran dapat melindungi ruangan maksimum 2000 m2 luas lantai.",
+     "sitasi": [
+      3,
+      4
+     ],
+     "nli": true
+    },
+    {
+     "id": "q110",
+     "kalimat": "Namun, ada pengecualian yang memungkinkan luas lantai maksimum diperluas menjadi 2000 m2.",
+     "sitasi": [
+      2
+     ],
+     "nli": true
+    },
+    {
+     "id": "q116",
+     "kalimat": "Dokumen yang wajib didokumentasikan dalam penerapan SMK3 meliputi peraturan perundang-undangan di bidang K3 dan standar di bidang K3, indikator kinerja K3, izin kerja, hasil identifikasi, penilaian, dan pengendalian risiko, kegiatan pelatihan K3, kegiatan inspeksi, kalibrasi dan pemeliharaan, catatan pemantauan data, hasil pengkajian kecelakaan di tempat kerja dan tindak lanjut, identifikasi produk termasuk komposisinya, informasi mengenai pemasok dan kontraktor, dan audit serta peninjauan ulang SMK3.",
+     "sitasi": [
+      3
+     ],
+     "nli": false
+    },
+    {
+     "id": "q118",
+     "kalimat": "Pemeriksaan berkala pesawat angkat dan angkut dilakukan paling lambat 2 tahun setelah pemeriksaan pertama dan selanjutnya dilakukan setiap 1 tahun sekali.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q121",
+     "kalimat": "Lisensi tersebut dikeluarkan oleh Kepala Instansi yang bertanggung jawab di bidang ketenagakerjaan setempat.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q123",
+     "kalimat": "Pengalaman paling singkat seorang teknisi pesawat angkat adalah 2 tahun.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q124",
+     "kalimat": "Juru las juga dianggap tidak terampil jika tidak lulus ujian ulang setelah mengikuti latihan las.",
+     "sitasi": [
+      3
+     ],
+     "nli": false
+    },
+    {
+     "id": "q128",
+     "kalimat": "Kriteria bahan kimia berbahaya yang dikenal terdiri dari bahan beracun, bahan sangat beracun, cairan mudah terbakar, cairan sangat mudah terbakar, gas mudah terbakar, bahan mudah meledak, bahan reaktif, dan bahan oksidator.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q135",
+     "kalimat": "Pemeriksaan dan/atau pengujian bejana tekanan dilakukan oleh Pengawas Ketenagakerjaan Spesialis atau Ahli K3 Bidang Pesawat Uap dan Bejana Tekanan.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q136",
+     "kalimat": "Untuk dapat ditunjuk sebagai Petugas K3 Kimia, seseorang harus memenuhi beberapa syarat, yaitu: bekerja pada perusahaan yang bersangkutan, tidak dalam masa percobaan, hubungan kerja tidak didasarkan pada Perjanjian Kerja Waktu Tertentu (PKWT), dan telah mengikuti kursus teknis K3 kimia.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q143",
+     "kalimat": "Baterai kering tidak boleh digunakan sebagai sumber tenaga listrik sistem alarm kebakaran, kecuali dalam keadaan khusus dan diijinkan oleh Pegawai Pengawas.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q146",
+     "kalimat": "Urutan pengujian contoh percobaan las dimulai dari sifat tampak.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q147",
+     "kalimat": "Operator Pesawat Uap kelas I berwenang untuk melayani dan mengoperasikan ketel uap dengan kapasitas uap lebih besar dari 10 ton/jam.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q150",
+     "kalimat": "Perusahaan yang sudah menerapkan SMK3 sebelum aturan ini terbit diberi waktu 1 tahun untuk menyesuaikan.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q155",
+     "kalimat": "Permohonan perpanjangan Lisensi K3 harus diajukan paling lambat 30 (tiga puluh) hari sebelum masa berlaku Lisensi K3 berakhir.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q158",
+     "kalimat": "Pengurus yang tidak memenuhi ketentuan K3 bejana tekanan dikenakan sanksi sesuai dengan Undang-Undang Nomor 1 Tahun 1970 tentang Keselamatan Kerja dan Undang-Undang Nomor 13 Tahun 2003 tentang Ketenagakerjaan.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q163",
+     "kalimat": "Tandu atau alat lain untuk memindahkan korban ke tempat yang aman atau rujukan termasuk alat evakuasi yang harus disediakan.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q173",
+     "kalimat": "Orang yang tidak setuju dengan keputusan direktur bisa mengajukan banding kepada Panitya Banding.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q174",
+     "kalimat": "Jenis pemeriksaan dan pengujian bejana tekanan dan tangki timbun meliputi: pertama, berkala, khusus, dan ulang.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q176",
+     "kalimat": "Jenis dan fungsi APD tersebut tercantum dalam Lampiran Peraturan Menteri.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q178",
+     "kalimat": "Percobaan las tersebut dilakukan pada contoh percobaan las pelat dan pipa seperti pada Lampiran II gambar 1 dan gambar 2.",
+     "sitasi": [
+      2
+     ],
+     "nli": true
+    },
+    {
+     "id": "q178",
+     "kalimat": "Juru las kelas II harus lulus melakukan percobaan las 1G, 2G, 3G, dan 4G.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q179",
+     "kalimat": "Paling lambat 30 hari sebelum masa berlaku lisensi K3 berakhir.",
+     "sitasi": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "nli": true
+    },
+    {
+     "id": "q181",
+     "kalimat": "Sekretaris P2K3 merupakan Ahli K3 yang telah ditunjuk sesuai dengan ketentuan peraturan perundang–undangan.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q185",
+     "kalimat": "Pengurus juga diwajibkan menyediakan alat perlindungan diri secara cuma-cuma bagi tenaga kerja yang berada di bawah pimpinannya.",
+     "sitasi": [
+      2
+     ],
+     "nli": false
+    },
+    {
+     "id": "q186",
+     "kalimat": "Penilaian terhadap kriteria Audit SMK3 dengan kategori mayor harus ditindaklanjuti dengan tindakan koreksi paling lambat dalam jangka waktu 1 bulan.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q189",
+     "kalimat": "Pemeliharaan dan pengujian berkala alarm kebakaran harus dilakukan secara mingguan, bulanan, dan tahunan.",
+     "sitasi": [
+      1
+     ],
+     "nli": true
+    },
+    {
+     "id": "q189",
+     "kalimat": "Pemeliharaan dan pengujian berkala ini mencakup beberapa kegiatan yang berbeda-beda tergantung pada frekuensi pemeliharaan.",
+     "sitasi": [
+      2,
+      3,
+      4
+     ],
+     "nli": false
+    },
+    {
+     "id": "q190",
+     "kalimat": "Pengawasan terhadap ditaatinya Peraturan Menteri tentang Alat Pelindung Diri dilakukan oleh Pengawas Ketenagakerjaan.",
+     "sitasi": [
+      1
+     ],
+     "nli": false
+    },
+    {
+     "id": "q196",
+     "kalimat": "Penerbitan Izin Masuk dilakukan jika syarat K3 telah terpenuhi.",
+     "sitasi": [
+      2
+     ],
+     "nli": true
+    }
+   ],
    "stress": {
     "n": 12,
     "mode": {

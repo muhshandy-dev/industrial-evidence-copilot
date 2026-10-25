@@ -117,6 +117,11 @@ function bagianGeneratif(ev) {
   const injPolos = server ? g[KONFIG_SERVER_POLOS]?.injeksi : g.polos?.injeksi;
   const tekan = g[konfigUtama].stress;
   const injLokal = server ? g.bertahan?.injeksi : null;
+  const tinjauNli = (konfig) => {
+    const t = ev.tinjauan_nli;
+    if (!t || t.konfigurasi !== konfig) return " Sampel kalimat disimpan untuk diperiksa manual.";
+    return ` Tinjauan manual oleh ${t.peninjau}: dari ${t.nli_didukung.n} kalimat sampel yang dinilai didukung, ${t.nli_didukung.manual_didukung} memang didukung; dari ${t.nli_tidak.n} kalimat yang dinilai tidak didukung, hanya ${t.nli_tidak.manual_tidak} yang memang tidak didukung. Untuk model ini, angka NLI cenderung terlalu rendah.`;
+  };
   const tinjau = (konfig) => {
     const t = ev.tinjauan_injeksi?.konfigurasi?.[konfig];
     return t ? ` Tinjauan manual atas ${t.n} pertanyaan yang sampai ke model: yang ditampilkan aman pada ${t.tampil_aman} dari ${t.n}; keluaran mentah model menuruti perintah tersembunyi pada ${t.model_ikut_perintah} dari ${t.n}${t.model_ikut_perintah ? ", dan kalimat itu dibuang pemeriksaan sitasi" : ""}.` : "";
@@ -141,7 +146,7 @@ function bagianGeneratif(ev) {
   return h("section", { "aria-labelledby": "e-gen" }, judul,
     h("p", {}, caraJalan),
     tabelGeneratif("Tabel mode generatif dan kutipan pada data uji", ev.jawaban.test, kolom),
-    h("p", { class: "catatan" }, `"Didukung" dinilai otomatis oleh model NLI multibahasa (${nli.model.split("/")[1]}): sebuah kalimat dianggap didukung bila peluang entailment terhadap pasal yang dikutipnya minimal ${desimal(nli.ambang)}. Penilai otomatis ini bisa keliru, terutama untuk angka dan istilah hukum; sampel kalimat disimpan untuk diperiksa manual. Model lokal (Qwen) tercantum sebagai pembanding: mode itu opsional dan tidak lolos batas mutu yang ditetapkan sebelum eksperimen.${catatanWaktu}`),
+    h("p", { class: "catatan" }, `"Didukung" dinilai otomatis oleh model NLI multibahasa (${nli.model.split("/")[1]}): sebuah kalimat dianggap didukung bila peluang entailment terhadap pasal yang dikutipnya minimal ${desimal(nli.ambang)}. Penilai otomatis ini bisa keliru, terutama untuk angka dan istilah hukum.${tinjauNli(konfigUtama)} Model lokal (Qwen) tercantum sebagai pembanding: mode itu opsional dan tidak lolos batas mutu yang ditetapkan sebelum eksperimen.${catatanWaktu}`),
     h("p", {}, `Apa yang terjadi pada pertanyaan uji dengan ${namaUtama}:`),
     h("ul", { class: "daftar-teks" }, Object.entries(utama.mode).map(([k, v]) => h("li", {}, `${NAMA_MODE[k] ?? k}: ${v}`))),
     tekan ? h("p", { class: "catatan" }, `Uji tekanan (pertanyaan panjang di luar cakupan) dengan ${namaUtama}: ${ringkasMode(tekan)}. Menjawab tanpa dasar: ${sel(tekan.dijawab_padahal_tak_terjawab)}.`) : null,

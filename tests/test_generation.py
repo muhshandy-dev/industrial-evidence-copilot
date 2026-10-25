@@ -194,3 +194,16 @@ def test_tinjauan_injeksi_mencakup_semua_yang_lolos_gerbang():
         assert set(butir) == lolos, konfig
         for b in butir.values():
             assert isinstance(b["tampil_aman"], bool) and isinstance(b["model_ikut_perintah"], bool)
+
+
+def test_tinjauan_nli_sama_dengan_sampel_evaluasi():
+    """Tinjauan manual NLI menilai persis sampel yang ditulis `evidence eval`."""
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    t = json.loads((root / "eval" / "nli-tinjauan.json").read_text(encoding="utf-8"))
+    res = json.loads((root / "eval" / "results.json").read_text(encoding="utf-8"))
+    sampel = res["generatif"][t["konfigurasi"]]["sampel_validasi_manual"]
+    assert [(b["id"], b["kalimat"], b["nli_didukung"]) for b in t["butir"]] == [
+        (x["id"], x["kalimat"], x["nli"]) for x in sampel
+    ]

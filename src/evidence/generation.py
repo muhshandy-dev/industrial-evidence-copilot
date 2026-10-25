@@ -441,7 +441,7 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
                     }
                     for r in recs
                 ]
-            if s == "test" and varian == "bertahan":
+            if s == "test" and varian in ("bertahan", konfigurasi_server()):
                 res["sampel_validasi_manual"] = manual_sample(recs, by_id)
         out[varian] = res
         out.setdefault("model_per_konfigurasi", {})[varian] = {
