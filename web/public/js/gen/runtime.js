@@ -1,11 +1,12 @@
-// Mode generatif. Bila MODEL_SERVER dipilih, jawaban ditulis model di Cloudflare Workers AI lewat
-// Pages Function /api/jawab, dan peramban hanya menjalankan reranker. Bila belum, model generatif
-// kecil berjalan di peramban (WebGPU atau CPU) dengan transformers.js.
+// Mode generatif, dua jalur:
+// - "server" (utama): jawaban ditulis model Cloudflare Workers AI lewat Pages Function /api/jawab;
+//   peramban hanya menjalankan reranker untuk mengurutkan pasal.
+// - "lokal" (opsional): model Qwen kecil berjalan di peramban (WebGPU atau CPU) dengan transformers.js.
 // Pustaka transformers.js dan runtime ONNX diunduh dari jsDelivr, bobot dari Hugging Face, semuanya
 // pada versi yang dipatok dan hanya setelah pengguna menekan tombol muat. Kode pustaka diperiksa
 // SHA-256-nya sebelum dijalankan.
 import { MODEL, MODEL_CPU, MODEL_SERVER, MAX_TOKEN_BARU } from "./prompt.js";
-import { muatReranker, urutUlang as urutDenganReranker } from "./rerank.js";
+import { RERANKER, muatReranker, urutUlang as urutDenganReranker } from "./rerank.js";
 
 // Diperiksa oleh scripts/check-build.mjs terhadap paket npm yang terpasang (versi dan SHA-256).
 export const PUSTAKA = {
@@ -24,16 +25,18 @@ export async function muatPustaka() {
   try { return await import(url); } finally { URL.revokeObjectURL(url); }
 }
 
-// Ukuran unduhan per jalur, dibulatkan: model generatif (berkas ONNX menurut dtype dan
-// tokenizer) ditambah reranker fp32 (sekitar 490 MB).
-export const UKURAN_UNDUHAN_MB = { webgpu: 1730, wasm: 1290, server: 500 };
+// Ukuran unduhan, dibulatkan: reranker (berkas ONNX dan tokenizer) untuk semua jalur generatif,
+// ditambah model generatif untuk jalur lokal (berkas ONNX menurut dtype dan tokenizer).
+const RERANKER_MB = RERANKER.berkas ? 160 : 510; // termasuk tokenizer (17 MB) dan runtime ONNX WebAssembly
+export const UKURAN_UNDUHAN_MB = { server: RERANKER_MB, webgpu: RERANKER_MB + 1240, wasm: RERANKER_MB + 800 };
 
 let lib = null;
-let gen = null;
 let rr = null;
+let genLokal = null;
+let perangkatLokal = null;
 
-// Jalur utama: WebGPU dengan shader-f16 dan model 1,5B. Tanpa itu, pengguna dapat memilih jalur
-// CPU (WebAssembly) dengan model 0,5B; keduanya dievaluasi dengan prompt yang sama.
+// Jalur lokal utama: WebGPU dengan shader-f16 dan model 1,5B. Tanpa itu, pengguna dapat memilih
+// jalur CPU (WebAssembly) dengan model 0,5B; keduanya dievaluasi dengan prompt yang sama.
 export async function periksaDukungan() {
   if (!("gpu" in navigator)) return { ok: false, alasan: "Peramban ini belum mendukung WebGPU." };
   let adapter = null;
@@ -43,47 +46,40 @@ export async function periksaDukungan() {
   return { ok: true };
 }
 
-let perangkatDipakai = null;
-export function perangkatAktif() { return perangkatDipakai; }
-export function modelUntuk(perangkat) { return perangkat === "server" ? MODEL_SERVER : perangkat === "webgpu" ? MODEL : MODEL_CPU; }
+export const serverTersedia = () => MODEL_SERVER !== null;
+export const perangkatLokalAktif = () => perangkatLokal;
+export function modelUntuk(jalur) {
+  if (jalur === "server") return MODEL_SERVER;
+  return perangkatLokal === "webgpu" ? MODEL : MODEL_CPU;
+}
+export function siap(jalur) { return rr !== null && (jalur === "server" ? serverTersedia() : genLokal !== null); }
 
-export function sudahDimuat() { return gen !== null; }
-
-// Jalur server: generator adalah Pages Function. Reranker tetap di peramban di CPU (WebAssembly),
-// jalur yang paritas skornya dengan evaluasi sudah diuji.
-const generatorServer = { server: true };
-
-// onProgress menerima {file, loaded, total} dari transformers.js.
-// perangkat: "webgpu" atau "wasm" (CPU).
-export async function muatModel(perangkat, onProgress) {
-  if (gen) return gen;
+// Reranker selalu di CPU (WebAssembly), jalur yang paritas skornya dengan evaluasi diuji.
+async function siapkanReranker(onProgress) {
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
-  if (perangkat === "server") {
-    try { rr = await muatReranker(lib, "wasm", onProgress); }
-    catch (e) { throw new Error(`reranker: ${e.message}`); }
-    gen = generatorServer;
-    perangkatDipakai = "server";
-    return gen;
-  }
-  const m = modelUntuk(perangkat);
-  // Dimuat berurutan, bukan bersamaan: di jalur CPU kedua sesi berbagi satu memori
-  // WebAssembly, dan memuat keduanya bersamaan gagal dengan bad_alloc pada uji asap CPU.
-  let g, r;
+  if (rr) return;
+  try { rr = await muatReranker(lib, "wasm", onProgress); }
+  catch (e) { throw new Error(`reranker: ${e.message}`); }
+}
+
+// onProgress menerima {file, loaded, total} dari transformers.js.
+// jalur "server": hanya reranker. jalur "lokal": reranker lalu model generatif di perangkat
+// ("webgpu" atau "wasm"). Dimuat berurutan, bukan bersamaan: di jalur CPU keduanya berbagi satu
+// memori WebAssembly, dan memuat keduanya bersamaan gagal dengan bad_alloc pada uji asap CPU.
+export async function muatJalur(jalur, perangkat, onProgress) {
+  await siapkanReranker(onProgress);
+  if (jalur === "server" || genLokal) return;
+  const m = perangkat === "webgpu" ? MODEL : MODEL_CPU;
   try {
-    g = await lib.pipeline("text-generation", m.id, {
+    genLokal = await lib.pipeline("text-generation", m.id, {
       revision: m.revision,
       dtype: m.dtype,
       device: perangkat,
       progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
     });
   } catch (e) { throw new Error(`model generatif: ${e.message}`); }
-  try { r = await muatReranker(lib, perangkat, onProgress); }
-  catch (e) { await g.dispose?.(); throw new Error(`reranker: ${e.message}`); }
-  rr = r;
-  gen = g;
-  perangkatDipakai = perangkat;
-  return gen;
+  perangkatLokal = perangkat;
 }
 
 // Urutan pasal untuk model generatif: 20 teratas BM25 dinilai ulang oleh reranker.
@@ -115,12 +111,12 @@ async function bangkitkanServer(tanya, pasal) {
   return j.mentah;
 }
 
-// Dekode serakah (tanpa sampling), sama seperti evaluasi. onTeks dipanggil untuk setiap potongan.
-// Jalur server tidak mengalir per potongan; jawabannya tampil utuh.
-export async function bangkitkan({ tanya, pasal, pesan }, onTeks) {
-  if (!gen) throw new Error("model belum dimuat");
-  if (gen.server) return bangkitkanServer(tanya, pasal);
-  const streamer = new lib.TextStreamer(gen.tokenizer, { skip_prompt: true, skip_special_tokens: true, callback_function: (t) => onTeks?.(t) });
-  const out = await gen(pesan, { max_new_tokens: MAX_TOKEN_BARU, do_sample: false, streamer });
+// Jalur lokal: dekode serakah (tanpa sampling), sama seperti evaluasi; onTeks dipanggil untuk
+// setiap potongan. Jalur server tidak mengalir per potongan; jawabannya tampil utuh.
+export async function bangkitkan(jalur, { tanya, pasal, pesan }, onTeks) {
+  if (jalur === "server") return bangkitkanServer(tanya, pasal);
+  if (!genLokal) throw new Error("model belum dimuat");
+  const streamer = new lib.TextStreamer(genLokal.tokenizer, { skip_prompt: true, skip_special_tokens: true, callback_function: (t) => onTeks?.(t) });
+  const out = await genLokal(pesan, { max_new_tokens: MAX_TOKEN_BARU, do_sample: false, streamer });
   return out[0].generated_text.at(-1).content;
 }

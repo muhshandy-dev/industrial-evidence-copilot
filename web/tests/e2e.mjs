@@ -45,11 +45,29 @@ await jalan("pertanyaan yang ada dasarnya dijawab dengan kutipan dan pasal terbu
   await ctx.close();
 });
 
-await jalan("mode generatif tanpa WebGPU: alasan dan pilihan CPU ditampilkan, tidak ada unduhan otomatis, jawaban tetap kutipan", async () => {
+await jalan("mode generatif server: tombol muat reranker, tidak ada unduhan otomatis, jawaban tetap kutipan sebelum dimuat", async () => {
+  const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
+  await siap(page, "");
+  const server = page.locator("input[name=mode-jawab][value=server]");
+  if (!(await server.count())) { await ctx.close(); return; } // MODEL_SERVER belum dipilih
+  await server.check();
+  await page.waitForFunction(() => /Workers AI/.test(document.querySelector(".mode-status")?.textContent ?? ""));
+  const tombol = page.locator(".mode-jawab button:visible");
+  assert.equal(await tombol.count(), 1);
+  assert.match(await tombol.textContent(), /reranker/);
+  await page.fill("#pertanyaan", "Berapa umur minimal peserta ujian juru las?");
+  await page.press("#pertanyaan", "Enter");
+  await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 15000 });
+  assert.match(await page.textContent(".jawaban-kepala"), /Jawaban ekstraktif/);
+  assert.deepEqual(log.errors, []); assert.deepEqual(log.luar, []);
+  await ctx.close();
+});
+
+await jalan("mode generatif lokal tanpa WebGPU: alasan dan pilihan CPU ditampilkan, tidak ada unduhan otomatis, jawaban tetap kutipan", async () => {
   const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
   await page.addInitScript(() => { Object.defineProperty(navigator, "gpu", { value: undefined, configurable: true }); });
   await siap(page, "");
-  await page.check("input[name=mode-jawab][value=generatif]");
+  await page.check("input[name=mode-jawab][value=lokal]");
   await page.waitForFunction(() => /tetap memakai kutipan langsung/.test(document.querySelector(".mode-status")?.textContent ?? ""));
   const tombol = page.locator(".mode-jawab button:visible");
   assert.equal(await tombol.count(), 1, "hanya pilihan CPU yang boleh muncul");

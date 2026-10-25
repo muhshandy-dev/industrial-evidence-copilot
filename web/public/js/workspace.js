@@ -6,7 +6,7 @@ import { createReader } from "./reader.js";
 import { wait, motionOn } from "./motion.js";
 import { createModePanel } from "./gen/panel.js";
 import { bacaJawaban, pasalUntukPrompt, periksa, susunPesan, K_PASAL } from "./gen/prompt.js";
-import { GalatServer, bangkitkan, modelUntuk, perangkatAktif, urutUlang } from "./gen/runtime.js";
+import { GalatServer, bangkitkan, modelUntuk, perangkatLokalAktif, urutUlang } from "./gen/runtime.js";
 import { RERANK_TOP } from "./gen/rerank.js";
 
 const num = (x) => x.toFixed(1).replace(".", ",");
@@ -108,11 +108,12 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
 
     const top = ranked.slice(0, 6);
     // Mode generatif memakai gerbang yang sama: di bawah ambang, model tidak dipanggil.
-    const generatif = modePanel.generatif() && topScore >= threshold;
+    const jalur = modePanel.jalur();
+    const generatif = jalur !== null && topScore >= threshold;
     const trace = buildTrace(tokens, top, scores, generatif);
     const lolos = generatif || !ans.abstain;
     const kepala = h("span", { class: "label-mode" }, generatif ? "Jawaban generatif" : lolos ? "Jawaban ekstraktif" : "Tidak menjawab");
-    const ringkas = h("span", {}, generatif ? keteranganModel() : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
+    const ringkas = h("span", {}, generatif ? keteranganModel(jalur) : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
     card.append(h("div", { class: "jawaban-kepala" },
       kepala,
       ringkas,
@@ -128,7 +129,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     // 2. Jawaban generatif, atau kutipan yang muncul satu per satu.
     card.dataset.mode = generatif ? "generatif" : ans.abstain ? "tolak_gerbang" : "ekstraktif";
     if (generatif) {
-      await jawabGeneratif(card, q, ranked, ans, top, kepala, ringkas);
+      await jawabGeneratif(jalur, card, q, ranked, ans, top, kepala, ringkas);
     } else if (ans.abstain) {
       card.append(h("div", { class: "tolak masuk" },
         h("h3", {}, "Korpus ini tidak memuat dasar yang cukup untuk menjawab."),
@@ -144,10 +145,9 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     thread.parentElement.scrollTo?.({ top: thread.parentElement.scrollHeight, behavior: motionOn() ? "smooth" : "auto" });
   }
 
-  function keteranganModel() {
-    const p = perangkatAktif();
-    const nama = modelUntuk(p).id.split("/").at(-1);
-    return p === "server" ? `${nama}, di Cloudflare Workers AI` : `${nama}, di ${p === "webgpu" ? "GPU" : "CPU"} perangkat ini`;
+  function keteranganModel(jalur) {
+    const nama = modelUntuk(jalur).id.split("/").at(-1);
+    return jalur === "server" ? `${nama}, di Cloudflare Workers AI` : `${nama}, di ${perangkatLokalAktif() === "webgpu" ? "GPU" : "CPU"} perangkat ini`;
   }
 
   function tolakBox(judul, isi, top) {
@@ -159,7 +159,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
           h("span", {}, `${korpus.dokumen[korpus.chunk[ci].dok].judul}, ${korpus.chunk[ci].label}`), h("span", { class: "kode" }, "buka"))))) : null);
   }
 
-  async function jawabGeneratif(card, q, ranked, ans, top, kepala, ringkas) {
+  async function jawabGeneratif(jalur, card, q, ranked, ans, top, kepala, ringkas) {
     const tulis = h("p", { class: "gen-mentah", "aria-hidden": "true" });
     const tunggu = h("p", { class: "catatan gen-tunggu", role: "status" }, `Reranker menilai ulang ${RERANK_TOP} pasal teratas…`);
     card.append(h("div", { class: "jawaban-isi" }, tunggu, tulis));
@@ -170,8 +170,9 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
       const { peringkat } = await urutUlang(korpus, q, ranked);
       pasal = pasalUntukPrompt(korpus, peringkat);
       card.dataset.peringkat = pasal.map((p) => p.id).join(" ");
-      tunggu.textContent = `${perangkatAktif() === "server" ? "Model di server" : "Model"} sedang menulis jawaban dari pasal yang ditemukan…`;
-      mentah = await bangkitkan({ tanya: q, pasal, pesan: susunPesan(q, pasal) }, (t) => { tulis.textContent += t; });
+      card.dataset.jalur = jalur;
+      tunggu.textContent = `${jalur === "server" ? "Model di server" : "Model"} sedang menulis jawaban dari pasal yang ditemukan…`;
+      mentah = await bangkitkan(jalur, { tanya: q, pasal, pesan: susunPesan(q, pasal) }, (t) => { tulis.textContent += t; });
     } catch (err) {
       tunggu.textContent = err instanceof GalatServer ? `${err.message} Ditampilkan kutipan langsung.` : `Model gagal menjawab (${err.message}). Ditampilkan kutipan langsung.`;
       tulis.remove();
