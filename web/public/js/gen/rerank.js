@@ -14,8 +14,9 @@ export const RERANKER_FP32 = {
 // src/evidence/generation.py, pilih_reranker_situs). Skornya dihitung dengan kode ini
 // (scripts/skor-rerank.mjs), bukan PyTorch.
 export const RERANKER_Q8 = { ...RERANKER_FP32, berkas: "model_quint8_avx2", kunci: "mminilm_q8" };
-// Reranker yang dipakai situs.
-export const RERANKER = RERANKER_FP32;
+// Reranker yang dipakai situs: 8-bit, karena MRR@10 dev-nya 0,945 berbanding 0,944 untuk fp32
+// (aturan pilih_reranker_situs terpenuhi; lihat eval/results.json).
+export const RERANKER = RERANKER_Q8;
 export const RERANK_TOP = 20; // sama dengan TOP di src/evidence/rerank.py
 const MAX_TOKEN = 512; // sama dengan max_length CrossEncoder di evaluasi
 const BATCH = 4;

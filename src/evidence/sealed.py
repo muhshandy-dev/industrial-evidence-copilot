@@ -119,7 +119,15 @@ def retrieval(corpus, systems: dict, rows: list[dict], shipped: str) -> dict:
 def generative(root: Path, corpus, system, threshold: float, rows: list[dict], ext: list[dict]):
     """Ringkasan generatif per konfigurasi. Menolak bila ada pertanyaan yang belum dibangkitkan
     atau skor NLI yang belum dihitung, supaya hasil sekali jalan ini tidak setengah jadi."""
-    from .generation import NliCache, _fresh, gen_input, judge, read_outputs, summarize
+    from .generation import (
+        NliCache,
+        _fresh,
+        _tanpa_keluaran,
+        gen_input,
+        judge,
+        read_outputs,
+        summarize,
+    )
 
     nli = NliCache(root)
     ids = [c.id for c in corpus.chunks]
@@ -128,6 +136,9 @@ def generative(root: Path, corpus, system, threshold: float, rows: list[dict], e
     out = {}
     for varian in KONFIGURASI_TERSEGEL:
         by_id = {r["id"]: r for r in read_outputs(root, varian, ("sealed",))}
+        for r in rows:  # ditolak gerbang: model tidak dipanggil
+            if not gates[r["id"]]["lolos_gerbang"]:
+                by_id[r["id"]] = _tanpa_keluaran(r["id"], "sealed")
         missing = [r["id"] for r in rows if not _fresh(by_id.get(r["id"]), gates[r["id"]], ids)]
         if missing:
             raise SystemExit(f"{varian}: {len(missing)} pertanyaan tersegel belum dibangkitkan")
@@ -135,7 +146,7 @@ def generative(root: Path, corpus, system, threshold: float, rows: list[dict], e
         s = summarize(recs)
         if s["nli_belum_dihitung"]:
             raise SystemExit(f"{varian}: {s['nli_belum_dihitung']} skor NLI belum dihitung")
-        any_rec = next(iter(by_id.values()))
+        any_rec = next(r for r in by_id.values() if "model" in r)
         out[varian] = {
             "model": {k: any_rec[k] for k in ("model", "revisi", "dtype")},
             **s,

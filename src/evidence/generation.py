@@ -47,8 +47,9 @@ DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt
 # mMiniLM (ONNX yang sama di peramban, paritas diuji). Gerbang penolakan tetap skor BM25.
 # Aturan pilih: di antara sistem layak peramban, MRR@10 dev tertinggi; selisih di bawah 0,01
 # dianggap seri dan dipilih yang mengunduh model paling sedikit. Aturan ini ditetapkan setelah
-# angka dev dan test semua sistem terlihat (lihat docs/evaluasi.md).
-SISTEM_GENERATIF = "bm25_konteks+mminilm"
+# angka dev dan test semua sistem terlihat (lihat docs/evaluasi.md). Reranker yang sama dalam versi
+# 8-bit menggantikan fp32 karena memenuhi pilih_reranker_situs (MRR@10 dev 0,945 vs 0,944).
+SISTEM_GENERATIF = "bm25_konteks+mminilm_q8"
 
 
 # Reranker situs: fp32 (471 MB) atau versi 8-bit (119 MB). Aturan ditulis sebelum skor 8-bit
@@ -419,9 +420,9 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
             recs = []
             for r in srows:
                 g, gate = by_id.get(r["id"]), gates[r["id"]]
-                # Pertanyaan yang ditolak gerbang tidak pernah sampai ke model, jadi model server
-                # (kuota terbatas) hanya dibangkitkan untuk yang lolos gerbang.
-                if g is None and not gate["lolos_gerbang"]:
+                # Pertanyaan yang ditolak gerbang (skor BM25, tidak bergantung reranker) tidak
+                # pernah sampai ke model, keluarannya tidak dipakai dan tak perlu dibangkitkan.
+                if not gate["lolos_gerbang"]:
                     g = _tanpa_keluaran(r["id"], s)
                 elif not _fresh(g, gate, ids):
                     continue

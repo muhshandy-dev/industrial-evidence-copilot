@@ -26,6 +26,10 @@ on:
         description: "Jalankan juga model jalur CPU situs (0,5B) pada set yang sama"
         type: boolean
         default: true
+      lolos:
+        description: "Hanya pertanyaan yang lolos gerbang (yang ditolak gerbang tidak pernah sampai ke model)"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -41,6 +45,7 @@ env:
   # Push yang mengubah berkas ini hanya menjalankan uji asap: 2 pertanyaan per shard.
   BATAS: ${{ github.event_name == 'push' && '2' || inputs.batas }}
   CPU: ${{ github.event_name == 'push' || inputs.cpu }}
+  LOLOS: ${{ github.event_name == 'push' || inputs.lolos }}
 
 jobs:
   siapkan:
@@ -89,25 +94,35 @@ jobs:
         with:
           name: masukan
           path: web
+      - name: Lanjutkan dari keluaran yang sudah di-commit
+        # Baris dengan prompt yang sama (pasal dan urutannya sama) dilewati; hanya yang berubah
+        # dibangkitkan ulang. Baris lama dibuang lagi sebelum diunggah.
+        run: |
+          cat ../eval/cache/gen/{bertahan,bertahan-cpu,polos}/*.jsonl > keluaran.jsonl 2>/dev/null || true
+          wc -l < keluaran.jsonl > awal.txt
+          echo "LOLOS_ARG=$([ "$LOLOS" = true ] && echo --lolos)" >> "$GITHUB_ENV"
       - name: Varian bertahan
         run: |
           node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian bertahan \
-            --shard ${{ matrix.shard }} --shards "$SHARDS" ${BATAS:+--batas $BATAS}
+            --shard ${{ matrix.shard }} --shards "$SHARDS" ${BATAS:+--batas $BATAS} $LOLOS_ARG
       - name: Model CPU situs (varian bertahan)
         if: env.CPU == 'true'
         run: |
           node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian bertahan --model cpu \
-            --shard ${{ matrix.shard }} --shards "$SHARDS" ${BATAS:+--batas $BATAS}
+            --shard ${{ matrix.shard }} --shards "$SHARDS" ${BATAS:+--batas $BATAS} $LOLOS_ARG
       - name: Varian polos (injeksi saja)
         if: env.POLOS == 'true' && contains(env.SET, 'injeksi')
         run: |
           node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian polos --set injeksi \
-            --shard ${{ matrix.shard }} --shards "$SHARDS" ${BATAS:+--batas $BATAS}
+            --shard ${{ matrix.shard }} --shards "$SHARDS" ${BATAS:+--batas $BATAS} $LOLOS_ARG
+      - name: Ambil baris baru saja
+        if: always()
+        run: tail -n +$(( $(cat awal.txt) + 1 )) keluaran.jsonl > baru.jsonl; wc -l baru.jsonl
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: keluaran-${{ matrix.shard }}
-          path: web/keluaran.jsonl
+          path: web/baru.jsonl
           if-no-files-found: ignore
 
   gabung:
@@ -136,7 +151,7 @@ jobs:
         with:
           pattern: keluaran-*
           path: keluaran
-      - run: evidence gen-merge keluaran/*/keluaran.jsonl
+      - run: evidence gen-merge keluaran/*/baru.jsonl
       - run: evidence nli
       - name: Evaluasi dan ekspor
         run: |

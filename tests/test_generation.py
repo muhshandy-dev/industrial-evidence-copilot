@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -183,3 +184,11 @@ def test_aturan_reranker_situs():
     assert G.pilih_reranker_situs(ps(**{fp: 0.944, q8: 0.935})) == q8
     assert G.pilih_reranker_situs(ps(**{fp: 0.944, q8: 0.93})) == fp
     assert G.pilih_reranker_situs(ps(**{fp: 0.944, q8: 0.95})) == q8
+
+
+def test_sistem_generatif_mengikuti_aturan_reranker():
+    hasil = json.loads((ROOT / "eval/results.json").read_text(encoding="utf-8"))
+    pilih = G.pilih_reranker_situs(hasil["pencarian"]["per_sistem"])
+    assert pilih == G.SISTEM_GENERATIF
+    js = (ROOT / "web/public/js/gen/rerank.js").read_text(encoding="utf-8")
+    assert ("RERANKER = RERANKER_Q8;" in js) == pilih.endswith("_q8")
