@@ -9,6 +9,7 @@ on:
       - ".github/workflows/peramban.yml"
       - "web/tests/gen-browser.mjs"
       - "web/tests/wasm-probe.mjs"
+      - "web/tests/paritas-peramban.mjs"
       - "web/public/js/gen/**"
       - "web/scripts/paritas-rerank.mjs"
   workflow_dispatch:
@@ -44,5 +45,7 @@ jobs:
         continue-on-error: true
       - name: Paritas reranker (transformers.js di Node terhadap skor evaluasi)
         run: node scripts/paritas-rerank.mjs
+      - name: Paritas reranker di Chromium (WebAssembly) terhadap skor evaluasi
+        run: node tests/paritas-peramban.mjs
       - name: Uji asap mode generatif
         run: node tests/gen-browser.mjs
