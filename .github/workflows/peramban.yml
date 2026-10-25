@@ -10,6 +10,9 @@ on:
       - "web/tests/gen-browser.mjs"
       - "web/tests/wasm-probe.mjs"
       - "web/tests/paritas-peramban.mjs"
+      - "web/tests/preview-server.mjs"
+      - "functions/**"
+      - "server/**"
       - "web/public/js/gen/**"
       - "web/scripts/paritas-rerank.mjs"
   workflow_dispatch:
@@ -49,3 +52,5 @@ jobs:
         run: node tests/paritas-peramban.mjs
       - name: Uji asap mode generatif
         run: node tests/gen-browser.mjs
+      - name: Uji asap mode server di deploy Preview (dilewati selama MODEL_SERVER null)
+        run: node tests/preview-server.mjs
