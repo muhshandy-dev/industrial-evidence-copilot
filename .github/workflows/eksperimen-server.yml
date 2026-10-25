@@ -3,6 +3,9 @@ name: Eksperimen model server
 # Putaran 3: model Cloudflare Workers AI di data DEV saja (pertanyaan yang lolos gerbang), dengan
 # prompt dan pemeriksaan yang sama dengan situs, lalu NLI. Aturan pilih (choose_server di
 # src/evidence/generation.py) ditulis sebelum model server mana pun dijalankan.
+# Model dipanggil lewat Pages Function di deploy Preview (binding AI yang sama dengan situs), bukan
+# REST API, jadi tidak ada secret Cloudflare. Jalur evaluasi fungsi itu hanya menerima token OIDC
+# GitHub Actions dari workflow ini (server/oidc.js).
 # Memakai kuota gratis harian akun Cloudflare (10.000 neuron). Bila kuota habis, keluaran yang sudah
 # ada tetap di-commit dan run berikutnya melanjutkan dari sana.
 on:
@@ -22,11 +25,12 @@ on:
         description: "Batas pertanyaan per model (kosong = semua); untuk uji asap"
         default: ""
       endpoint:
-        description: "Pages Function Preview (kosong = REST API dengan secret Cloudflare)"
+        description: "Pages Function di deploy Preview"
         default: "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/api/jawab"
 
 permissions:
   contents: write
+  id-token: write # token OIDC untuk jalur evaluasi /api/jawab
 
 concurrency:
   group: eksperimen-server-${{ github.ref }}
@@ -54,7 +58,6 @@ jobs:
       - run: pip install -e .
       - run: evidence gen-input --set dev --out web/masukan.jsonl && wc -l web/masukan.jsonl
       - name: Periksa binding AI di Preview
-        if: env.ENDPOINT != ''
         run: |
           # Tunggu sampai deploy Preview memuat versi fungsi yang melaporkan binding (paling lama 10 menit).
           for i in $(seq 1 20); do
@@ -68,11 +71,8 @@ jobs:
       - name: Bangkitkan lewat Workers AI
         id: gen
         working-directory: web
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          kuota=0
+          kuota=0; gagal=0
           for v in ${VARIAN//,/ }; do
             for m in ${MODEL//,/ }; do
               f="keluaran-$v-$m.jsonl"
@@ -80,12 +80,14 @@ jobs:
               if [ -f "../eval/cache/gen/$v-$m/dev.jsonl" ]; then cp "../eval/cache/gen/$v-$m/dev.jsonl" "$f"; fi
               rc=0
               node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" \
-                --lolos ${BATAS:+--batas "$BATAS"} ${ENDPOINT:+--endpoint "$ENDPOINT"} || rc=$?
+                --lolos ${BATAS:+--batas "$BATAS"} --endpoint "$ENDPOINT" || rc=$?
               if [ "$rc" = 3 ]; then kuota=1; break 2; fi
-              if [ "$rc" != 0 ]; then exit "$rc"; fi
+              # Galat lain: hentikan, tetapi keluaran yang sudah ada tetap dinilai dan di-commit.
+              if [ "$rc" != 0 ]; then gagal=1; break 2; fi
             done
           done
           echo "kuota_habis=$kuota" >> "$GITHUB_OUTPUT"
+          echo "gagal=$gagal" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
@@ -114,3 +116,6 @@ jobs:
       - name: Catatan kuota
         if: steps.gen.outputs.kuota_habis == '1'
         run: echo "::warning::Kuota harian Workers AI habis; jalankan lagi setelah 00.00 UTC untuk melanjutkan."
+      - name: Gagalkan run bila generasi berhenti karena galat
+        if: steps.gen.outputs.gagal == '1'
+        run: echo "::error::Generasi berhenti karena galat; lihat langkah Bangkitkan"; exit 1

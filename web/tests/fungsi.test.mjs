@@ -14,6 +14,7 @@ const korpus = readFileSync(join(akar, "web/public/data/korpus.json"), "utf8");
 async function muatFungsi(aktif) {
   const d = mkdtempSync(join(tmpdir(), "fungsi-"));
   cpSync(join(akar, "functions"), join(d, "functions"), { recursive: true });
+  cpSync(join(akar, "server"), join(d, "server"), { recursive: true });
   cpSync(join(akar, "web/public/js/gen"), join(d, "web/public/js/gen"), { recursive: true });
   if (aktif) {
     const p = join(d, "web/public/js/gen/prompt.js");
@@ -27,7 +28,12 @@ const ids = JSON.parse(korpus).chunk.slice(0, 3).map((c) => c.id);
 function env(ai) {
   return { ASSETS: { fetch: async () => new Response(korpus) }, AI: ai };
 }
-const minta = (badan, headers = {}) => new Request(`${asal}/api/jawab`, { method: "POST", body: typeof badan === "string" ? badan : JSON.stringify(badan), headers: { origin: asal, ...headers } });
+// Setiap permintaan uji dari IP berbeda, kecuali uji batas per menit yang menentukan IP sendiri.
+let nomorIp = 0;
+const minta = (badan, headers = {}) => new Request(`${asal}/api/jawab`, {
+  method: "POST", body: typeof badan === "string" ? badan : JSON.stringify(badan),
+  headers: { origin: asal, "cf-connecting-ip": `198.51.100.${++nomorIp % 250}`, ...headers },
+});
 
 test("nonaktif selama MODEL_SERVER null", async () => {
   const f = await muatFungsi(false);
@@ -78,23 +84,83 @@ test("kuota habis menjadi 429, galat lain 502", async () => {
   assert.equal((await f.onRequestPost({ request: minta({ tanya: "Apa itu APD?", pasal: ids }), env: env(rusak) })).status, 502);
 });
 
-test("Preview boleh memilih kandidat model dan varian; produksi tidak", async () => {
+// Token OIDC tiruan: pasangan kunci RSA lokal, JWKS disajikan lewat fetch tiruan.
+const pasangan = await crypto.subtle.generateKey(
+  { name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign", "verify"]);
+const jwkPublik = { ...(await crypto.subtle.exportKey("jwk", pasangan.publicKey)), kid: "uji", alg: "RS256", use: "sig" };
+const fetchAsli = globalThis.fetch;
+globalThis.fetch = async (url, ...lain) => (String(url).startsWith("https://token.actions.githubusercontent.com/")
+  ? new Response(JSON.stringify({ keys: [jwkPublik] })) : fetchAsli(url, ...lain));
+const b64 = (x) => Buffer.from(typeof x === "string" ? x : JSON.stringify(x)).toString("base64url");
+async function tokenUji(ubah = {}, kunci = pasangan.privateKey) {
+  const t = Math.floor(Date.now() / 1000);
+  const klaim = {
+    iss: "https://token.actions.githubusercontent.com", aud: "industrial-evidence-copilot-evaluasi",
+    repository: "muhshandy-dev/industrial-evidence-copilot",
+    job_workflow_ref: "muhshandy-dev/industrial-evidence-copilot/.github/workflows/eksperimen-server.yml@refs/heads/x",
+    iat: t, nbf: t, exp: t + 300, ...ubah,
+  };
+  const isi = `${b64({ alg: "RS256", kid: "uji", typ: "JWT" })}.${b64(klaim)}`;
+  const ttd = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", kunci, new TextEncoder().encode(isi));
+  return `${isi}.${Buffer.from(ttd).toString("base64url")}`;
+}
+const mintaEvaluasi = (badan, token, host = asal) => new Request(`${host}/api/jawab`, {
+  method: "POST", body: JSON.stringify(badan), headers: { authorization: `Bearer ${token}` },
+});
+
+test("jalur evaluasi: hanya Preview dan hanya dengan token OIDC workflow evaluasi", async () => {
   const f = await muatFungsi(false);
   const panggilan = [];
   const ai = { run: async (model, badan) => { panggilan.push([model, badan]); return { response: "Ya [1].", usage: { prompt_tokens: 10 } }; } };
   assert.equal((await f.onRequestGet({ env: env(ai) }).json()).binding, true);
   assert.equal((await f.onRequestGet({ env: {} }).json()).binding, false);
-  const r = await f.onRequestPost({ request: minta({ tanya: "Apa kewajiban pengurus?", pasal: ids, model: "llama-4-scout", varian: "k3" }), env: env(ai) });
+  const badan = { tanya: "Apa kewajiban pengurus?", pasal: ids, model: "llama-4-scout", varian: "k3" };
+
+  const r = await f.onRequestPost({ request: mintaEvaluasi(badan, await tokenUji()), env: env(ai) });
   assert.equal(r.status, 200);
   const j = await r.json();
   assert.equal(j.model, "@cf/meta/llama-4-scout-17b-16e-instruct");
   assert.equal(j.varian, "k3");
   assert.deepEqual(j.usage, { prompt_tokens: 10 });
   assert.equal(panggilan[0][1].messages.length, 4); // k3: contoh sebagai giliran percakapan
-  const salah = await f.onRequestPost({ request: minta({ tanya: "Apa itu APD?", pasal: ids, model: "gpt-lain" }), env: env(ai) });
-  assert.equal(salah.status, 400);
-  const prod = `https://${f.HOST_PRODUKSI}`;
-  const req = new Request(`${prod}/api/jawab`, { method: "POST", headers: { origin: prod }, body: JSON.stringify({ tanya: "Apa itu APD?", pasal: ids, model: "mistral-small-3.1" }) });
-  assert.equal((await f.onRequestPost({ request: req, env: env(ai) })).status, 403);
+
+  // Tanpa token: pengunjung tidak boleh memilih model.
+  assert.equal((await f.onRequestPost({ request: minta(badan), env: env(ai) })).status, 403);
+  // Token yang tidak sah.
+  const { privateKey: kunciLain } = await crypto.subtle.generateKey(
+    { name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign"]);
+  const salah = [
+    ["tanda_tangan_salah", await tokenUji({}, kunciLain)],
+    ["repositori_salah", await tokenUji({ repository: "orang-lain/industrial-evidence-copilot" })],
+    ["workflow_ditolak", await tokenUji({ job_workflow_ref: "muhshandy-dev/industrial-evidence-copilot/.github/workflows/ci.yml@refs/heads/x" })],
+    ["audiens_salah", await tokenUji({ aud: "lain" })],
+    ["kedaluwarsa", await tokenUji({ exp: Math.floor(Date.now() / 1000) - 10 })],
+    ["token_tidak_sah", "bukan.token"],
+  ];
+  for (const [alasan, token] of salah) {
+    const res = await f.onRequestPost({ request: mintaEvaluasi(badan, token), env: env(ai) });
+    assert.equal(res.status, 401, alasan);
+    assert.equal((await res.json()).alasan, alasan);
+  }
+  // Domain produksi menolak jalur evaluasi walau tokennya sah.
+  const prod = await f.onRequestPost({ request: mintaEvaluasi(badan, await tokenUji(), `https://${f.HOST_PRODUKSI}`), env: env(ai) });
+  assert.equal(prod.status, 403);
+  // Model yang tidak dikenal.
+  assert.equal((await f.onRequestPost({ request: mintaEvaluasi({ ...badan, model: "gpt-lain" }, await tokenUji()), env: env(ai) })).status, 400);
   assert.equal(panggilan.length, 1);
+});
+
+test("pengunjung: Origin wajib dan batas permintaan per menit", async () => {
+  const f = await muatFungsi(true);
+  const ai = { run: async () => ({ response: "Ya [1]." }) };
+  const tanpaAsal = new Request(`${asal}/api/jawab`, { method: "POST", body: JSON.stringify({ tanya: "Apa itu APD?", pasal: ids }) });
+  assert.equal((await f.onRequestPost({ request: tanpaAsal, env: env(ai) })).status, 403);
+  const status = [];
+  for (let i = 0; i < f.BATAS_PER_MENIT + 1; i++) {
+    const req = minta({ tanya: "Apa itu APD?", pasal: ids }, { "cf-connecting-ip": "203.0.113.9" });
+    status.push((await f.onRequestPost({ request: req, env: env(ai) })).status);
+  }
+  assert.deepEqual(status, [...Array(f.BATAS_PER_MENIT).fill(200), 429]);
+  const lain = minta({ tanya: "Apa itu APD?", pasal: ids }, { "cf-connecting-ip": "203.0.113.10" });
+  assert.equal((await f.onRequestPost({ request: lain, env: env(ai) })).status, 200);
 });

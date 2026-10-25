@@ -102,6 +102,7 @@ const PESAN_SERVER = {
   kuota_habis: "Kuota harian gratis model server sudah habis. Kuota terisi lagi pukul 07.00 WIB.",
   mode_server_nonaktif: "Mode server belum diaktifkan di situs ini.",
   binding_ai_belum_dipasang: "Server belum tersambung ke Workers AI.",
+  terlalu_sering: "Terlalu banyak pertanyaan dalam satu menit. Tunggu sebentar lalu coba lagi.",
 };
 
 async function bangkitkanServer(tanya, pasal) {
