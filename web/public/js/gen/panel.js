@@ -28,7 +28,7 @@ export function createModePanel() {
     h("legend", { class: "subjudul" }, "Mode jawaban"),
     pilih("kutipan", "Kutipan langsung", "Kalimat disalin persis dari pasal. Cepat, tanpa unduhan model."),
     serverTersedia()
-      ? pilih("server", "Generatif (Cloudflare Workers AI)", `Model bahasa ${nama(MODEL_SERVER)} di server Cloudflare menulis jawaban singkat dengan sitasi [n] ke pasal.`)
+      ? pilih("server", "Generatif dengan model server (utama)", `Model bahasa ${MODEL_SERVER.nama} di Cloudflare Workers AI menulis jawaban singkat dengan sitasi [n] ke pasal. Peramban hanya mengunduh reranker untuk mengurutkan pasal.`)
       : null,
     pilih("lokal", serverTersedia() ? "Generatif di perangkat Anda (opsional)" : "Generatif di perangkat Anda",
       `Model kecil ${nama(MODEL)} di GPU (WebGPU), atau ${nama(MODEL_CPU)} di CPU, berjalan di peramban Anda. Unduhan besar dan hasilnya lebih lemah${serverTersedia() ? " daripada model server" : ""}.`),

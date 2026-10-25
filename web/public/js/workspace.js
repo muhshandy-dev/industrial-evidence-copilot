@@ -146,8 +146,8 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
   }
 
   function keteranganModel(jalur) {
-    const nama = modelUntuk(jalur).id.split("/").at(-1);
-    return jalur === "server" ? `${nama}, di Cloudflare Workers AI` : `${nama}, di ${perangkatLokalAktif() === "webgpu" ? "GPU" : "CPU"} perangkat ini`;
+    const m = modelUntuk(jalur);
+    return jalur === "server" ? `${m.nama}, di Cloudflare Workers AI` : `${m.id.split("/").at(-1)}, di ${perangkatLokalAktif() === "webgpu" ? "GPU" : "CPU"} perangkat ini`;
   }
 
   function tolakBox(judul, isi, top) {

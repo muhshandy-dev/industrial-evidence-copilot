@@ -18,9 +18,10 @@ export const MODEL_CPU = {
   dtype: "q4",
   lisensi: "Apache-2.0",
 };
-// Model kandidat untuk eksperimen di dev (belum dipakai situs). Qwen3 berlisensi Apache-2.0;
-// mode berpikirnya dimatikan lewat templat chat (enable_thinking: false), jadi keluarannya
-// langsung jawaban.
+// Model kandidat untuk eksperimen di dev (tidak dipakai situs). Qwen3 berlisensi Apache-2.0.
+// Catatan: opsi templat enable_thinking: false ternyata tidak diteruskan pipeline transformers.js
+// 4.3.1, jadi keluaran putaran 2 masih memuat mode berpikir dan angkanya tidak sah
+// (docs/eksperimen-prompt.md).
 export const MODEL_KANDIDAT = {
   "qwen3-1.7b": {
     id: "onnx-community/Qwen3-1.7B-ONNX",
@@ -42,9 +43,9 @@ export const MODEL_KANDIDAT = {
 // dipilih di data dev dengan aturan yang ditulis sebelum dijalankan (docs/eksperimen-prompt.md,
 // putaran 3). Workers AI tidak memberi nomor revisi bobot; nama model adalah patokannya.
 export const MODEL_SERVER_KANDIDAT = {
-  "llama-3.3-70b": { id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", penyedia: "workers-ai", lisensi: "Llama 3.3 Community License" },
-  "llama-4-scout": { id: "@cf/meta/llama-4-scout-17b-16e-instruct", penyedia: "workers-ai", lisensi: "Llama 4 Community License" },
-  "mistral-small-3.1": { id: "@cf/mistralai/mistral-small-3.1-24b-instruct", penyedia: "workers-ai", lisensi: "Apache-2.0" },
+  "llama-3.3-70b": { id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", nama: "Llama 3.3 70B Instruct (FP8)", penyedia: "workers-ai", lisensi: "Llama 3.3 Community License" },
+  "llama-4-scout": { id: "@cf/meta/llama-4-scout-17b-16e-instruct", nama: "Llama 4 Scout 17B-16E Instruct", penyedia: "workers-ai", lisensi: "Llama 4 Community License" },
+  "mistral-small-3.1": { id: "@cf/mistralai/mistral-small-3.1-24b-instruct", nama: "Mistral Small 3.1 24B Instruct", penyedia: "workers-ai", lisensi: "Apache-2.0" },
 };
 // Model server yang dipakai situs: belum ada sampai putaran 3 memilih. Selama null, Pages
 // Function menolak permintaan dan situs tidak menawarkan mode server.
@@ -53,8 +54,8 @@ export const MODEL_SERVER = null;
 export const VARIAN_SERVER = "bertahan";
 export const MODELS = Object.fromEntries([MODEL, MODEL_CPU, ...Object.values(MODEL_KANDIDAT), ...Object.values(MODEL_SERVER_KANDIDAT)].map((m) => [m.id, m]));
 
-// Badan permintaan ke Workers AI, sama untuk Pages Function (binding env.AI) dan evaluasi
-// (REST API di GitHub Actions). Suhu 0 dan seed tetap supaya sedekat mungkin dengan dekode serakah;
+// Badan permintaan ke Workers AI dari Pages Function (binding env.AI), dipakai situs dan evaluasi.
+// Suhu 0 dan seed tetap supaya sedekat mungkin dengan dekode serakah;
 // server tidak menjamin keluaran yang persis sama di setiap panggilan.
 export function permintaanServer(pesan) {
   return { messages: pesan, max_tokens: MAX_TOKEN_BARU, temperature: 0, seed: 42 };
