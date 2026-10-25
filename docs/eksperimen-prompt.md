@@ -153,13 +153,17 @@ tagihan selama akun di paket Workers Free). Kode: `choose_server` di `src/eviden
 diuji.
 
 - Kandidat: prompt bertahan dan k3 dengan tiga model Workers AI:
-  `@cf/meta/llama-4-scout-17b-16e-instruct`, `@cf/google/gemma-3-12b-it`, dan
+  `@cf/meta/llama-4-scout-17b-16e-instruct`, `@cf/mistralai/mistral-small-3.1-24b-instruct`, dan
   `@cf/meta/llama-3.3-70b-instruct-fp8-fast`. Suhu 0, seed tetap, batas 220 token.
 - Ukuran utama dan syarat sama dengan putaran 1 dan 2, dengan pembanding bertahan + Qwen2.5-1.5B.
 - Seri (selisih 1 pertanyaan atau kurang): prompt bertahan lebih dulu, lalu model dengan perkiraan
   neuron per jawaban paling sedikit (urutan perkiraan dari tarif yang diterbitkan Cloudflare:
-  Llama 4 Scout, Gemma 3 12B, Llama 3.3 70B), karena lebih murah berarti lebih banyak pertanyaan
-  per hari dari kuota gratis.
+  Llama 4 Scout, Mistral Small 3.1 24B, Llama 3.3 70B), karena lebih murah berarti lebih banyak
+  pertanyaan per hari dari kuota gratis.
+- Perubahan kandidat sebelum hasil apa pun terlihat: kandidat awal `@cf/google/gemma-3-12b-it`
+  ditolak Workers AI untuk akun ini ("5018: This account is not allowed to access"), jadi diganti
+  `@cf/mistralai/mistral-small-3.1-24b-instruct` (Apache-2.0, tarif neuron hampir sama). Satu-
+  satunya keluaran yang sudah terlihat saat itu adalah dua jawaban uji asap Llama 4 Scout.
 - Tetap dev saja. Konfigurasi yang belum lengkap (misalnya terpotong kuota) tidak dipilih.
 - Bila tidak ada yang lolos, hasilnya dilaporkan ke pemilik proyek sebelum langkah lain.
 
@@ -167,6 +171,8 @@ Catatan: Workers AI tidak menerbitkan nomor revisi bobot, jadi nama model adalah
 suhu 0 tidak menjamin keluaran yang persis sama di setiap panggilan. Keluaran mentah di-commit
 supaya angka dapat dihitung ulang.
 
-Workflow `Eksperimen model server` (dispatch), dengan secret `CLOUDFLARE_ACCOUNT_ID` dan
+Workflow `Eksperimen model server` (dispatch) memanggil `/api/jawab` di deploy Preview (binding AI
+yang sama dengan situs; Preview boleh memilih kandidat model, produksi tidak). Jalur cadangan: REST
+API dengan secret `CLOUDFLARE_ACCOUNT_ID` dan
 `CLOUDFLARE_API_TOKEN`. Bila kuota habis di tengah jalan, keluaran yang sudah ada di-commit dan run
 berikutnya melanjutkan.

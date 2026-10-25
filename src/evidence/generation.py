@@ -80,7 +80,7 @@ MODEL_KANDIDAT = {
 MODEL_SERVER = {
     "@cf/meta/llama-3.3-70b-instruct-fp8-fast": "llama-3.3-70b",
     "@cf/meta/llama-4-scout-17b-16e-instruct": "llama-4-scout",
-    "@cf/google/gemma-3-12b-it": "gemma-3-12b",
+    "@cf/mistralai/mistral-small-3.1-24b-instruct": "mistral-small-3.1",
 }
 
 
@@ -565,7 +565,8 @@ def choose_config(hasil: dict) -> str | None:
 # dengan putaran 1 dan 2 (pembanding: bertahan dengan Qwen2.5-1.5B). Seri (selisih <= 1): prompt
 # bertahan lebih dulu (prompt situs dengan aturan pertahanan), lalu model dengan perkiraan neuron
 # per jawaban paling sedikit (lebih banyak pertanyaan per hari dari kuota gratis).
-URUTAN_SERVER = ("llama-4-scout", "gemma-3-12b", "llama-3.3-70b")  # perkiraan neuron, termurah dulu
+# Urutan perkiraan neuron, termurah dulu.
+URUTAN_SERVER = ("llama-4-scout", "mistral-small-3.1", "llama-3.3-70b")
 
 
 def choose_server(hasil: dict) -> str | None:

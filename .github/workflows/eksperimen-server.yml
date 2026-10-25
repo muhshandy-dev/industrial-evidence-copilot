@@ -16,8 +16,8 @@ on:
         description: "Prompt (dipisah koma): bertahan, k3"
         default: "bertahan"
       model:
-        description: "Model: llama-4-scout, gemma-3-12b, llama-3.3-70b (dipisah koma)"
-        default: "llama-4-scout,gemma-3-12b,llama-3.3-70b"
+        description: "Model: llama-4-scout, mistral-small-3.1, llama-3.3-70b (dipisah koma)"
+        default: "llama-4-scout,mistral-small-3.1,llama-3.3-70b"
       batas:
         description: "Batas pertanyaan per model (kosong = semua); untuk uji asap"
         default: ""

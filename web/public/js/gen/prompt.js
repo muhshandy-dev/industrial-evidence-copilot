@@ -44,7 +44,7 @@ export const MODEL_KANDIDAT = {
 export const MODEL_SERVER_KANDIDAT = {
   "llama-3.3-70b": { id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", penyedia: "workers-ai", lisensi: "Llama 3.3 Community License" },
   "llama-4-scout": { id: "@cf/meta/llama-4-scout-17b-16e-instruct", penyedia: "workers-ai", lisensi: "Llama 4 Community License" },
-  "gemma-3-12b": { id: "@cf/google/gemma-3-12b-it", penyedia: "workers-ai", lisensi: "Gemma Terms of Use" },
+  "mistral-small-3.1": { id: "@cf/mistralai/mistral-small-3.1-24b-instruct", penyedia: "workers-ai", lisensi: "Apache-2.0" },
 };
 // Model server yang dipakai situs: belum ada sampai putaran 3 memilih. Selama null, Pages
 // Function menolak permintaan dan situs tidak menawarkan mode server.

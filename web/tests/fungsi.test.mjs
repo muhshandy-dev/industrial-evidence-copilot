@@ -17,7 +17,7 @@ async function muatFungsi(aktif) {
   cpSync(join(akar, "web/public/js/gen"), join(d, "web/public/js/gen"), { recursive: true });
   if (aktif) {
     const p = join(d, "web/public/js/gen/prompt.js");
-    writeFileSync(p, readFileSync(p, "utf8").replace("export const MODEL_SERVER = null;", 'export const MODEL_SERVER = MODEL_SERVER_KANDIDAT["gemma-3-12b"];'));
+    writeFileSync(p, readFileSync(p, "utf8").replace("export const MODEL_SERVER = null;", 'export const MODEL_SERVER = MODEL_SERVER_KANDIDAT["mistral-small-3.1"];'));
   }
   return import(join(d, "functions/api/jawab.js"));
 }
@@ -46,7 +46,7 @@ test("menyusun prompt sendiri dari korpus dan memanggil model yang dipatok", asy
   assert.equal(j.mentah, "Jawaban [1].");
   assert.deepEqual(j.pasal, ids);
   const [model, badan] = panggilan[0];
-  assert.equal(model, "@cf/google/gemma-3-12b-it");
+  assert.equal(model, "@cf/mistralai/mistral-small-3.1-24b-instruct");
   assert.equal(badan.temperature, 0);
   assert.equal(badan.messages[0].role, "system");
   const k = JSON.parse(korpus).chunk[0];
@@ -94,7 +94,7 @@ test("Preview boleh memilih kandidat model dan varian; produksi tidak", async ()
   const salah = await f.onRequestPost({ request: minta({ tanya: "Apa itu APD?", pasal: ids, model: "gpt-lain" }), env: env(ai) });
   assert.equal(salah.status, 400);
   const prod = `https://${f.HOST_PRODUKSI}`;
-  const req = new Request(`${prod}/api/jawab`, { method: "POST", headers: { origin: prod }, body: JSON.stringify({ tanya: "Apa itu APD?", pasal: ids, model: "gemma-3-12b" }) });
+  const req = new Request(`${prod}/api/jawab`, { method: "POST", headers: { origin: prod }, body: JSON.stringify({ tanya: "Apa itu APD?", pasal: ids, model: "mistral-small-3.1" }) });
   assert.equal((await f.onRequestPost({ request: req, env: env(ai) })).status, 403);
   assert.equal(panggilan.length, 1);
 });

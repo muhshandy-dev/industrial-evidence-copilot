@@ -154,7 +154,7 @@ def test_aturan_pilih_putaran_3():
 
     base = _hasil(0)
     # Terbaik yang lolos syarat menang.
-    h = {"bertahan": base, "bertahan-gemma-3-12b": _hasil(30), "k3-llama-3.3-70b": _hasil(35)}
+    h = {"bertahan": base, "bertahan-mistral-small-3.1": _hasil(30), "k3-llama-3.3-70b": _hasil(35)}
     assert choose_server(h) == "k3-llama-3.3-70b"
     # Seri (selisih <= 1): prompt bertahan lebih dulu, lalu model termurah.
     h = {"bertahan": base, "bertahan-llama-3.3-70b": _hasil(34), "k3-llama-4-scout": _hasil(35)}
@@ -166,8 +166,8 @@ def test_aturan_pilih_putaran_3():
     h = {
         "bertahan": base,
         "bertahan-llama-4-scout": _hasil(40, didukung=(15, 20)),
-        "bertahan-gemma-3-12b": _hasil(40, tak=1),
-        "k3-gemma-3-12b": _hasil(40, belum=3),
+        "bertahan-mistral-small-3.1": _hasil(40, tak=1),
+        "k3-mistral-small-3.1": _hasil(40, belum=3),
     }
     assert choose_server(h) is None
     # Model di peramban tidak ikut putaran ini.
