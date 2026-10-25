@@ -64,13 +64,18 @@ async function siapkanReranker(onProgress) {
 }
 
 // onProgress menerima {file, loaded, total} dari transformers.js.
-// jalur "server": hanya reranker. jalur "lokal": reranker lalu model generatif di perangkat
-// ("webgpu" atau "wasm"). Dimuat berurutan, bukan bersamaan: di jalur CPU keduanya berbagi satu
-// memori WebAssembly, dan memuat keduanya bersamaan gagal dengan bad_alloc pada uji asap CPU.
+// jalur "server": hanya reranker. jalur "lokal": model generatif di perangkat ("webgpu" atau
+// "wasm") lalu reranker. Dimuat berurutan, bukan bersamaan: di jalur CPU keduanya berbagi satu
+// memori WebAssembly, dan memuat keduanya bersamaan, atau reranker lebih dulu, gagal dengan
+// bad_alloc pada uji asap CPU.
 export async function muatJalur(jalur, perangkat, onProgress) {
-  await siapkanReranker(onProgress);
-  if (jalur === "server" || genLokal) return;
+  if (jalur === "server" || genLokal) { await siapkanReranker(onProgress); return; }
   const m = perangkat === "webgpu" ? MODEL : MODEL_CPU;
+  lib ??= await muatPustaka();
+  lib.env.allowLocalModels = false;
+  // Model generatif dimuat lebih dulu (urutan yang lolos uji asap CPU); reranker yang sudah dimuat
+  // untuk jalur server dilepas dulu dan dimuat ulang dari cache peramban sesudahnya.
+  if (rr) { await rr.model.dispose?.(); rr = null; }
   try {
     genLokal = await lib.pipeline("text-generation", m.id, {
       revision: m.revision,
@@ -79,6 +84,8 @@ export async function muatJalur(jalur, perangkat, onProgress) {
       progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); },
     });
   } catch (e) { throw new Error(`model generatif: ${e.message}`); }
+  try { await siapkanReranker(onProgress); }
+  catch (e) { await genLokal.dispose?.(); genLokal = null; throw e; }
   perangkatLokal = perangkat;
 }
 
