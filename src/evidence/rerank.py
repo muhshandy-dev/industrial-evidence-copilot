@@ -23,7 +23,15 @@ RERANKERS: dict[str, tuple[str, str, bool]] = {
         True,
     ),
     "bge_m3": ("BAAI/bge-reranker-v2-m3", "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e", False),
+    # Versi 8-bit mMiniLM (onnx/model_quint8_avx2.onnx di repositori yang sama). Skornya dihitung
+    # dengan kode situs (web/scripts/skor-rerank.mjs), bukan dengan `evidence rerank`.
+    "mminilm_q8": (
+        "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        "1427fd652930e4ba29e8149678df786c240d8825",
+        True,
+    ),
 }
+DARI_JS = {"mminilm_q8"}
 POOL = 30  # kandidat per sistem tahap pertama yang dimasukkan ke pool
 TOP = 20  # yang di-rerank saat evaluasi
 

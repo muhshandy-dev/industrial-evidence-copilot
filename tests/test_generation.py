@@ -172,3 +172,14 @@ def test_aturan_pilih_putaran_3():
     assert choose_server(h) is None
     # Model di peramban tidak ikut putaran ini.
     assert choose_server({"bertahan": base, "k3-qwen3-4b": _hasil(40)}) is None
+
+
+def test_aturan_reranker_situs():
+    def ps(**mrr):
+        return {k: {"metrik": {"dev": {"mrr@10": {"nilai": v}}}} for k, v in mrr.items()}
+
+    fp, q8 = "bm25_konteks+mminilm", "bm25_konteks+mminilm_q8"
+    assert G.pilih_reranker_situs(ps(**{fp: 0.944})) == fp
+    assert G.pilih_reranker_situs(ps(**{fp: 0.944, q8: 0.935})) == q8
+    assert G.pilih_reranker_situs(ps(**{fp: 0.944, q8: 0.93})) == fp
+    assert G.pilih_reranker_situs(ps(**{fp: 0.944, q8: 0.95})) == q8

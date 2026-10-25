@@ -3,12 +3,19 @@
 // dengan evaluasi (PyTorch fp32); kesamaan skornya diuji di web/scripts/paritas-rerank.mjs.
 // Modul ini tidak bergantung pada peramban, supaya dapat dipakai uji paritas di Node.
 
-export const RERANKER = {
+export const RERANKER_FP32 = {
   id: "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
   revision: "1427fd652930e4ba29e8149678df786c240d8825",
   dtype: "fp32",
   lisensi: "Apache-2.0",
 };
+// Versi kuantisasi 8-bit dari repositori yang sama (sekitar 119 MB, bukan 471 MB). Dipakai situs
+// hanya bila MRR@10 dev-nya tidak lebih dari 0,01 di bawah fp32 (aturan di
+// src/evidence/generation.py, pilih_reranker_situs). Skornya dihitung dengan kode ini
+// (scripts/skor-rerank.mjs), bukan PyTorch.
+export const RERANKER_Q8 = { ...RERANKER_FP32, berkas: "model_quint8_avx2", kunci: "mminilm_q8" };
+// Reranker yang dipakai situs.
+export const RERANKER = RERANKER_FP32;
 export const RERANK_TOP = 20; // sama dengan TOP di src/evidence/rerank.py
 const MAX_TOKEN = 512; // sama dengan max_length CrossEncoder di evaluasi
 const BATCH = 4;
@@ -21,11 +28,12 @@ export function teksPasal(korpus, ci) {
   return `${d.judul} tentang ${d.tentang}. ${c.judul_bab ?? ""}. ${c.teks_cari || c.teks}`;
 }
 
-export async function muatReranker(lib, device, onProgress) {
-  const opsi = { revision: RERANKER.revision, progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); } };
+export async function muatReranker(lib, device, onProgress, m = RERANKER) {
+  const opsi = { revision: m.revision, progress_callback: (p) => { if (p.status === "progress") onProgress?.(p); } };
+  const berkas = m.berkas ? { model_file_name: m.berkas } : {};
   const [tokenizer, model] = await Promise.all([
-    lib.AutoTokenizer.from_pretrained(RERANKER.id, opsi),
-    lib.AutoModelForSequenceClassification.from_pretrained(RERANKER.id, { ...opsi, dtype: RERANKER.dtype, device }),
+    lib.AutoTokenizer.from_pretrained(m.id, opsi),
+    lib.AutoModelForSequenceClassification.from_pretrained(m.id, { ...opsi, ...berkas, dtype: m.dtype, device }),
   ]);
   const rr = { lib, tokenizer, model };
   // Pasangan pendek tidak terpotong, jadi susunan manual harus sama persis dengan tokenizer.

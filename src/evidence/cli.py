@@ -180,7 +180,7 @@ def cmd_rerank(args: argparse.Namespace) -> int:
     from .corpus import Corpus
     from .dense import text_key
     from .evalrag import build_systems, corpus_sha
-    from .rerank import POOL, RERANKERS, cache_path, score_and_cache
+    from .rerank import DARI_JS, POOL, RERANKERS, cache_path, score_and_cache
 
     corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
     systems = build_systems(corpus, ROOT)
@@ -195,7 +195,7 @@ def cmd_rerank(args: argparse.Namespace) -> int:
     keys = sorted(pairs)[args.shard :: args.shards]
     pairs = {k: pairs[k] for k in keys}
     print(f"{len(pairs)} pertanyaan, {sum(map(len, pairs.values()))} pasangan")
-    for key in args.model or list(RERANKERS):
+    for key in args.model or [k for k in RERANKERS if k not in DARI_JS]:
         out = cache_path(ROOT, key)
         if args.shards > 1:
             out = Path(args.out_dir) / f"{key}.shard-{args.shard}.json"
@@ -206,9 +206,9 @@ def cmd_rerank(args: argparse.Namespace) -> int:
 
 def cmd_rerank_merge(args: argparse.Namespace) -> int:
     """Gabungkan skor reranker dari beberapa shard ke eval/cache/rerank/<kunci>/skor.json."""
-    from .rerank import RERANKERS, cache_path
+    from .rerank import DARI_JS, RERANKERS, cache_path
 
-    by_repo = {repo: key for key, (repo, _, _) in RERANKERS.items()}
+    by_repo = {repo: key for key, (repo, _, _) in RERANKERS.items() if key not in DARI_JS}
     merged: dict[str, dict] = {}
     for f in args.files:
         part = json.loads(Path(f).read_text(encoding="utf-8"))

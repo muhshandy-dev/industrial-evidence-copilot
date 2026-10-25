@@ -49,6 +49,22 @@ DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt
 # dianggap seri dan dipilih yang mengunduh model paling sedikit. Aturan ini ditetapkan setelah
 # angka dev dan test semua sistem terlihat (lihat docs/evaluasi.md).
 SISTEM_GENERATIF = "bm25_konteks+mminilm"
+
+
+# Reranker situs: fp32 (471 MB) atau versi 8-bit (119 MB). Aturan ditulis sebelum skor 8-bit
+# dihitung: pakai 8-bit bila MRR@10 dev bm25_konteks+mminilm_q8 tidak lebih dari 0,01 di bawah
+# fp32; bila skornya belum ada atau selisihnya lebih besar, tetap fp32.
+def pilih_reranker_situs(per_sistem: dict) -> str:
+    def mrr(k: str) -> float | None:
+        s = per_sistem.get(k)
+        return s["metrik"]["dev"]["mrr@10"]["nilai"] if s else None
+
+    fp32, q8 = mrr("bm25_konteks+mminilm"), mrr("bm25_konteks+mminilm_q8")
+    if fp32 is not None and q8 is not None and q8 >= fp32 - 0.01:
+        return "bm25_konteks+mminilm_q8"
+    return "bm25_konteks+mminilm"
+
+
 # bertahan: prompt situs dengan model utama; polos: pembanding injeksi; bertahan-cpu: model CPU.
 KONFIGURASI = ("bertahan", "polos", "bertahan-cpu")
 
