@@ -6,7 +6,7 @@ import { createReader } from "./reader.js";
 import { wait, motionOn } from "./motion.js";
 import { createModePanel } from "./gen/panel.js";
 import { bacaJawaban, pasalUntukPrompt, periksa, susunPesan, K_PASAL } from "./gen/prompt.js";
-import { bangkitkan, modelUntuk, perangkatAktif, urutUlang } from "./gen/runtime.js";
+import { GalatServer, bangkitkan, modelUntuk, perangkatAktif, urutUlang } from "./gen/runtime.js";
 import { RERANK_TOP } from "./gen/rerank.js";
 
 const num = (x) => x.toFixed(1).replace(".", ",");
@@ -112,7 +112,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     const trace = buildTrace(tokens, top, scores, generatif);
     const lolos = generatif || !ans.abstain;
     const kepala = h("span", { class: "label-mode" }, generatif ? "Jawaban generatif" : lolos ? "Jawaban ekstraktif" : "Tidak menjawab");
-    const ringkas = h("span", {}, generatif ? `${modelUntuk(perangkatAktif()).id.split("/")[1]}, di ${perangkatAktif() === "webgpu" ? "GPU" : "CPU"} perangkat ini` : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
+    const ringkas = h("span", {}, generatif ? keteranganModel() : lolos ? `${ans.evidence.length} kutipan` : "Dasar tidak cukup");
     card.append(h("div", { class: "jawaban-kepala" },
       kepala,
       ringkas,
@@ -144,6 +144,12 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     thread.parentElement.scrollTo?.({ top: thread.parentElement.scrollHeight, behavior: motionOn() ? "smooth" : "auto" });
   }
 
+  function keteranganModel() {
+    const p = perangkatAktif();
+    const nama = modelUntuk(p).id.split("/").at(-1);
+    return p === "server" ? `${nama}, di Cloudflare Workers AI` : `${nama}, di ${p === "webgpu" ? "GPU" : "CPU"} perangkat ini`;
+  }
+
   function tolakBox(judul, isi, top) {
     return h("div", { class: "tolak masuk" },
       h("h3", {}, judul),
@@ -164,10 +170,10 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
       const { peringkat } = await urutUlang(korpus, q, ranked);
       pasal = pasalUntukPrompt(korpus, peringkat);
       card.dataset.peringkat = pasal.map((p) => p.id).join(" ");
-      tunggu.textContent = "Model sedang menulis jawaban dari pasal yang ditemukan…";
-      mentah = await bangkitkan(susunPesan(q, pasal), (t) => { tulis.textContent += t; });
+      tunggu.textContent = `${perangkatAktif() === "server" ? "Model di server" : "Model"} sedang menulis jawaban dari pasal yang ditemukan…`;
+      mentah = await bangkitkan({ tanya: q, pasal, pesan: susunPesan(q, pasal) }, (t) => { tulis.textContent += t; });
     } catch (err) {
-      tunggu.textContent = `Model gagal menjawab (${err.message}). Ditampilkan kutipan langsung.`;
+      tunggu.textContent = err instanceof GalatServer ? `${err.message} Ditampilkan kutipan langsung.` : `Model gagal menjawab (${err.message}). Ditampilkan kutipan langsung.`;
       tulis.remove();
       card.dataset.mode = "galat_model";
       kepala.textContent = "Kutipan cadangan";

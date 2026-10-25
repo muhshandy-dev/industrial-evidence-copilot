@@ -1,8 +1,10 @@
-// Menjalankan model generatif di peramban (WebGPU) dengan transformers.js.
-// Pustaka transformers.js dan runtime ONNX diunduh dari jsDelivr, bobot model dari Hugging Face,
-// semuanya pada versi yang dipatok dan hanya setelah pengguna menekan tombol muat. Kode pustaka
-// diperiksa SHA-256-nya sebelum dijalankan. Pertanyaan tidak pernah dikirim ke server mana pun.
-import { MODEL, MODEL_CPU, MAX_TOKEN_BARU } from "./prompt.js";
+// Mode generatif. Bila MODEL_SERVER dipilih, jawaban ditulis model di Cloudflare Workers AI lewat
+// Pages Function /api/jawab, dan peramban hanya menjalankan reranker. Bila belum, model generatif
+// kecil berjalan di peramban (WebGPU atau CPU) dengan transformers.js.
+// Pustaka transformers.js dan runtime ONNX diunduh dari jsDelivr, bobot dari Hugging Face, semuanya
+// pada versi yang dipatok dan hanya setelah pengguna menekan tombol muat. Kode pustaka diperiksa
+// SHA-256-nya sebelum dijalankan.
+import { MODEL, MODEL_CPU, MODEL_SERVER, MAX_TOKEN_BARU } from "./prompt.js";
 import { muatReranker, urutUlang as urutDenganReranker } from "./rerank.js";
 
 // Diperiksa oleh scripts/check-build.mjs terhadap paket npm yang terpasang (versi dan SHA-256).
@@ -24,7 +26,7 @@ export async function muatPustaka() {
 
 // Ukuran unduhan per jalur, dibulatkan: model generatif (berkas ONNX menurut dtype dan
 // tokenizer) ditambah reranker fp32 (sekitar 490 MB).
-export const UKURAN_UNDUHAN_MB = { webgpu: 1730, wasm: 1290 };
+export const UKURAN_UNDUHAN_MB = { webgpu: 1730, wasm: 1290, server: 500 };
 
 let lib = null;
 let gen = null;
@@ -43,9 +45,13 @@ export async function periksaDukungan() {
 
 let perangkatDipakai = null;
 export function perangkatAktif() { return perangkatDipakai; }
-export function modelUntuk(perangkat) { return perangkat === "webgpu" ? MODEL : MODEL_CPU; }
+export function modelUntuk(perangkat) { return perangkat === "server" ? MODEL_SERVER : perangkat === "webgpu" ? MODEL : MODEL_CPU; }
 
 export function sudahDimuat() { return gen !== null; }
+
+// Jalur server: generator adalah Pages Function. Reranker tetap di peramban di CPU (WebAssembly),
+// jalur yang paritas skornya dengan evaluasi sudah diuji.
+const generatorServer = { server: true };
 
 // onProgress menerima {file, loaded, total} dari transformers.js.
 // perangkat: "webgpu" atau "wasm" (CPU).
@@ -53,6 +59,13 @@ export async function muatModel(perangkat, onProgress) {
   if (gen) return gen;
   lib ??= await muatPustaka();
   lib.env.allowLocalModels = false;
+  if (perangkat === "server") {
+    try { rr = await muatReranker(lib, "wasm", onProgress); }
+    catch (e) { throw new Error(`reranker: ${e.message}`); }
+    gen = generatorServer;
+    perangkatDipakai = "server";
+    return gen;
+  }
   const m = modelUntuk(perangkat);
   // Dimuat berurutan, bukan bersamaan: di jalur CPU kedua sesi berbagi satu memori
   // WebAssembly, dan memuat keduanya bersamaan gagal dengan bad_alloc pada uji asap CPU.
@@ -79,9 +92,34 @@ export async function urutUlang(korpus, tanya, ranked) {
   return urutDenganReranker(rr, korpus, tanya, ranked);
 }
 
+// Galat yang punya pesan untuk pengguna (misalnya kuota harian habis).
+export class GalatServer extends Error {}
+
+const PESAN_SERVER = {
+  kuota_habis: "Kuota harian gratis model server sudah habis. Kuota terisi lagi pukul 07.00 WIB.",
+  mode_server_nonaktif: "Mode server belum diaktifkan di situs ini.",
+  binding_ai_belum_dipasang: "Server belum tersambung ke Workers AI.",
+};
+
+async function bangkitkanServer(tanya, pasal) {
+  let res;
+  try {
+    res = await fetch("/api/jawab", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ tanya, pasal: pasal.map((p) => p.id) }),
+    });
+  } catch { throw new GalatServer("Server tidak dapat dihubungi."); }
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok) throw new GalatServer(PESAN_SERVER[j.galat] ?? `Server menjawab dengan galat (HTTP ${res.status}).`);
+  return j.mentah;
+}
+
 // Dekode serakah (tanpa sampling), sama seperti evaluasi. onTeks dipanggil untuk setiap potongan.
-export async function bangkitkan(pesan, onTeks) {
+// Jalur server tidak mengalir per potongan; jawabannya tampil utuh.
+export async function bangkitkan({ tanya, pasal, pesan }, onTeks) {
   if (!gen) throw new Error("model belum dimuat");
+  if (gen.server) return bangkitkanServer(tanya, pasal);
   const streamer = new lib.TextStreamer(gen.tokenizer, { skip_prompt: true, skip_special_tokens: true, callback_function: (t) => onTeks?.(t) });
   const out = await gen(pesan, { max_new_tokens: MAX_TOKEN_BARU, do_sample: false, streamer });
   return out[0].generated_text.at(-1).content;

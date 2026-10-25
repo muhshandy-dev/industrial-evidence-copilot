@@ -1,10 +1,12 @@
-// Pilihan mode jawaban di ruang kerja: kutipan langsung (bawaan) atau generatif di perangkat.
-// Model generatif hanya diunduh setelah pengguna menekan tombol muat.
+// Pilihan mode jawaban di ruang kerja: kutipan langsung (bawaan) atau generatif. Bila MODEL_SERVER
+// dipilih, model menulis di Cloudflare Workers AI dan peramban hanya memuat reranker; bila belum,
+// model kecil berjalan di perangkat. Unduhan hanya terjadi setelah pengguna menekan tombol muat.
 import { h } from "../dom.js";
-import { MODEL, MODEL_CPU } from "./prompt.js";
+import { MODEL, MODEL_CPU, MODEL_SERVER } from "./prompt.js";
 import { UKURAN_UNDUHAN_MB, muatModel, periksaDukungan, sudahDimuat } from "./runtime.js";
 
-const nama = (m) => m.id.split("/")[1];
+const nama = (m) => m.id.split("/").at(-1);
+const SERVER = MODEL_SERVER !== null;
 
 const mb = (b) => Math.round(b / 1e6).toLocaleString("id-ID");
 
@@ -14,7 +16,9 @@ export function createModePanel() {
   const status = h("p", { class: "mode-status", role: "status" });
   const batang = h("span", { class: "mode-batang-isi" });
   const kemajuan = h("div", { class: "mode-batang", hidden: true, "aria-hidden": "true" }, batang);
-  const tombol = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("webgpu") }, `Muat model (sekitar ${UKURAN_UNDUHAN_MB.webgpu.toLocaleString("id-ID")} MB)`);
+  const tombol = SERVER
+    ? h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("server") }, `Muat reranker (sekitar ${UKURAN_UNDUHAN_MB.server.toLocaleString("id-ID")} MB)`)
+    : h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("webgpu") }, `Muat model (sekitar ${UKURAN_UNDUHAN_MB.webgpu.toLocaleString("id-ID")} MB)`);
   const tombolCpu = h("button", { class: "tombol tombol-pelan", type: "button", hidden: true, onclick: () => muat("wasm") }, `Pakai model kecil di CPU (sekitar ${UKURAN_UNDUHAN_MB.wasm.toLocaleString("id-ID")} MB, lambat)`);
   const pilih = (nilai, label, ket) => h("label", { class: "mode-pilih" },
     h("input", { type: "radio", name: "mode-jawab", value: nilai, checked: nilai === "kutipan", onchange: () => ganti(nilai) }),
@@ -22,7 +26,9 @@ export function createModePanel() {
   const el = h("fieldset", { class: "mode-jawab" },
     h("legend", { class: "subjudul" }, "Mode jawaban"),
     pilih("kutipan", "Kutipan langsung", "Kalimat disalin persis dari pasal. Cepat, tanpa unduhan model."),
-    pilih("generatif", "Generatif di perangkat Anda", `Model bahasa menulis jawaban singkat dengan sitasi [n] ke pasal: ${nama(MODEL)} di GPU (WebGPU), atau ${nama(MODEL_CPU)} di CPU.`),
+    SERVER
+      ? pilih("generatif", "Generatif (Cloudflare Workers AI)", `Model bahasa ${nama(MODEL_SERVER)} di server Cloudflare menulis jawaban singkat dengan sitasi [n] ke pasal.`)
+      : pilih("generatif", "Generatif di perangkat Anda", `Model bahasa menulis jawaban singkat dengan sitasi [n] ke pasal: ${nama(MODEL)} di GPU (WebGPU), atau ${nama(MODEL_CPU)} di CPU.`),
     tombol, tombolCpu, kemajuan, status);
 
   async function ganti(nilai) {
@@ -33,6 +39,11 @@ export function createModePanel() {
     status.textContent = "";
     if (nilai !== "generatif") return;
     if (sudahDimuat()) { status.textContent = "Model siap. Pertanyaan berikutnya dijawab secara generatif."; return; }
+    if (SERVER) {
+      tombol.hidden = false;
+      status.textContent = "Peramban mengunduh reranker dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, untuk mengurutkan pasal. Setelah itu pertanyaan Anda dan nomor empat pasal teratas dikirim ke server situs ini, yang meneruskannya ke Workers AI. Kuota gratisnya terbatas per hari; bila habis, jawaban kembali ke kutipan langsung.";
+      return;
+    }
     const d = await periksaDukungan();
     const unduh = "Bobot model diunduh dari Hugging Face dan pustakanya dari jsDelivr, sekali saja, lalu disimpan di peramban. Pertanyaan Anda tetap diproses di perangkat ini.";
     if (!d.ok) {
@@ -62,7 +73,7 @@ export function createModePanel() {
       tombolCpu.hidden = true;
       kemajuan.hidden = true;
       el.dataset.model = "siap";
-      status.textContent = perangkat === "webgpu" ? "Model siap. Pertanyaan berikutnya dijawab secara generatif." : `Model ${nama(MODEL_CPU)} siap di CPU. Pertanyaan berikutnya dijawab secara generatif; mohon bersabar, prosesnya lambat.`;
+      status.textContent = perangkat !== "wasm" ? "Model siap. Pertanyaan berikutnya dijawab secara generatif." : `Model ${nama(MODEL_CPU)} siap di CPU. Pertanyaan berikutnya dijawab secara generatif; mohon bersabar, prosesnya lambat.`;
     } catch (err) {
       tombol.disabled = false;
       tombolCpu.disabled = false;
