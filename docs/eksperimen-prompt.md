@@ -138,6 +138,14 @@ satu jawaban butuh sekitar 2,5 menit di CPU runner.
 Kesimpulan putaran 2: model yang muat di peramban (sampai 4B) belum memenuhi standar kebenaran
 yang ditetapkan. Keputusan lokasi model dikembalikan ke pemilik proyek, sesuai aturan di atas.
 
+**Koreksi (ditemukan setelah keputusan diambil):** mode berpikir Qwen3 ternyata tidak mati. Semua
+318 keluaran Qwen3 diawali blok `<think>`, dan hanya 108 yang menutupnya sebelum batas 220 token.
+Opsi `enable_thinking: false` yang diteruskan lewat `tokenizer_kwargs` tidak dipakai oleh pipeline
+transformers.js 4.3.1. Jadi angka Qwen3 di atas meremehkan model itu dan tidak boleh dibaca sebagai
+kemampuannya. Angka Qwen2.5 (putaran 1) tidak terpengaruh. Alasan lain untuk tidak memakai Qwen3-4B
+di peramban tetap berlaku (unduhan 2,8 GB, sekitar 2,5 menit per jawaban di CPU), tetapi
+perbandingan kualitas yang adil belum dilakukan.
+
 ## Aturan putaran 3 (ditulis sebelum model server mana pun dijalankan)
 
 Pemilik proyek memilih memindahkan generasi ke Cloudflare Workers AI (kuota gratis harian, tanpa

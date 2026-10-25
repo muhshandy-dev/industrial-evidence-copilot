@@ -371,6 +371,15 @@ def manual_sample(recs: list[dict], parsed: dict[str, dict], n: int = 40, seed: 
     return sorted(pos[: n - len(take_neg)] + take_neg, key=lambda x: x["id"])
 
 
+def _tanpa_keluaran(qid: str, set_name: str) -> dict:
+    """Baris pengganti untuk pertanyaan yang ditolak gerbang dan tidak dibangkitkan."""
+    baca = {"tolak": True, "kalimat": [], "dikutip": [], "sitasiTidakSah": 0, "tanpaSitasi": 0}
+    return {
+        "id": qid, "set": set_name, "pasal": [], "pasal_teks": [], "baca": baca,
+        "periksa": {"status": "tolak", "kalimat": [], "dibuang": []},
+    }  # fmt: skip
+
+
 def _fresh(g: dict | None, gate: dict, ids: list[str]) -> bool:
     """Keluaran dihitung dari peringkat pasal yang sama dengan pencarian saat ini."""
     return g is not None and g["pasal"] == [ids[i] for i in gate["peringkat"][: len(g["pasal"])]]
@@ -407,11 +416,16 @@ def evaluate(root: Path, corpus, system, threshold: float, rows: list[dict], ext
                 ext_by = {r["id"]: r for r in answer_all(corpus, system, filled, threshold)}
             ids = [c.id for c in corpus.chunks]
 
-            recs = [
-                judge(by_id[r["id"]], r, gates[r["id"]], ext_by.get(r["id"]), nli)
-                for r in srows
-                if _fresh(by_id.get(r["id"]), gates[r["id"]], ids)
-            ]
+            recs = []
+            for r in srows:
+                g, gate = by_id.get(r["id"]), gates[r["id"]]
+                # Pertanyaan yang ditolak gerbang tidak pernah sampai ke model, jadi model server
+                # (kuota terbatas) hanya dibangkitkan untuk yang lolos gerbang.
+                if g is None and not gate["lolos_gerbang"]:
+                    g = _tanpa_keluaran(r["id"], s)
+                elif not _fresh(g, gate, ids):
+                    continue
+                recs.append(judge(g, r, gate, ext_by.get(r["id"]), nli))
             missing = len(srows) - len(recs)
             res[s] = {**summarize(recs), "belum_dibangkitkan": missing}
             if s == "injeksi":
