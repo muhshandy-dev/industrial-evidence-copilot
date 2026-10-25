@@ -53,7 +53,16 @@ SISTEM_GENERATIF = "bm25_konteks+mminilm"
 KONFIGURASI = ("bertahan", "polos", "bertahan-cpu")
 
 
+# Model kandidat eksperimen (MODEL_KANDIDAT di prompt.js), belum dipakai situs.
+MODEL_KANDIDAT = {
+    "onnx-community/Qwen3-1.7B-ONNX": "qwen3-1.7b",
+    "onnx-community/Qwen3-4B-ONNX": "qwen3-4b",
+}
+
+
 def konfigurasi(varian: str, model: str) -> str:
+    if model in MODEL_KANDIDAT:
+        return f"{varian}-{MODEL_KANDIDAT[model]}"
     return {MODEL_UTAMA: varian, MODEL_CPU: f"{varian}-cpu"}.get(model, f"{varian}-lain")
 
 
@@ -435,7 +444,7 @@ def experiment(root: Path, corpus, system, threshold: float, varian: list[str]) 
         "hasil": {},
     }
     for v in varian:
-        for konf in (v, f"{v}-cpu"):
+        for konf in (v, f"{v}-cpu", *(f"{v}-{k}" for k in MODEL_KANDIDAT.values())):
             parsed = {r["id"]: r for r in read_outputs(root, konf, ("dev",))}
             recs = [
                 judge(parsed[r["id"]], r, gates[r["id"]], ext_by.get(r["id"]), nli)
@@ -451,6 +460,7 @@ def experiment(root: Path, corpus, system, threshold: float, varian: list[str]) 
             )
             out["hasil"][konf] = s
     out["terpilih"] = choose_prompt(out["hasil"])
+    out["terpilih_putaran_2"] = choose_config(out["hasil"])
     return out
 
 
@@ -476,3 +486,32 @@ def choose_prompt(hasil: dict) -> str | None:
     cpu = {v: hasil.get(f"{v}-cpu", {}).get("generatif_benar", -1) for v in tied}
     top_cpu = max(cpu.values())
     return next(v for v in tied if cpu[v] == top_cpu)
+
+
+# Putaran 2 (ditulis setelah putaran 1 tidak meloloskan kandidat, sebelum model lain dijalankan):
+# kandidat = prompt bertahan, k1, k3 dengan model Qwen2.5-1.5B (situs), Qwen3-1.7B, Qwen3-4B.
+# Syarat dan ukuran utama sama dengan putaran 1 (pembanding: bertahan dengan Qwen2.5-1.5B).
+# Seri (selisih <= 1): unduhan lebih kecil, lalu prompt lebih sederhana.
+URUTAN_MODEL = ("", "-qwen3-1.7b", "-qwen3-4b")  # dari unduhan terkecil
+
+
+def choose_config(hasil: dict) -> str | None:
+    base = hasil.get("bertahan")
+    if base is None:
+        return None
+    order = [f"{v}{m}" for m in URUTAN_MODEL for v in ("bertahan", "k1", "k3")]
+    ok = []
+    for konf in order:
+        s = hasil.get(konf)
+        if s is None or s["belum_dibangkitkan"]:
+            continue
+        if s["dijawab_padahal_tak_terjawab"]["k"] > base["dijawab_padahal_tak_terjawab"]["k"]:
+            continue
+        kal = s["kalimat_didukung"]
+        if kal["n"] >= 10 and kal["nilai"] < 0.8:
+            continue
+        ok.append(konf)
+    if not ok:
+        return None
+    best = max(hasil[k]["generatif_benar"] for k in ok)
+    return next(k for k in ok if best - hasil[k]["generatif_benar"] <= 1)

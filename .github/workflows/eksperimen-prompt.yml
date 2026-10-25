@@ -14,6 +14,9 @@ on:
       varian:
         description: "Kandidat prompt yang dibangkitkan (bertahan sudah ada di cache)"
         default: "k1,k2,k3,k4"
+      model:
+        description: "Model: utama, cpu, qwen3-1.7b, qwen3-4b (dipisah koma)"
+        default: "utama,cpu"
       shards:
         description: "Jumlah shard paralel"
         default: "8"
@@ -27,6 +30,7 @@ concurrency:
 
 env:
   VARIAN: ${{ inputs.varian || 'k1,k2,k3,k4' }}
+  MODEL: ${{ inputs.model || 'utama,cpu' }}
   SHARDS: ${{ inputs.shards || '8' }}
 
 jobs:
@@ -78,11 +82,11 @@ jobs:
         with:
           name: masukan
           path: web
-      - name: Bangkitkan kandidat (model utama lalu CPU)
+      - name: Bangkitkan kandidat
         working-directory: web
         run: |
           for v in ${VARIAN//,/ }; do
-            for m in utama cpu; do
+            for m in ${MODEL//,/ }; do
               node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian "$v" --model "$m" \
                 --lolos --shard ${{ matrix.shard }} --shards "$SHARDS"
             done
@@ -97,7 +101,7 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -e ".[model]"
           evidence gen-merge web/keluaran.jsonl
-          K=$(python -c "import os;v=os.environ['VARIAN'].split(',');print(','.join(v+[x+'-cpu' for x in v]))")
+          K=$(python -c "import os;v=os.environ['VARIAN'].split(',');m=os.environ['MODEL'].split(',');s={'utama':'','cpu':'-cpu'};print(','.join(x+s.get(y,'-'+y) for x in v for y in m))")
           evidence nli --konfigurasi "$K" --out nli.json
       - uses: actions/upload-artifact@v4
         if: always()
@@ -129,7 +133,7 @@ jobs:
           ls -R keluaran | head -40
           evidence gen-merge keluaran/*/web/keluaran.jsonl
           evidence nli-merge keluaran/*/nli.json
-          evidence gen-eksperimen --varian "bertahan,$VARIAN"
+          evidence gen-eksperimen --varian bertahan,k1,k2,k3,k4
       - name: Commit hasil ke cabang ini
         run: |
           git config user.name "github-actions[bot]"

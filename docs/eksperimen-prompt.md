@@ -59,6 +59,57 @@ Workflow `Eksperimen prompt` (dispatch). Hasilnya di `eval/eksperimen-prompt.jso
 evidence gen-eksperimen --varian bertahan,k1,k2,k3,k4
 ```
 
-## Hasil
+## Hasil putaran 1
 
-Belum ada. Bagian ini diisi dari `eval/eksperimen-prompt.json` setelah run selesai.
+Dev, 53 pertanyaan yang lolos gerbang (50 terjawab, 3 tak terjawab). "Generatif benar" = jawaban
+generatif yang mengutip pasal emas dan memuat fakta kunci. "Didukung" = kalimat generatif yang
+didukung NLI (peluang entailment paling sedikit 0,5).
+
+| Konfigurasi | Generatif benar | Mode generatif | Tak terjawab yang dijawab | Didukung NLI |
+| --- | --- | --- | --- | --- |
+| bertahan, 1,5B | 0 | 0 | 0 | 0 dari 0 |
+| k1, 1,5B | 10 | 24 | 1 | 20 dari 37 (54%) |
+| k2, 1,5B | 15 | 30 | 2 | 24 dari 42 (57%) |
+| k3, 1,5B | 20 | 40 | 2 | 27 dari 41 (66%) |
+| k4, 1,5B | 10 | 24 | 3 | 21 dari 38 (55%) |
+| bertahan, 0,5B | 0 | 13 | 2 | 3 dari 24 (13%) |
+| k1, 0,5B | 5 | 31 | 3 | 22 dari 50 (44%) |
+| k2, 0,5B | 21 | 53 | 3 | 11 dari 71 (15%) |
+| k3, 0,5B | 9 | 41 | 2 | 29 dari 69 (42%) |
+| k4, 0,5B | 7 | 33 | 2 | 29 dari 62 (47%) |
+
+Sumber: `eval/eksperimen-prompt.json`.
+
+**Menurut aturan pilih, tidak ada kandidat yang lolos.** Semua kandidat menjawab paling sedikit
+satu pertanyaan tak terjawab (bertahan: 0), dan tidak ada yang mencapai 80% kalimat didukung NLI.
+Aturan lalu mempertahankan "bertahan", yang praktis tidak generatif. Aturan tidak diubah setelah
+hasil terlihat.
+
+Kandidat memang membuat model mau menjawab (k3 dengan 1,5B: 40 jawaban generatif, 20 benar),
+tetapi sekitar sepertiga kalimatnya tidak didukung pasal yang dikutipnya. Pemeriksaan manual
+saya atas 14 kalimat k3 (1,5B) yang dinilai tidak didukung: sekitar 9 memang keliru (angka yang
+salah atau dikarang, misalnya umur minimal 20 tahun padahal pasal menulis 21, atau tegangan 25
+volt yang tidak ada di pasal), sekitar 3 sebenarnya didukung tetapi dinilai rendah oleh NLI
+(misalnya kalimat yang diawali "Berdasarkan kutipan,"), dan sisanya tidak jelas. Pemeriksaan ini
+dilakukan satu orang (asisten pengembang) dan belum independen.
+
+Saringan tambahan yang mencoba membuang kalimat berisi angka yang tidak ada di pasal yang dikutip
+juga diuji secara informal (tidak termasuk aturan): dukungan k3 (1,5B) naik ke 73%, masih di
+bawah 80%.
+
+Kesimpulan putaran 1: masalah utamanya kemampuan model 1,5B dan 0,5B, bukan hanya prompt.
+
+## Aturan putaran 2 (ditulis sebelum model lain dijalankan)
+
+Kode: `choose_config` di `src/evidence/generation.py`, diuji.
+
+- Kandidat: prompt bertahan, k1, k3 dengan Qwen2.5-1.5B (model situs sekarang), Qwen3-1.7B,
+  dan Qwen3-4B (q4f16, onnx-community, Apache-2.0, mode berpikir dimatikan).
+- Ukuran utama dan syarat sama dengan putaran 1, dengan pembanding bertahan + Qwen2.5-1.5B.
+- Seri (selisih 1 pertanyaan atau kurang): unduhan lebih kecil, lalu prompt lebih sederhana.
+- Tetap dev saja. Bila tidak ada yang lolos, keputusan lokasi model (peramban atau server gratis
+  dengan model lebih besar) dikembalikan ke pemilik proyek.
+
+## Hasil putaran 2
+
+Belum ada.

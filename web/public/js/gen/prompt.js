@@ -18,7 +18,26 @@ export const MODEL_CPU = {
   dtype: "q4",
   lisensi: "Apache-2.0",
 };
-export const MODELS = { [MODEL.id]: MODEL, [MODEL_CPU.id]: MODEL_CPU };
+// Model kandidat untuk eksperimen di dev (belum dipakai situs). Qwen3 berlisensi Apache-2.0;
+// mode berpikirnya dimatikan lewat templat chat (enable_thinking: false), jadi keluarannya
+// langsung jawaban.
+export const MODEL_KANDIDAT = {
+  "qwen3-1.7b": {
+    id: "onnx-community/Qwen3-1.7B-ONNX",
+    revision: "3231b522c6e703b2f9b3cd8ea27426a1289a02f2",
+    dtype: "q4f16",
+    lisensi: "Apache-2.0",
+    templat: { enable_thinking: false },
+  },
+  "qwen3-4b": {
+    id: "onnx-community/Qwen3-4B-ONNX",
+    revision: "ca652ef636e8b121ff4a1607c37ab578cb866987",
+    dtype: "q4f16",
+    lisensi: "Apache-2.0",
+    templat: { enable_thinking: false },
+  },
+};
+export const MODELS = Object.fromEntries([MODEL, MODEL_CPU, ...Object.values(MODEL_KANDIDAT)].map((m) => [m.id, m]));
 
 export const K_PASAL = 4; // jumlah pasal teratas yang diberikan ke model
 export const MAX_KARAKTER_PASAL = 1800; // pasal lebih panjang dipotong

@@ -13,6 +13,9 @@ def test_dtype_utama_sama_dengan_situs():
     assert re.findall(r'dtype: "([^"]+)"', js)[:2] == [G.DTYPE_UTAMA, G.DTYPE_CPU]
     assert G.konfigurasi("bertahan", G.MODEL_UTAMA) == "bertahan"
     assert G.konfigurasi("bertahan", G.MODEL_CPU) == "bertahan-cpu"
+    for repo, kunci in G.MODEL_KANDIDAT.items():
+        assert f'"{kunci}": {{\n    id: "{repo}"' in js
+        assert G.konfigurasi("k3", repo) == f"k3-{kunci}"
 
 
 def test_jendela_nli_berurutan_dan_terbatas():
@@ -126,3 +129,17 @@ def test_aturan_pilih_prompt():
     assert choose_prompt({"bertahan": base, "k1": _hasil(10), "k3": _hasil(11)}) == "k1"
     # Kandidat yang belum lengkap tidak dipilih.
     assert choose_prompt({"bertahan": base, "k1": _hasil(30, belum=2)}) == "bertahan"
+
+
+def test_aturan_pilih_putaran_2():
+    from evidence.generation import choose_config
+
+    base = _hasil(0)
+    h = {"bertahan": base, "k3": _hasil(20, didukung=(27, 41)), "k3-qwen3-4b": _hasil(25)}
+    assert choose_config(h) == "k3-qwen3-4b"
+    # Seri: unduhan lebih kecil menang.
+    h = {"bertahan": base, "k1-qwen3-1.7b": _hasil(24), "k3-qwen3-4b": _hasil(25)}
+    assert choose_config(h) == "k1-qwen3-1.7b"
+    # Tidak ada yang lolos syarat selain pembanding yang tidak menjawab apa pun.
+    h = {"bertahan": base, "k3-qwen3-4b": _hasil(25, tak=1)}
+    assert choose_config(h) == "bertahan"
