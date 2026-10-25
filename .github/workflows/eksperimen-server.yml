@@ -1,0 +1,100 @@
+name: Eksperimen model server
+
+# Putaran 3: model Cloudflare Workers AI di data DEV saja (pertanyaan yang lolos gerbang), dengan
+# prompt dan pemeriksaan yang sama dengan situs, lalu NLI. Aturan pilih (choose_server di
+# src/evidence/generation.py) ditulis sebelum model server mana pun dijalankan.
+# Memakai kuota gratis harian akun Cloudflare (10.000 neuron). Bila kuota habis, keluaran yang sudah
+# ada tetap di-commit dan run berikutnya melanjutkan dari sana.
+on:
+  # Push hanya mendaftarkan workflow; generasi hanya lewat dispatch.
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/eksperimen-server.yml"]
+  workflow_dispatch:
+    inputs:
+      varian:
+        description: "Prompt (dipisah koma): bertahan, k3"
+        default: "bertahan"
+      model:
+        description: "Model: llama-4-scout, gemma-3-12b, llama-3.3-70b (dipisah koma)"
+        default: "llama-4-scout,gemma-3-12b,llama-3.3-70b"
+      batas:
+        description: "Batas pertanyaan per model (kosong = semua); untuk uji asap"
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eksperimen-server-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  VARIAN: ${{ inputs.varian }}
+  MODEL: ${{ inputs.model }}
+  BATAS: ${{ inputs.batas }}
+
+jobs:
+  jalankan:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: pip install -e .
+      - run: evidence gen-input --set dev --out web/masukan.jsonl && wc -l web/masukan.jsonl
+      - name: Bangkitkan lewat Workers AI
+        id: gen
+        working-directory: web
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          kuota=0
+          for v in ${VARIAN//,/ }; do
+            for m in ${MODEL//,/ }; do
+              f="keluaran-$v-$m.jsonl"
+              # Lanjutkan dari keluaran yang sudah di-commit (baris yang sama dilewati).
+              if [ -f "../eval/cache/gen/$v-$m/dev.jsonl" ]; then cp "../eval/cache/gen/$v-$m/dev.jsonl" "$f"; fi
+              rc=0
+              node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" \
+                --lolos ${BATAS:+--batas "$BATAS"} || rc=$?
+              if [ "$rc" = 3 ]; then kuota=1; break 2; fi
+              if [ "$rc" != 0 ]; then exit "$rc"; fi
+            done
+          done
+          echo "kuota_habis=$kuota" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nli-${{ hashFiles('src/evidence/generation.py') }}
+          restore-keys: hf-
+      - name: Gabung, NLI, ringkasan
+        run: |
+          shopt -s nullglob
+          files=(web/keluaran-*.jsonl)
+          if [ ${#files[@]} = 0 ]; then echo "tidak ada keluaran"; exit 0; fi
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[model]"
+          evidence gen-merge "${files[@]}"
+          K=$(python -c "import os;print(','.join(f'{v}-{m}' for v in os.environ['VARIAN'].split(',') for m in os.environ['MODEL'].split(',')))")
+          evidence nli --konfigurasi "$K"
+          evidence gen-eksperimen --varian bertahan,k1,k2,k3,k4
+      - name: Commit hasil ke cabang ini
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/cache/gen eval/cache/nli eval/eksperimen-prompt.json
+          if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
+          git commit -m "Eksperimen model server (dev): keluaran Workers AI, skor NLI, ringkasan"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Catatan kuota
+        if: steps.gen.outputs.kuota_habis == '1'
+        run: echo "::warning::Kuota harian Workers AI habis; jalankan lagi setelah 00.00 UTC untuk melanjutkan."

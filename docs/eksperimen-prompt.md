@@ -137,3 +137,28 @@ satu jawaban butuh sekitar 2,5 menit di CPU runner.
 
 Kesimpulan putaran 2: model yang muat di peramban (sampai 4B) belum memenuhi standar kebenaran
 yang ditetapkan. Keputusan lokasi model dikembalikan ke pemilik proyek, sesuai aturan di atas.
+
+## Aturan putaran 3 (ditulis sebelum model server mana pun dijalankan)
+
+Pemilik proyek memilih memindahkan generasi ke Cloudflare Workers AI (kuota gratis harian, tanpa
+tagihan selama akun di paket Workers Free). Kode: `choose_server` di `src/evidence/generation.py`,
+diuji.
+
+- Kandidat: prompt bertahan dan k3 dengan tiga model Workers AI:
+  `@cf/meta/llama-4-scout-17b-16e-instruct`, `@cf/google/gemma-3-12b-it`, dan
+  `@cf/meta/llama-3.3-70b-instruct-fp8-fast`. Suhu 0, seed tetap, batas 220 token.
+- Ukuran utama dan syarat sama dengan putaran 1 dan 2, dengan pembanding bertahan + Qwen2.5-1.5B.
+- Seri (selisih 1 pertanyaan atau kurang): prompt bertahan lebih dulu, lalu model dengan perkiraan
+  neuron per jawaban paling sedikit (urutan perkiraan dari tarif yang diterbitkan Cloudflare:
+  Llama 4 Scout, Gemma 3 12B, Llama 3.3 70B), karena lebih murah berarti lebih banyak pertanyaan
+  per hari dari kuota gratis.
+- Tetap dev saja. Konfigurasi yang belum lengkap (misalnya terpotong kuota) tidak dipilih.
+- Bila tidak ada yang lolos, hasilnya dilaporkan ke pemilik proyek sebelum langkah lain.
+
+Catatan: Workers AI tidak menerbitkan nomor revisi bobot, jadi nama model adalah patokannya, dan
+suhu 0 tidak menjamin keluaran yang persis sama di setiap panggilan. Keluaran mentah di-commit
+supaya angka dapat dihitung ulang.
+
+Workflow `Eksperimen model server` (dispatch), dengan secret `CLOUDFLARE_ACCOUNT_ID` dan
+`CLOUDFLARE_API_TOKEN`. Bila kuota habis di tengah jalan, keluaran yang sudah ada di-commit dan run
+berikutnya melanjutkan.

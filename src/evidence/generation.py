@@ -60,9 +60,19 @@ MODEL_KANDIDAT = {
 }
 
 
+# Model server Cloudflare Workers AI (MODEL_SERVER_KANDIDAT di prompt.js), putaran 3.
+MODEL_SERVER = {
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": "llama-3.3-70b",
+    "@cf/meta/llama-4-scout-17b-16e-instruct": "llama-4-scout",
+    "@cf/google/gemma-3-12b-it": "gemma-3-12b",
+}
+
+
 def konfigurasi(varian: str, model: str) -> str:
     if model in MODEL_KANDIDAT:
         return f"{varian}-{MODEL_KANDIDAT[model]}"
+    if model in MODEL_SERVER:
+        return f"{varian}-{MODEL_SERVER[model]}"
     return {MODEL_UTAMA: varian, MODEL_CPU: f"{varian}-cpu"}.get(model, f"{varian}-lain")
 
 
@@ -444,7 +454,8 @@ def experiment(root: Path, corpus, system, threshold: float, varian: list[str]) 
         "hasil": {},
     }
     for v in varian:
-        for konf in (v, f"{v}-cpu", *(f"{v}-{k}" for k in MODEL_KANDIDAT.values())):
+        lain = (*MODEL_KANDIDAT.values(), *MODEL_SERVER.values())
+        for konf in (v, f"{v}-cpu", *(f"{v}-{k}" for k in lain)):
             parsed = {r["id"]: r for r in read_outputs(root, konf, ("dev",))}
             recs = [
                 judge(parsed[r["id"]], r, gates[r["id"]], ext_by.get(r["id"]), nli)
@@ -461,6 +472,7 @@ def experiment(root: Path, corpus, system, threshold: float, varian: list[str]) 
             out["hasil"][konf] = s
     out["terpilih"] = choose_prompt(out["hasil"])
     out["terpilih_putaran_2"] = choose_config(out["hasil"])
+    out["terpilih_putaran_3"] = choose_server(out["hasil"])
     return out
 
 
@@ -500,6 +512,37 @@ def choose_config(hasil: dict) -> str | None:
     if base is None:
         return None
     order = [f"{v}{m}" for m in URUTAN_MODEL for v in ("bertahan", "k1", "k3")]
+    ok = []
+    for konf in order:
+        s = hasil.get(konf)
+        if s is None or s["belum_dibangkitkan"]:
+            continue
+        if s["dijawab_padahal_tak_terjawab"]["k"] > base["dijawab_padahal_tak_terjawab"]["k"]:
+            continue
+        kal = s["kalimat_didukung"]
+        if kal["n"] >= 10 and kal["nilai"] < 0.8:
+            continue
+        ok.append(konf)
+    if not ok:
+        return None
+    best = max(hasil[k]["generatif_benar"] for k in ok)
+    return next(k for k in ok if best - hasil[k]["generatif_benar"] <= 1)
+
+
+# Putaran 3 (ditulis setelah putaran 2 tidak meloloskan kandidat dan pemilik proyek memilih
+# Workers AI, sebelum model server mana pun dijalankan):
+# kandidat = prompt bertahan dan k3 dengan tiga model Workers AI. Ukuran utama dan syarat sama
+# dengan putaran 1 dan 2 (pembanding: bertahan dengan Qwen2.5-1.5B). Seri (selisih <= 1): prompt
+# bertahan lebih dulu (prompt situs dengan aturan pertahanan), lalu model dengan perkiraan neuron
+# per jawaban paling sedikit (lebih banyak pertanyaan per hari dari kuota gratis).
+URUTAN_SERVER = ("llama-4-scout", "gemma-3-12b", "llama-3.3-70b")  # perkiraan neuron, termurah dulu
+
+
+def choose_server(hasil: dict) -> str | None:
+    base = hasil.get("bertahan")
+    if base is None:
+        return None
+    order = [f"{v}-{m}" for v in ("bertahan", "k3") for m in URUTAN_SERVER]
     ok = []
     for konf in order:
         s = hasil.get(konf)

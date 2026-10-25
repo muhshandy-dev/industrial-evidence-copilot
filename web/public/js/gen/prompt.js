@@ -37,7 +37,36 @@ export const MODEL_KANDIDAT = {
     templat: { enable_thinking: false },
   },
 };
-export const MODELS = Object.fromEntries([MODEL, MODEL_CPU, ...Object.values(MODEL_KANDIDAT)].map((m) => [m.id, m]));
+// Model di server Cloudflare Workers AI (kuota gratis harian), dipanggil lewat Pages Function
+// functions/api/jawab.js. Prompt, pembacaan sitasi, dan pemeriksaan tetap kode ini. Kandidat
+// dipilih di data dev dengan aturan yang ditulis sebelum dijalankan (docs/eksperimen-prompt.md,
+// putaran 3). Workers AI tidak memberi nomor revisi bobot; nama model adalah patokannya.
+export const MODEL_SERVER_KANDIDAT = {
+  "llama-3.3-70b": { id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", penyedia: "workers-ai", lisensi: "Llama 3.3 Community License" },
+  "llama-4-scout": { id: "@cf/meta/llama-4-scout-17b-16e-instruct", penyedia: "workers-ai", lisensi: "Llama 4 Community License" },
+  "gemma-3-12b": { id: "@cf/google/gemma-3-12b-it", penyedia: "workers-ai", lisensi: "Gemma Terms of Use" },
+};
+// Model server yang dipakai situs: belum ada sampai putaran 3 memilih. Selama null, Pages
+// Function menolak permintaan dan situs tidak menawarkan mode server.
+export const MODEL_SERVER = null;
+// Varian prompt untuk model server (dipilih bersama modelnya).
+export const VARIAN_SERVER = "bertahan";
+export const MODELS = Object.fromEntries([MODEL, MODEL_CPU, ...Object.values(MODEL_KANDIDAT), ...Object.values(MODEL_SERVER_KANDIDAT)].map((m) => [m.id, m]));
+
+// Badan permintaan ke Workers AI, sama untuk Pages Function (binding env.AI) dan evaluasi
+// (REST API di GitHub Actions). Suhu 0 dan seed tetap supaya sedekat mungkin dengan dekode serakah;
+// server tidak menjamin keluaran yang persis sama di setiap panggilan.
+export function permintaanServer(pesan) {
+  return { messages: pesan, max_tokens: MAX_TOKEN_BARU, temperature: 0, seed: 42 };
+}
+
+// Teks jawaban dari hasil Workers AI. Sebagian model memberi {response}, sebagian {choices}.
+export function teksServer(hasil) {
+  const r = hasil?.response ?? hasil?.choices?.[0]?.message?.content;
+  if (typeof r === "string") return r;
+  if (r && typeof r === "object") return JSON.stringify(r);
+  throw new Error("respons Workers AI tanpa teks");
+}
 
 export const K_PASAL = 4; // jumlah pasal teratas yang diberikan ke model
 export const MAX_KARAKTER_PASAL = 1800; // pasal lebih panjang dipotong

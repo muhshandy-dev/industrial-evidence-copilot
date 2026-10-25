@@ -350,7 +350,8 @@ def cmd_gen_experiment(args: argparse.Namespace) -> int:
             f"  mode {s['mode']}  tak-terjawab-dijawab {s['dijawab_padahal_tak_terjawab']['k']}"
             f"  didukung {s['kalimat_didukung']['k']}/{s['kalimat_didukung']['n']}"
         )
-    print(f"terpilih: {res['terpilih']}")
+    print(f"terpilih: {res['terpilih']}, putaran 2: {res['terpilih_putaran_2']}")
+    print(f"putaran 3 (server): {res['terpilih_putaran_3']}")
     return 0
 
 

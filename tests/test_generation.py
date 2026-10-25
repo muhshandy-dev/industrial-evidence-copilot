@@ -16,6 +16,10 @@ def test_dtype_utama_sama_dengan_situs():
     for repo, kunci in G.MODEL_KANDIDAT.items():
         assert f'"{kunci}": {{\n    id: "{repo}"' in js
         assert G.konfigurasi("k3", repo) == f"k3-{kunci}"
+    for model, kunci in G.MODEL_SERVER.items():
+        assert f'"{kunci}": {{ id: "{model}"' in js
+        assert G.konfigurasi("bertahan", model) == f"bertahan-{kunci}"
+    assert set(G.URUTAN_SERVER) == set(G.MODEL_SERVER.values())
 
 
 def test_jendela_nli_berurutan_dan_terbatas():
@@ -143,3 +147,28 @@ def test_aturan_pilih_putaran_2():
     # Tidak ada yang lolos syarat selain pembanding yang tidak menjawab apa pun.
     h = {"bertahan": base, "k3-qwen3-4b": _hasil(25, tak=1)}
     assert choose_config(h) == "bertahan"
+
+
+def test_aturan_pilih_putaran_3():
+    from evidence.generation import choose_server
+
+    base = _hasil(0)
+    # Terbaik yang lolos syarat menang.
+    h = {"bertahan": base, "bertahan-gemma-3-12b": _hasil(30), "k3-llama-3.3-70b": _hasil(35)}
+    assert choose_server(h) == "k3-llama-3.3-70b"
+    # Seri (selisih <= 1): prompt bertahan lebih dulu, lalu model termurah.
+    h = {"bertahan": base, "bertahan-llama-3.3-70b": _hasil(34), "k3-llama-4-scout": _hasil(35)}
+    assert choose_server(h) == "bertahan-llama-3.3-70b"
+    h = {"bertahan": base, "bertahan-llama-3.3-70b": _hasil(35)}
+    h["bertahan-llama-4-scout"] = _hasil(34)
+    assert choose_server(h) == "bertahan-llama-4-scout"
+    # Gugur karena NLI, tak terjawab, atau belum lengkap; tanpa yang lolos hasilnya None.
+    h = {
+        "bertahan": base,
+        "bertahan-llama-4-scout": _hasil(40, didukung=(15, 20)),
+        "bertahan-gemma-3-12b": _hasil(40, tak=1),
+        "k3-gemma-3-12b": _hasil(40, belum=3),
+    }
+    assert choose_server(h) is None
+    # Model di peramban tidak ikut putaran ini.
+    assert choose_server({"bertahan": base, "k3-qwen3-4b": _hasil(40)}) is None
