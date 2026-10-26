@@ -1,0 +1,3182 @@
+{
+ "versi": 1,
+ "waktu_utc": "2026-10-26T17:34:19Z",
+ "commit": "4c5c4deb3e94f0aa6d27a8a60f6fbe793fdd552e",
+ "aturan": "Dijalankan sekali setelah desain dibekukan. Metode, ambang, prompt, dan model diambil dari eval/results.json; tidak ada yang dipilih atau disetel dari set ini.",
+ "set": {
+  "sha256": {
+   "sealed/questions.jsonl": "dced355242507eb15387f0ce88a7d12282218093dc77ea322bbd97adaa2df9a7",
+   "sealed/injeksi.jsonl": "d0914ff08fa2124c37504f2d41fc527cad0ebc2e2c3ef7eea8f2a7e63f39f134"
+  },
+  "pertanyaan": 100,
+  "terjawab": 70,
+  "tak_terjawab": 30
+ },
+ "terkunci": {
+  "korpus_sha256": "44279bc73ad2fd4b75c97a0ba7e5d23a57ba93996b7c6727252a9470caab52bb",
+  "hasil_sha256": "1e5bd073eaad0dc093d632a29443aa7d955d89258b6f7d52bb92778a7a014fc1",
+  "metode": "bm25_konteks",
+  "ambang": 14.0
+ },
+ "pencarian": {
+  "n": 70,
+  "per_sistem": {
+   "bm25_polos": {
+    "label": "BM25, tanpa stem, tanpa konteks",
+    "situs": true,
+    "hit@1": {
+     "nilai": 0.6,
+     "bawah": 0.4857,
+     "atas": 0.7143
+    },
+    "hit@5": {
+     "nilai": 0.7429,
+     "bawah": 0.6429,
+     "atas": 0.8429
+    },
+    "recall@10": {
+     "nilai": 0.8429,
+     "bawah": 0.7571,
+     "atas": 0.9286
+    },
+    "mrr@10": {
+     "nilai": 0.6711,
+     "bawah": 0.5714,
+     "atas": 0.7729
+    }
+   },
+   "bm25_stem": {
+    "label": "BM25 + stem Indonesia",
+    "situs": true,
+    "hit@1": {
+     "nilai": 0.6714,
+     "bawah": 0.5571,
+     "atas": 0.7857
+    },
+    "hit@5": {
+     "nilai": 0.8571,
+     "bawah": 0.7714,
+     "atas": 0.9286
+    },
+    "recall@10": {
+     "nilai": 0.8857,
+     "bawah": 0.8,
+     "atas": 0.9571
+    },
+    "mrr@10": {
+     "nilai": 0.7506,
+     "bawah": 0.6598,
+     "atas": 0.8387
+    }
+   },
+   "bm25_konteks": {
+    "label": "BM25 + stem + chunk kontekstual",
+    "situs": true,
+    "hit@1": {
+     "nilai": 0.6571,
+     "bawah": 0.5429,
+     "atas": 0.7714
+    },
+    "hit@5": {
+     "nilai": 0.8714,
+     "bawah": 0.7857,
+     "atas": 0.9429
+    },
+    "recall@10": {
+     "nilai": 0.9,
+     "bawah": 0.8286,
+     "atas": 0.9714
+    },
+    "mrr@10": {
+     "nilai": 0.7542,
+     "bawah": 0.669,
+     "atas": 0.8397
+    }
+   },
+   "lsa_konteks": {
+    "label": "LSA (vektor dari korpus) + konteks",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.5286,
+     "bawah": 0.4143,
+     "atas": 0.6429
+    },
+    "hit@5": {
+     "nilai": 0.7714,
+     "bawah": 0.6714,
+     "atas": 0.8714
+    },
+    "recall@10": {
+     "nilai": 0.8143,
+     "bawah": 0.7282,
+     "atas": 0.9
+    },
+    "mrr@10": {
+     "nilai": 0.632,
+     "bawah": 0.5351,
+     "atas": 0.7293
+    }
+   },
+   "hybrid": {
+    "label": "Hibrida BM25 + LSA (RRF)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.5857,
+     "bawah": 0.4714,
+     "atas": 0.7
+    },
+    "hit@5": {
+     "nilai": 0.8286,
+     "bawah": 0.7429,
+     "atas": 0.9143
+    },
+    "recall@10": {
+     "nilai": 0.8857,
+     "bawah": 0.8139,
+     "atas": 0.9571
+    },
+    "mrr@10": {
+     "nilai": 0.6955,
+     "bawah": 0.6035,
+     "atas": 0.7833
+    }
+   },
+   "dense_e5_small": {
+    "label": "Dense multilingual-e5-small",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.6286,
+     "bawah": 0.5286,
+     "atas": 0.7286
+    },
+    "hit@5": {
+     "nilai": 0.8571,
+     "bawah": 0.7714,
+     "atas": 0.9286
+    },
+    "recall@10": {
+     "nilai": 0.9,
+     "bawah": 0.8286,
+     "atas": 0.9571
+    },
+    "mrr@10": {
+     "nilai": 0.7252,
+     "bawah": 0.6407,
+     "atas": 0.8074
+    }
+   },
+   "hybrid_e5_small": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.7429,
+     "bawah": 0.6429,
+     "atas": 0.8429
+    },
+    "hit@5": {
+     "nilai": 0.8857,
+     "bawah": 0.8143,
+     "atas": 0.9571
+    },
+    "recall@10": {
+     "nilai": 0.9286,
+     "bawah": 0.8571,
+     "atas": 0.9857
+    },
+    "mrr@10": {
+     "nilai": 0.796,
+     "bawah": 0.7098,
+     "atas": 0.8784
+    }
+   },
+   "dense_e5_base": {
+    "label": "Dense multilingual-e5-base",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.7286,
+     "bawah": 0.6286,
+     "atas": 0.8286
+    },
+    "hit@5": {
+     "nilai": 0.9,
+     "bawah": 0.8286,
+     "atas": 0.9714
+    },
+    "recall@10": {
+     "nilai": 0.9286,
+     "bawah": 0.8714,
+     "atas": 0.9857
+    },
+    "mrr@10": {
+     "nilai": 0.8036,
+     "bawah": 0.7221,
+     "atas": 0.8764
+    }
+   },
+   "hybrid_e5_base": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.7286,
+     "bawah": 0.6282,
+     "atas": 0.8286
+    },
+    "hit@5": {
+     "nilai": 0.9286,
+     "bawah": 0.8571,
+     "atas": 0.9857
+    },
+    "recall@10": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.8168,
+     "bawah": 0.7412,
+     "atas": 0.8876
+    }
+   },
+   "dense_e5_large": {
+    "label": "Dense multilingual-e5-large",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.7857,
+     "bawah": 0.6857,
+     "atas": 0.8714
+    },
+    "hit@5": {
+     "nilai": 0.9143,
+     "bawah": 0.8429,
+     "atas": 0.9714
+    },
+    "recall@10": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "mrr@10": {
+     "nilai": 0.8445,
+     "bawah": 0.7677,
+     "atas": 0.9124
+    }
+   },
+   "hybrid_e5_large": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8,
+     "bawah": 0.7,
+     "atas": 0.8857
+    },
+    "hit@5": {
+     "nilai": 0.9,
+     "bawah": 0.8286,
+     "atas": 0.9714
+    },
+    "recall@10": {
+     "nilai": 0.9857,
+     "bawah": 0.9571,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.8539,
+     "bawah": 0.7793,
+     "atas": 0.9228
+    }
+   },
+   "bm25_konteks+mminilm": {
+    "label": "BM25 + stem + chunk kontekstual + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8857,
+     "bawah": 0.8143,
+     "atas": 0.9571
+    },
+    "hit@5": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "recall@10": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.9094,
+     "bawah": 0.843,
+     "atas": 0.9661
+    }
+   },
+   "hybrid_e5_small+mminilm": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8571,
+     "bawah": 0.7714,
+     "atas": 0.9286
+    },
+    "hit@5": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.9029,
+     "bawah": 0.839,
+     "atas": 0.9548
+    }
+   },
+   "hybrid_e5_base+mminilm": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8714,
+     "bawah": 0.7857,
+     "atas": 0.9429
+    },
+    "hit@5": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9857,
+     "bawah": 0.9571,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.9118,
+     "bawah": 0.8493,
+     "atas": 0.9643
+    }
+   },
+   "hybrid_e5_large+mminilm": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8714,
+     "bawah": 0.7857,
+     "atas": 0.9429
+    },
+    "hit@5": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9857,
+     "bawah": 0.9571,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.912,
+     "bawah": 0.8498,
+     "atas": 0.9643
+    }
+   },
+   "bm25_konteks+bge_m3": {
+    "label": "BM25 + stem + chunk kontekstual + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "hit@5": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.95,
+     "bawah": 0.8998,
+     "atas": 0.9929
+    }
+   },
+   "hybrid_e5_small+bge_m3": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.9286,
+     "bawah": 0.8571,
+     "atas": 0.9857
+    },
+    "hit@5": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.94,
+     "bawah": 0.8814,
+     "atas": 0.9857
+    }
+   },
+   "hybrid_e5_base+bge_m3": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "hit@5": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.9529,
+     "bawah": 0.9014,
+     "atas": 0.9929
+    }
+   },
+   "hybrid_e5_large+bge_m3": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank bge-reranker-v2-m3",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "hit@5": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "recall@10": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.9529,
+     "bawah": 0.9014,
+     "atas": 0.9929
+    }
+   },
+   "bm25_konteks+mminilm_q8": {
+    "label": "BM25 + stem + chunk kontekstual + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8714,
+     "bawah": 0.7857,
+     "atas": 0.9429
+    },
+    "hit@5": {
+     "nilai": 0.9286,
+     "bawah": 0.8571,
+     "atas": 0.9857
+    },
+    "recall@10": {
+     "nilai": 0.9571,
+     "bawah": 0.9,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.8975,
+     "bawah": 0.8286,
+     "atas": 0.9571
+    }
+   },
+   "hybrid_e5_small+mminilm_q8": {
+    "label": "Hibrida BM25 + multilingual-e5-small (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8429,
+     "bawah": 0.7571,
+     "atas": 0.9286
+    },
+    "hit@5": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "recall@10": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.8882,
+     "bawah": 0.82,
+     "atas": 0.9459
+    }
+   },
+   "hybrid_e5_base+mminilm_q8": {
+    "label": "Hibrida BM25 + multilingual-e5-base (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8429,
+     "bawah": 0.7571,
+     "atas": 0.9286
+    },
+    "hit@5": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "recall@10": {
+     "nilai": 0.9714,
+     "bawah": 0.9286,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.8889,
+     "bawah": 0.8214,
+     "atas": 0.9476
+    }
+   },
+   "hybrid_e5_large+mminilm_q8": {
+    "label": "Hibrida BM25 + multilingual-e5-large (RRF) + rerank mmarco-mMiniLMv2-L12-H384-v1 8-bit (ditolak, skor bergantung CPU)",
+    "situs": false,
+    "hit@1": {
+     "nilai": 0.8571,
+     "bawah": 0.7714,
+     "atas": 0.9286
+    },
+    "hit@5": {
+     "nilai": 0.9429,
+     "bawah": 0.8857,
+     "atas": 0.9857
+    },
+    "recall@10": {
+     "nilai": 0.9857,
+     "bawah": 0.9571,
+     "atas": 1.0
+    },
+    "mrr@10": {
+     "nilai": 0.8993,
+     "bawah": 0.836,
+     "atas": 0.9545
+    }
+   }
+  },
+  "selisih_berpasangan": {
+   "bm25_konteks_vs_bm25_polos": {
+    "hit@5": {
+     "selisih": 0.1286,
+     "bawah": 0.0571,
+     "atas": 0.2143
+    },
+    "mrr@10": {
+     "selisih": 0.0831,
+     "bawah": 0.013,
+     "atas": 0.1567
+    }
+   }
+  }
+ },
+ "ekstraktif": {
+  "jawaban_benar": {
+   "n": 70,
+   "k": 30,
+   "nilai": 0.4286,
+   "bawah": 0.3194,
+   "atas": 0.5452
+  },
+  "jawaban_benar_ketat": {
+   "n": 70,
+   "k": 29,
+   "nilai": 0.4143,
+   "bawah": 0.3063,
+   "atas": 0.5312
+  },
+  "sitasi_benar_dari_yang_dijawab": {
+   "n": 53,
+   "k": 36,
+   "nilai": 0.6792,
+   "bawah": 0.5452,
+   "atas": 0.7891
+  },
+  "kunci_fakta_ada_dari_yang_dijawab": {
+   "n": 53,
+   "k": 30,
+   "nilai": 0.566,
+   "bawah": 0.4327,
+   "atas": 0.6905
+  },
+  "menolak_padahal_terjawab": {
+   "n": 70,
+   "k": 17,
+   "nilai": 0.2429,
+   "bawah": 0.1575,
+   "atas": 0.355
+  },
+  "menolak_padahal_peringkat1_sah": {
+   "n": 17,
+   "k": 10,
+   "nilai": 0.5882,
+   "bawah": 0.3601,
+   "atas": 0.7839
+  },
+  "dijawab_padahal_tak_terjawab": {
+   "n": 30,
+   "k": 12,
+   "nilai": 0.4,
+   "bawah": 0.2459,
+   "atas": 0.5768
+  },
+  "unit_per_jawaban": 1.51,
+  "kutipan_tidak_verbatim": {
+   "n": 65,
+   "jumlah": 0
+  },
+  "dijawab_padahal_tak_terjawab_dekat": {
+   "n": 22,
+   "k": 12,
+   "nilai": 0.5455,
+   "bawah": 0.3466,
+   "atas": 0.7308
+  },
+  "dijawab_padahal_tak_terjawab_luar": {
+   "n": 8,
+   "k": 0,
+   "nilai": 0.0,
+   "bawah": 0.0,
+   "atas": 0.3244
+  },
+  "jawaban_benar_leksikal": {
+   "n": 25,
+   "k": 10,
+   "nilai": 0.4,
+   "bawah": 0.234,
+   "atas": 0.5926
+  },
+  "jawaban_benar_parafrase": {
+   "n": 45,
+   "k": 20,
+   "nilai": 0.4444,
+   "bawah": 0.3094,
+   "atas": 0.5882
+  }
+ },
+ "generatif": {
+  "bertahan": {
+   "model": {
+    "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+    "revisi": "d54957e3af1be04546436e874a60fe386041b244",
+    "dtype": "q4f16"
+   },
+   "n": 100,
+   "mode": {
+    "tolak_gerbang": 35,
+    "tolak_model": 43,
+    "cadangan_ekstraktif": 22
+   },
+   "jawaban_benar": {
+    "n": 70,
+    "k": 14,
+    "nilai": 0.2,
+    "bawah": 0.123,
+    "atas": 0.3082
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 30,
+    "k": 1,
+    "nilai": 0.0333,
+    "bawah": 0.0059,
+    "atas": 0.1667
+   },
+   "menolak_padahal_terjawab": {
+    "n": 70,
+    "k": 49,
+    "nilai": 0.7,
+    "bawah": 0.5846,
+    "atas": 0.7946
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "sitasi_semua_sah": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "kalimat_didukung": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 0,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 1.0
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 100,
+    "k": 16,
+    "nilai": 0.16,
+    "bawah": 0.101,
+    "atas": 0.2442
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 31.5,
+    "p90": 46.8
+   },
+   "per_pertanyaan": [
+    {
+     "id": "s001",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s002",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s003",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s004",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s005",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s006",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s007",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s008",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s009",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s010",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s011",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s012",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s013",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s014",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s015",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s016",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s017",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s018",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s019",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s020",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s021",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s022",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s023",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s024",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s025",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s026",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s027",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s028",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s029",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s030",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s031",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s032",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s033",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s034",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s035",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s036",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s037",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s038",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s039",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s040",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s041",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s042",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s043",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s044",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s045",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s046",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s047",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s048",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s049",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s050",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s051",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s052",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s053",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s054",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s055",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s056",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s057",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s058",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s059",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s060",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s061",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s062",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s063",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s064",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s065",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s066",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s067",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s068",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s069",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s070",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s071",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s072",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s073",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s074",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s075",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s076",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s077",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s078",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s079",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s080",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s081",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s082",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s083",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s084",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s085",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s086",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s087",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s088",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s089",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s090",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s091",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s092",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s093",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s094",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s095",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s096",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s097",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s098",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s099",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s100",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    }
+   ]
+  },
+  "bertahan-cpu": {
+   "model": {
+    "model": "onnx-community/Qwen2.5-0.5B-Instruct",
+    "revisi": "22942cb7d7ba4cc81bb4673549ca4d4614469b5e",
+    "dtype": "q4"
+   },
+   "n": 100,
+   "mode": {
+    "tolak_gerbang": 35,
+    "cadangan_ekstraktif": 47,
+    "generatif": 15,
+    "tolak_model": 3
+   },
+   "jawaban_benar": {
+    "n": 70,
+    "k": 25,
+    "nilai": 0.3571,
+    "bawah": 0.255,
+    "atas": 0.4741
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 30,
+    "k": 11,
+    "nilai": 0.3667,
+    "bawah": 0.2187,
+    "atas": 0.5449
+   },
+   "menolak_padahal_terjawab": {
+    "n": 70,
+    "k": 19,
+    "nilai": 0.2714,
+    "bawah": 0.1812,
+    "atas": 0.3854
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 13,
+    "k": 10,
+    "nilai": 0.7692,
+    "bawah": 0.4974,
+    "atas": 0.9182
+   },
+   "sitasi_semua_sah": {
+    "n": 13,
+    "k": 6,
+    "nilai": 0.4615,
+    "bawah": 0.2321,
+    "atas": 0.7086
+   },
+   "kalimat_didukung": {
+    "n": 20,
+    "k": 6,
+    "nilai": 0.3,
+    "bawah": 0.1455,
+    "atas": 0.519
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 15,
+    "k": 3,
+    "nilai": 0.2,
+    "bawah": 0.0705,
+    "atas": 0.4519
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 20,
+    "k": 6,
+    "nilai": 0.3,
+    "bawah": 0.1455,
+    "atas": 0.519
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 100,
+    "k": 56,
+    "nilai": 0.56,
+    "bawah": 0.4623,
+    "atas": 0.6533
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 16.9,
+    "p90": 33.9
+   },
+   "per_pertanyaan": [
+    {
+     "id": "s001",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s002",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s003",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s004",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s005",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s006",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s007",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s008",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s009",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s010",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s011",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-11"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s012",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s013",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-131"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s014",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-14",
+      "permenaker-2-1982#pasal-4"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s015",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-39"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s016",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s017",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s018",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-21"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s019",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s020",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s021",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s022",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s023",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-34"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s024",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s025",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s026",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s027",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-20"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s028",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s029",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s030",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s031",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s032",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s033",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s034",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s035",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s036",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s037",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s038",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s039",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s040",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s041",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s042",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s043",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s044",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s045",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s046",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s047",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s048",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s049",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s050",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s051",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s052",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s053",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s054",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s055",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s056",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s057",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-5",
+      "permenaker-13-2025#pasal-6",
+      "permenaker-13-2025#pasal-7",
+      "permenaker-13-2025#pasal-8"
+     ],
+     "benar": null
+    },
+    {
+     "id": "s058",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s059",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-15",
+      "permenaker-2-1983#pasal-39",
+      "permenaker-2-1983#pasal-4",
+      "permenaker-2-1983#pasal-81"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s060",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s061",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s062",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s063",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-24"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s064",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s065",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s066",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s067",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s068",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s069",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-10",
+      "pp-50-2012#pasal-10",
+      "pp-50-2012#pasal-7",
+      "pp-50-2012#pasal-9"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s070",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s071",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s072",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s073",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s074",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s075",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s076",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s077",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s078",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s079",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s080",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s081",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s082",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s083",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-127",
+      "permenaker-8-2020#pasal-49",
+      "permenaker-8-2020#pasal-65",
+      "permenaker-8-2020#pasal-66"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s084",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-16"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s085",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s086",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s087",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s088",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-5"
+     ],
+     "benar": null
+    },
+    {
+     "id": "s089",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s090",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s091",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s092",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s093",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s094",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s095",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s096",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s097",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": true
+    },
+    {
+     "id": "s098",
+     "mode": "cadangan_ekstraktif",
+     "menolak": false,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s099",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s100",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-127"
+     ],
+     "benar": false
+    }
+   ]
+  },
+  "bertahan-llama-3.3-70b": {
+   "model": {
+    "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "revisi": null,
+    "dtype": null
+   },
+   "n": 100,
+   "mode": {
+    "tolak_gerbang": 35,
+    "tolak_model": 13,
+    "generatif": 52
+   },
+   "jawaban_benar": {
+    "n": 70,
+    "k": 36,
+    "nilai": 0.5143,
+    "bawah": 0.3995,
+    "atas": 0.6275
+   },
+   "dijawab_padahal_tak_terjawab": {
+    "n": 30,
+    "k": 2,
+    "nilai": 0.0667,
+    "bawah": 0.0185,
+    "atas": 0.2132
+   },
+   "menolak_padahal_terjawab": {
+    "n": 70,
+    "k": 20,
+    "nilai": 0.2857,
+    "bawah": 0.1932,
+    "atas": 0.4005
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 50,
+    "k": 49,
+    "nilai": 0.98,
+    "bawah": 0.895,
+    "atas": 0.9965
+   },
+   "sitasi_semua_sah": {
+    "n": 50,
+    "k": 46,
+    "nilai": 0.92,
+    "bawah": 0.8116,
+    "atas": 0.9685
+   },
+   "kalimat_didukung": {
+    "n": 68,
+    "k": 56,
+    "nilai": 0.8235,
+    "bawah": 0.7164,
+    "atas": 0.8961
+   },
+   "jawaban_seluruhnya_didukung": {
+    "n": 52,
+    "k": 43,
+    "nilai": 0.8269,
+    "bawah": 0.7027,
+    "atas": 0.9062
+   },
+   "kalimat_didukung_sebelum_pemeriksaan": {
+    "n": 68,
+    "k": 56,
+    "nilai": 0.8235,
+    "bawah": 0.7164,
+    "atas": 0.8961
+   },
+   "jawaban_dengan_kalimat_tanpa_sitasi": {
+    "n": 100,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.037
+   },
+   "nli_belum_dihitung": 0,
+   "detik_per_jawaban_cpu": {
+    "median": 1.2,
+    "p90": 3.3
+   },
+   "per_pertanyaan": [
+    {
+     "id": "s001",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s002",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s003",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-171"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s004",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1982#pasal-4"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s005",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-15"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s006",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-31"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s007",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-9"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s008",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-65"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s009",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-26"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s010",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s011",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-11"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s012",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s013",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-131"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s014",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-4"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s015",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-39"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s016",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s017",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s018",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-21"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s019",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-84"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s020",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-175"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s021",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s022",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-8"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s023",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s024",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-28"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s025",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "uu-1-1970#pasal-1"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s026",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s027",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-20"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s028",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s029",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s030",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-130"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s031",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s032",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s033",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-8"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s034",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-58"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s035",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s036",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s037",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s038",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-158"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s039",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s040",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-105"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s041",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s042",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-79"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s043",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-157",
+      "permenaker-8-2020#pasal-166"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s044",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-6"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s045",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s046",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-22"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s047",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-8",
+      "pp-50-2012#pasal-14"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s048",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s049",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-10"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s050",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-8"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s051",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s052",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-60"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s053",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s054",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s055",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-83",
+      "permenaker-3-1982#pasal-10",
+      "permenaker-3-1998#pasal-12",
+      "uu-1-1970#pasal-15"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s056",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s057",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s058",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s059",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-81"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s060",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-85"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s061",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-10"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s062",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s063",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-21"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s064",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s065",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-31"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s066",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-61"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s067",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s068",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s069",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-9"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s070",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s071",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s072",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s073",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-14"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s074",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s075",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s076",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-10"
+     ],
+     "benar": null
+    },
+    {
+     "id": "s077",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s078",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s079",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-49"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s080",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s081",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s082",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s083",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-66"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s084",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-16"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s085",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-10"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s086",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s087",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s088",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-5"
+     ],
+     "benar": null
+    },
+    {
+     "id": "s089",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s090",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s091",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-153"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s092",
+     "mode": "tolak_gerbang",
+     "menolak": true,
+     "sitasi": [],
+     "benar": false
+    },
+    {
+     "id": "s093",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-30"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s094",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s095",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-12",
+      "permenaker-2-1982#pasal-3",
+      "permenaker-2-1982#pasal-30"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s096",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s097",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-60"
+     ],
+     "benar": true
+    },
+    {
+     "id": "s098",
+     "mode": "tolak_model",
+     "menolak": true,
+     "sitasi": [],
+     "benar": null
+    },
+    {
+     "id": "s099",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-10"
+     ],
+     "benar": false
+    },
+    {
+     "id": "s100",
+     "mode": "generatif",
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-17"
+     ],
+     "benar": true
+    }
+   ]
+  }
+ }
+}
