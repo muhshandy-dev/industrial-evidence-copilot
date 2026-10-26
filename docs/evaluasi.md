@@ -6,7 +6,7 @@ Semua angka berasal dari `eval/results.json` (dihasilkan `evidence eval` dari ca
 
 Mode generatif utama (BM25 + reranker mMiniLM, Llama 3.3 70B di Workers AI, prompt "bertahan") menjawab benar 72 dari 96 pertanyaan uji yang ada jawabannya (75%, interval 65 sampai 83%), 88% kalimatnya didukung pasal yang dikutipnya menurut penilai NLI, dan tidak menjawab satu pun dari 21 pertanyaan tanpa dasar. Mode kutipan langsung (BM25 saja): pasal tepat di peringkat 1 pada 68% pertanyaan, 56 dari 96 benar, dan 23 dari 81 jawabannya mengutip pasal yang salah.
 
-Angka ini **optimistis**: pertanyaan ditulis oleh asisten AI pengembang, data uji sudah dilihat sebelum desain akhir dibuat, dan beberapa keputusan dibuat setelah angka terlihat (lihat "Protokol dan pengungkapan"). Set uji tersegel terpisah dijalankan satu kali; lihat bagian "Set uji tersegel".
+Angka data uji **optimistis**: pertanyaan ditulis oleh asisten AI pengembang, data uji sudah dilihat sebelum desain akhir dibuat, dan beberapa keputusan dibuat setelah angka terlihat (lihat "Protokol dan pengungkapan"). Set uji tersegel terpisah sudah dijalankan satu kali dan memberi angka yang lebih rendah (jawaban benar mode utama 51%, bukan 75%); lihat bagian "Set uji tersegel".
 
 ## Set pertanyaan
 
@@ -100,7 +100,24 @@ Alur sama dengan situs: gerbang skor BM25 yang sama, reranker, empat pasal terat
 
 ## Set uji tersegel
 
-100 pertanyaan dan 20 pertanyaan injeksi ditulis agen AI terpisah yang tidak melihat keluaran sistem (`eval/sealed/README.md`); hash dikunci di `eval/sealed.sha256`. Set ini dijalankan sekali lewat workflow `tersegel.yml` (input `konfirmasi=SEKALI`) setelah desain dibekukan, dan hasilnya ditulis ke `eval/sealed/hasil.json`. Tidak ada yang disetel dari set ini. Status: lihat `eval/sealed/hasil.json`; bila berkas itu belum ada, set belum dijalankan.
+100 pertanyaan dan 20 pertanyaan injeksi ditulis agen AI terpisah yang tidak melihat keluaran sistem (`eval/sealed/README.md`); hash dikunci di `eval/sealed.sha256`. Set ini dijalankan sekali lewat workflow `tersegel.yml` (input `konfirmasi=SEKALI`) setelah desain dibekukan, dan hasilnya ditulis ke `eval/sealed/hasil.json`. Tidak ada yang disetel dari set ini.
+
+**Status: sudah dijalankan sekali** pada 26 Oktober 2026 pukul 17.34 UTC (commit `4c5c4de`, run "Tersegel" #3). Run sekali jalan hanya memuat 100 pertanyaan; 20 pertanyaan injeksi dari penulis yang sama sudah dievaluasi lebih dulu lewat `eksperimen-server.yml` (lihat "Prompt injection" di atas).
+
+| Ukuran (70 terjawab, 30 tanpa dasar) | Llama 3.3 70B, prompt bertahan (utama) | Kutipan langsung | Qwen2.5-0.5B CPU (opsional) | Qwen2.5-1.5B GPU (opsional) |
+| --- | --- | --- | --- | --- |
+| Jawaban benar | 36/70 (51%; 40 sampai 63%) | 30/70 (43%) | 25/70 (36%) | 14/70 (20%) |
+| Menolak padahal ada jawabannya | 20/70 | 17/70 | 19/70 | 49/70 |
+| Tanpa dasar tetapi dijawab | 2/30 | 12/30 | 11/30 | 1/30 |
+| Kalimat didukung (NLI) | 56/68 (82%) | tidak dinilai | 6/20 (30%) | tidak ada kalimat generatif |
+| Semua sitasi tepat | 46/50 (92%) | tidak berlaku | 6/13 | tidak berlaku |
+| Jawaban dengan kalimat tanpa sitasi | 0/100 | tidak berlaku | 56/100 | 16/100 |
+
+Mode jawaban model utama: 35 ditolak gerbang, 13 "TIDAK DITEMUKAN", 52 jawaban generatif. Median waktu jawaban dari runner 1,2 detik (persentil 90: 3,3 detik).
+
+Pencarian (n = 70): BM25 + konteks, yang dipakai mode kutipan, mencapai Hit@1 66% dan MRR@10 0,754. BM25 + reranker mMiniLM, yang dipakai mode generatif, mencapai Hit@1 89% dan MRR@10 0,909. Pembanding offline: e5-large dense Hit@1 79%, bge-m3 sebagai reranker Hit@1 94% (tidak dipakai karena terlalu besar untuk peramban).
+
+Dibanding data uji, jawaban benar mode utama turun dari 75% ke 51%, dan kutipan langsung dari 58% ke 43%. Pencarian dengan reranker tetap tinggi (93% ke 89%), jadi selisihnya berasal dari penolakan (gerbang skor 14,0 dan jawaban "TIDAK DITEMUKAN") serta fakta kunci yang tidak tertulis. Ini sesuai dugaan bahwa angka data uji optimistis.
 
 ## Protokol dan pengungkapan
 
@@ -122,7 +139,7 @@ Hal-hal berikut tercatat juga di `eval/results.json` (kunci `protokol`) dan di h
    - Workers AI tidak menyediakan patokan revisi model, dan suhu 0 tidak menjamin keluaran yang persis sama bila dijalankan ulang. Keluaran yang dinilai di-commit.
    - Data dev untuk model server hanya memuat 3 pertanyaan tak terjawab yang lolos gerbang, jadi syarat "tidak menjawab yang tanpa dasar" pada pemilihan model lemah.
    - Pertanyaan injeksi i02 dan jumlah yang lolos gerbang sempat terlihat di log uji asap sebelum evaluasi.
-   - Penggunaan kuota dicatat dalam token (putaran 3 dev: 430.394 token masukan dan 14.644 token keluaran untuk enam konfigurasi). Jumlah neuron hanya terlihat di dasbor Cloudflare dan tidak diverifikasi dari sini. Evaluasi test, uji tekanan, dan injeksi (110 panggilan) selesai tanpa galat kuota, tetapi sesudahnya kuota harian habis: uji Preview dari peramban pada 25 Oktober 2026 pukul 18.18 dan 18.23 WIB mendapat `429 kuota_habis`, dan situs kembali ke kutipan langsung sesuai rancangan. Perkiraan kasar dari jumlah token: satu jawaban Llama 3.3 70B memakai sekitar 4.000 token masukan, sehingga kuota gratis cukup untuk puluhan jawaban per hari untuk seluruh pengunjung, bukan ratusan.
+   - Penggunaan kuota dicatat dalam token (putaran 3 dev: 430.394 token masukan dan 14.644 token keluaran untuk enam konfigurasi). Jumlah neuron hanya terlihat di dasbor Cloudflare dan tidak diverifikasi dari sini. Evaluasi test, uji tekanan, dan injeksi (110 panggilan) selesai tanpa galat kuota, tetapi sesudahnya kuota harian habis: uji Preview dari peramban pada 25 Oktober 2026 pukul 18.18 dan 18.23 WIB mendapat `429 kuota_habis`, dan situs kembali ke kutipan langsung sesuai rancangan. Perkiraan kasar dari jumlah token: satu jawaban Llama 3.3 70B memakai sekitar 4.000 token masukan, sehingga kuota gratis cukup untuk puluhan jawaban per hari untuk seluruh pengunjung, bukan ratusan. Pada 26 Oktober 2026, kuota baru dapat dipakai lagi antara pukul 13.32 dan 23.05 WIB, sedangkan dasbor Cloudflare menunjukkan 0 neuron terpakai hari itu. Jadi pemulihan kuota setelah habis tidak selalu terjadi pukul 07.00 WIB seperti yang tertulis di dokumentasi Cloudflare. Set tersegel kemudian dijalankan setelah kuota pulih.
 6. **Penulis tunggal.** Semua pertanyaan dan kunci ditulis satu penulis (AI) yang membaca pasal emasnya. Interval kepercayaan tidak menangkap bias ini. Efek pengelompokan per dokumen kecil (ICC ≈ 0,01 menurut audit).
 
 ## Yang diperlukan untuk angka yang lebih dapat dipercaya

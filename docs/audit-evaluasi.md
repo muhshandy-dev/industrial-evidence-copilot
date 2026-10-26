@@ -6,7 +6,7 @@ Status: **Diperbaiki** (kode atau data berubah), **Diungkap** (tidak dapat diper
 
 | ID | Temuan | Status | Tindakan |
 | --- | --- | --- | --- |
-| A1 | Test bukan holdout bersih | Diungkap | Disebut "semi-holdout" di situs, `results.json` (`protokol`), dan `docs/evaluasi.md`. Data situs tidak lagi memuat hasil per pertanyaan. Set tersegel baru: Terbuka. |
+| A1 | Test bukan holdout bersih | Diungkap | Disebut "semi-holdout" di situs, `results.json` (`protokol`), dan `docs/evaluasi.md`. Data situs tidak lagi memuat hasil per pertanyaan. Set tersegel baru: dijalankan sekali pada 26 Oktober 2026 (`eval/sealed/hasil.json`). |
 | A2 | Penyetelan tidak diungkap (jumlah kalimat, syarat kalimat kedua) | Diperbaiki | Semua keputusan setelah run pertama didaftar di `protokol` dan ditampilkan. Klaim "hanya ambang yang disetel" dihapus dari kode, data, dan situs. |
 | A3 | Label test tidak dibekukan | Diperbaiki | `merge_frozen` menolak perubahan label test; digest label test di `eval/test-beku.sha256` diperiksa oleh `eval-set check` dan pytest. |
 | A4 | Ajudikasi jawaban alternatif tidak konsisten | Diungkap | Dampak angka kecil (satu pertanyaan pada peringkat 1). Label test sengaja tidak diubah lagi agar tidak menambah penyetelan pada test. Pedoman ajudikasi buta: Terbuka. |

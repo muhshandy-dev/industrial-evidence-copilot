@@ -27,7 +27,23 @@ Situs punya tiga mode, dan label di atas setiap jawaban menyebut mode yang dipak
 
 Pencarian untuk mode generatif (BM25 + reranker mMiniLM): pasal tepat di peringkat 1 pada 93% pertanyaan uji (interval 95%: 88 sampai 98%), MRR@10 0,951. Kutipan langsung (BM25 saja): 68%.
 
-Angka ini **optimistis**: 221 pertanyaan ditulis oleh asisten AI pengembang (bukan praktisi K3), data uji sudah dilihat sebelum desain akhir, aturan pemilihan sistem pencarian generatif ditetapkan setelah angka semua sistem terlihat, dan "didukung" dinilai model NLI otomatis. Model server dipilih dari data dev dengan aturan yang ditulis sebelum eksperimen ([docs/eksperimen-prompt.md](docs/eksperimen-prompt.md)). Set uji tersegel (100 pertanyaan dari penulis terpisah) dijalankan satu kali; hasilnya dicantumkan di halaman Evaluasi setelah dijalankan. Protokol dan batas: [docs/evaluasi.md](docs/evaluasi.md).
+Angka ini **optimistis**: 221 pertanyaan ditulis oleh asisten AI pengembang (bukan praktisi K3), data uji sudah dilihat sebelum desain akhir, aturan pemilihan sistem pencarian generatif ditetapkan setelah angka semua sistem terlihat, dan "didukung" dinilai model NLI otomatis. Model server dipilih dari data dev dengan aturan yang ditulis sebelum eksperimen ([docs/eksperimen-prompt.md](docs/eksperimen-prompt.md)). Protokol dan batas: [docs/evaluasi.md](docs/evaluasi.md).
+
+## Hasil set uji tersegel (70 pertanyaan terjawab dan 30 tanpa dasar)
+
+Ditulis agen AI terpisah yang tidak melihat keluaran sistem, hash dikunci sebelum run, dijalankan sekali pada 26 Oktober 2026 (`eval/sealed/hasil.json`). Tidak ada yang disetel dari set ini. Angka inilah perkiraan yang lebih dapat dipercaya, dan hasilnya lebih rendah daripada data uji.
+
+| Ukuran | Generatif server (utama) | Kutipan langsung |
+| --- | --- | --- |
+| Jawaban benar | 36 dari 70 (51%; interval 95%: 40 sampai 63%) | 30 dari 70 (43%) |
+| Menolak padahal ada jawabannya | 20 dari 70 | 17 dari 70 |
+| Pertanyaan tanpa dasar yang dijawab | 2 dari 30 | 12 dari 30 |
+| Kalimat yang didukung pasal yang dikutipnya (penilai NLI) | 56 dari 68 (82%) | disalin, tidak dinilai |
+| Jawaban dengan minimal satu sitasi sah | 49 dari 50 (98%) | tidak berlaku |
+| Jawaban yang semua sitasinya tepat | 46 dari 50 (92%) | tidak berlaku |
+| Kalimat tanpa sitasi yang ditampilkan | 0 | tidak berlaku |
+
+Pencarian untuk mode generatif (BM25 + reranker mMiniLM) pada set ini: pasal tepat di peringkat 1 pada 89% pertanyaan terjawab, MRR@10 0,909. Kutipan langsung (BM25 saja): 66%. Jadi penurunan jawaban benar terutama berasal dari penolakan (gerbang skor dan model) dan fakta kunci yang tidak tertulis, bukan dari pencarian.
 
 ## Data dan lisensi
 

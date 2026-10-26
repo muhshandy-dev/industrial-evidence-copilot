@@ -173,7 +173,7 @@ function bagianTersegel(ev) {
     h("p", {}, `${s.set.pertanyaan} pertanyaan (${s.set.terjawab} ada jawabannya, ${s.set.tak_terjawab} tidak ada) ditulis oleh penulis terpisah yang tidak melihat keluaran sistem, label ditetapkan lebih dulu, dan isinya dikunci dengan SHA-256 sebelum dijalankan. Set ini dijalankan satu kali pada ${s.waktu_utc.slice(0, 10)}. ${s.aturan}`),
     tabelGeneratif("Tabel hasil set tersegel", e, kolom),
     ps?.[kirim] ? h("p", { class: "catatan" }, `Pencarian mode kutipan pada set ini: pasal tepat di peringkat 1 pada ${pct(ps[kirim]["hit@1"].nilai)} pertanyaan terjawab dan di lima teratas pada ${pct(ps[kirim]["hit@5"].nilai)}.`) : null,
-    h("p", { class: "catatan" }, "Pertanyaan tersegel tetap ditulis oleh asisten AI, bukan praktisi K3, jadi set ini mengurangi bias penyetelan tetapi tidak menghapus bias penulis."));
+    h("p", { class: "catatan" }, "Pertanyaan tersegel tetap ditulis oleh asisten AI, bukan praktisi K3, jadi set ini mengurangi bias penyetelan tetapi tidak menghapus bias penulis. 20 pertanyaan injeksi dari penulis yang sama tidak termasuk run sekali jalan ini; pertanyaan itu sudah dievaluasi lebih dulu dan hasilnya ada di bagian prompt injection di atas."));
 }
 
 // Ringkasan model embedding dan reranker, dari selisih berpasangan di data uji.
@@ -204,13 +204,16 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const gagalSitasi = ev.kegagalan_test.filter((f) => f.jenis === "sitasi_pasal_salah");
   const gagalSatuPeraturan = gagalSitasi.filter((f) => f.satu_peraturan).length;
   const genUtama = KONFIG_SERVER ? ev.generatif?.[KONFIG_SERVER]?.test : null;
+  const segel = ev.tersegel;
+  const segelUtama = KONFIG_SERVER ? segel?.generatif?.[KONFIG_SERVER] : null;
 
   const ringkas = h("section", { "aria-labelledby": "e-ringkas" },
     h("h2", { id: "e-ringkas" }, "Ringkasan jujur"),
     h("div", { class: "kotak-jujur" },
       h("p", {}, `Mode kutipan langsung: pasal yang tepat muncul di peringkat 1 pada ${pct(m["hit@1"].nilai)} pertanyaan uji dan di lima teratas pada ${pct(m["hit@5"].nilai)}. Namun dari ${salah.n} jawaban yang diberikan, ${salah.k} (${pct(salahCi.nilai)}) mengutip pasal yang salah. Selalu periksa pasal yang dikutip.`),
       genUtama ? h("p", {}, `Mode generatif utama (${MODEL_SERVER.nama}) menjawab benar ${genUtama.jawaban_benar.k} dari ${genUtama.jawaban_benar.n} pertanyaan uji yang ada jawabannya (kutipan langsung: ${t.jawaban_benar.k}), ${pct(genUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip menurut penilai NLI, dan ${genUtama.dijawab_padahal_tak_terjawab.k} dari ${genUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Kalimatnya ditulis model, jadi tetap bisa keliru walau bersitasi.`) : null,
-      h("p", {}, `Angka ini optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
+      segelUtama ? h("p", {}, `Pada set uji tersegel (${segel.set.pertanyaan} pertanyaan dari penulis terpisah, dijalankan sekali), angkanya lebih rendah: mode generatif utama menjawab benar ${segelUtama.jawaban_benar.k} dari ${segelUtama.jawaban_benar.n} (${pct(segelUtama.jawaban_benar.nilai)}; kutipan langsung: ${segel.ekstraktif.jawaban_benar.k}), ${pct(segelUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip, dan ${segelUtama.dijawab_padahal_tak_terjawab.k} dari ${segelUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Angka tersegel inilah perkiraan yang lebih dapat dipercaya.`) : null,
+      h("p", {}, `Angka data uji optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
 
   const hasil = h("section", { "aria-labelledby": "e-hasil" },
     h("h2", { id: "e-hasil" }, "Mode kutipan langsung pada data uji"),
