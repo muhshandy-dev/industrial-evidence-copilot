@@ -110,9 +110,9 @@ export async function onRequestPost({ request, env }) {
     const hasil = await env.AI.run(model.id, permintaanServer(pesan));
     return json({ mentah: teksServer(hasil), model: model.id, varian, pasal: pasal.map((p) => p.id), usage: hasil?.usage ?? null });
   } catch (e) {
-    if (kuotaHabis(e)) return json({ galat: "kuota_habis" }, 429);
     // Rincian galat hanya untuk evaluasi, untuk diagnosis.
     const rinci = evaluasi ? { rinci: String(e?.message ?? e).slice(0, 300) } : {};
+    if (kuotaHabis(e)) return json({ galat: "kuota_habis", ...rinci }, 429);
     return json({ galat: "model_gagal", ...rinci }, 502);
   }
 }
