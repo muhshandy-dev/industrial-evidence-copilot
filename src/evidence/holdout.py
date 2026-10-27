@@ -97,6 +97,19 @@ def make_input(root: Path, alur: str) -> list[dict]:
     return G.gen_input(corpus, system, rows, SET, threshold, alur)
 
 
+SET_LAIN = ("questions.jsonl", "stress.jsonl", "sealed/questions.jsonl", "sealed/injeksi.jsonl")
+
+
+def duplikat(root: Path, rows: list[dict]) -> set[str]:
+    """Id pertanyaan holdout yang teksnya identik dengan pertanyaan di set evaluasi lain."""
+    lain: set[str] = set()
+    for rel in SET_LAIN:
+        p = root / "eval" / rel
+        if p.exists():
+            lain |= {r["tanya"].strip() for r in read_questions(p)}
+    return {r["id"] for r in rows if r["tanya"].strip() in lain}
+
+
 def _git_head(root: Path) -> str | None:
     import subprocess
 
@@ -125,6 +138,13 @@ def run(root: Path) -> dict:
         if x["belum_dibangkitkan"]:
             raise SystemExit(f"alur {a}: {len(x['belum_dibangkitkan'])} keluaran belum ada")
     ring = {a: alur_v2.ringkas(x["rekaman"]) for a, x in h.items()}
+    # Uji sensitivitas yang ditetapkan sebelum run (preflight 27 Okt): pertanyaan yang teksnya
+    # identik dengan set lain (kebetulan; penulis tidak melihat set itu) dikeluarkan. Angka utama
+    # dan kriteria tetap memakai seluruh 120 pertanyaan sesuai protokol.
+    dup = duplikat(root, rows)
+    tanpa_dup = {
+        a: alur_v2.ringkas([r for r in x["rekaman"] if r["id"] not in dup]) for a, x in h.items()
+    }
     v2 = ring["v2"]
     kriteria = periksa_kriteria(
         {
@@ -157,6 +177,7 @@ def run(root: Path) -> dict:
         "alur_v1": ring["v1"],
         "alur_v2": ring["v2"],
         "kriteria": {"ambang": KRITERIA, "hasil": kriteria},
+        "sensitivitas_tanpa_duplikat": {"dikeluarkan": sorted(dup), **tanpa_dup},
         "perbandingan": alur_v2.bandingkan(h["v1"], h["v2"]),
         "rekaman": {a: x["rekaman"] for a, x in h.items()},
     }

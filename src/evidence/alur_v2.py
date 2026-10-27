@@ -88,6 +88,7 @@ def rekam(root: Path, corpus, systems: dict, metode: str, thr: float, s: str, al
         if rec["terjawab"]:
             rec["benar"] = bool(j["benar"])
             rec["sitasi_semua_sah"] = j.get("sitasi_semua_sah")
+            rec["sitasi_ada_yang_sah"] = j.get("sitasi_ada_yang_sah")
             if j["mode"] == "generatif":
                 rec["benar_v2"] = bool(j["sitasi_ada_yang_sah"]) and key_hit_v2(row["kunci"], teks)
             elif j["mode"] == "cadangan_ekstraktif":
@@ -107,15 +108,34 @@ def ringkas(recs: list[dict]) -> dict:
     u = [r for r in recs if not r["terjawab"]]
     gen_a = [r for r in a if r["mode"] == "generatif"]
     kal = [x for r in recs if r["mode"] == "generatif" for x in r["didukung"] if x is not None]
+    dijawab = [r for r in a if not r["menolak"]]
+    kb_dijawab = [r for r in a if not r["kutipan_bawaan"]["menolak"]]
     return {
         "n": len(recs),
         "mode": dict(Counter(r["mode"] for r in recs)),
+        # Pertanyaan terjawab: benar (utama), dijawab (cakupan), dan benar di antara yang dijawab.
         "benar_v1": G._rate([r["benar"] for r in a]),
         "benar_v2": G._rate([r["benar_v2"] for r in a]),
+        "dijawab_terjawab": G._rate([not r["menolak"] for r in a]),
+        "benar_v2_di_antara_dijawab": G._rate([r["benar_v2"] for r in dijawab]),
         "kutipan_bawaan_benar_v1": G._rate([r["kutipan_bawaan"]["benar"] for r in a]),
         "kutipan_bawaan_benar_v2": G._rate([r["kutipan_bawaan"]["benar_v2"] for r in a]),
+        "kutipan_bawaan_dijawab_terjawab": G._rate([not r["kutipan_bawaan"]["menolak"] for r in a]),
+        "kutipan_bawaan_benar_v2_di_antara_dijawab": G._rate(
+            [r["kutipan_bawaan"]["benar_v2"] for r in kb_dijawab]
+        ),
+        # Pertanyaan tak terjawab: penolakan tepat (termasuk koreksi premis sah) lawan keliru.
         "tak_terjawab_keliru_v2": G._rate([r["tak_terjawab_v2"] == "keliru" for r in u]),
+        "tak_terjawab_ditolak": G._rate([r["tak_terjawab_v2"] == "menolak" for r in u]),
+        "tak_terjawab_koreksi_premis": G._rate(
+            [r["tak_terjawab_v2"] == "koreksi_premis" for r in u]
+        ),
         "tak_terjawab_dijawab_v1": G._rate([not r["menolak"] for r in u]),
+        "kutipan_bawaan_tak_terjawab_dijawab": G._rate(
+            [not r["kutipan_bawaan"]["menolak"] for r in u]
+        ),
+        # Sitasi jawaban generatif atas pertanyaan terjawab.
+        "sitasi_ada_yang_sah": G._rate([bool(r["sitasi_ada_yang_sah"]) for r in gen_a]),
         "sitasi_semua_sah": G._rate([bool(r["sitasi_semua_sah"]) for r in gen_a]),
         "kalimat_didukung": G._rate(kal),
         "kalimat_tanpa_sitasi_tampil": sum(r["kalimat_tanpa_sitasi_tampil"] for r in recs),

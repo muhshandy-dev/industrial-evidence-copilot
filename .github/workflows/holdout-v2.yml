@@ -113,10 +113,13 @@ jobs:
           # Prompt v2 yang identik dengan v1 memakai ulang keluaran v1 tanpa panggilan.
           node scripts/generate-server.mjs --in masukan/masukan-v2.jsonl --out keluaran-v2.jsonl --model "$m" --varian "$v" \
             --alur v2 --salin-dari keluaran-v1.jsonl --lolos --senyap --endpoint "$ENDPOINT"
+      # Keluaran disimpan juga bila generasi berhenti (misalnya kuota habis), sebagai jejak.
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: keluaran
           path: web/keluaran-v*.jsonl
+          if-no-files-found: ignore
 
   gabung:
     needs: [siapkan, bangkitkan]
@@ -153,8 +156,8 @@ jobs:
       - run: evidence nli --konfigurasi bertahan-llama-3.3-70b,v2-bertahan-llama-3.3-70b
       - name: Holdout v2 (sekali)
         run: evidence holdout run
-      - name: Uji
-        run: pytest -q
+      # Hasil di-commit apa pun isinya (termasuk bila kriteria gagal) dan sebelum uji, supaya
+      # kegagalan uji tidak membuang hasil yang sudah dihitung.
       - name: Commit hasil ke cabang ini
         run: |
           git config user.name "github-actions[bot]"
@@ -163,3 +166,5 @@ jobs:
           git commit -m "Holdout v2: keluaran model, skor NLI, dan hasil evaluasi sekali jalan"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Uji
+        run: pytest -q
