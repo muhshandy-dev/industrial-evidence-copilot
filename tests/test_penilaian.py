@@ -49,3 +49,12 @@ def test_kriteria_lolos_hanya_bila_semua_syarat():
     assert not periksa_kriteria({**dasar, "kutipan_benar": 0.72})["lolos"]
     assert not periksa_kriteria({**dasar, "generatif_benar": 0.69})["lolos"]
     assert KRITERIA["generatif_benar_min"] == 0.70
+
+
+def test_holdout_v2_tidak_berubah_dari_hash_yang_di_commit():
+    import hashlib
+    from pathlib import Path
+
+    ev = Path(__file__).resolve().parents[1] / "eval"
+    want, name = (ev / "holdout-v2.sha256").read_text(encoding="utf-8").split()
+    assert hashlib.sha256((ev / name).read_bytes()).hexdigest() == want
