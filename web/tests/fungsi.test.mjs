@@ -148,7 +148,10 @@ test("jalur evaluasi: hanya Preview dan hanya dengan token OIDC workflow evaluas
   assert.equal(prod.status, 403);
   // Model yang tidak dikenal.
   assert.equal((await f.onRequestPost({ request: mintaEvaluasi({ ...badan, model: "gpt-lain" }, await tokenUji()), env: env(ai) })).status, 400);
-  assert.equal(panggilan.length, 1);
+  // Workflow holdout v2 boleh memakai jalur evaluasi.
+  const holdout = await tokenUji({ job_workflow_ref: "muhshandy-dev/industrial-evidence-copilot/.github/workflows/holdout-v2.yml@refs/heads/x" });
+  assert.equal((await f.onRequestPost({ request: mintaEvaluasi(badan, holdout), env: env(ai) })).status, 200);
+  assert.equal(panggilan.length, 2);
 });
 
 test("pengunjung: Origin wajib dan batas permintaan per menit", async () => {

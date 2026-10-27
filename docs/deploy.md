@@ -38,7 +38,7 @@ Tidak ada secret dan tidak ada API token Cloudflare. Model yang dipakai situs di
 | Pengunjung | tidak boleh memilih model atau varian prompt | `403 pilihan_model_butuh_evaluasi` |
 | Semua | badan paling besar 4 KB, pertanyaan 3 sampai 500 karakter, 1 sampai 4 id pasal yang dikenal | `400` atau `413` |
 | Evaluasi | hanya di deploy Preview, bukan domain produksi | `403 evaluasi_hanya_preview` |
-| Evaluasi | token OIDC GitHub Actions: tanda tangan RS256 dari JWKS GitHub, `aud` khusus, repositori ini, dan workflow `eksperimen-server.yml` atau `tersegel.yml` | `401 evaluasi_ditolak` |
+| Evaluasi | token OIDC GitHub Actions: tanda tangan RS256 dari JWKS GitHub, `aud` khusus, repositori ini, dan workflow `eksperimen-server.yml`, `tersegel.yml`, atau `holdout-v2.yml` | `401 evaluasi_ditolak` |
 
 Fungsi menyusun prompt sendiri dari korpus situs; peramban hanya mengirim pertanyaan dan nomor
 pasal. Jadi kuota tidak bisa dipakai untuk prompt bebas. Pengujian fungsi ada di
