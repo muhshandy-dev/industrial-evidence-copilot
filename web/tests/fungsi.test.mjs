@@ -43,6 +43,25 @@ test("nonaktif selama MODEL_SERVER null", async () => {
   assert.equal(r.status, 503);
 });
 
+test("domain produksi: mode generatif tidak aktif (RAG Research Prototype)", async () => {
+  const f = await muatFungsi(true);
+  const panggilan = [];
+  const ai = { run: async (...a) => { panggilan.push(a); return { response: "Jawaban [1]." }; } };
+  const prod = `https://${f.HOST_PRODUKSI}`;
+  const get = await f.onRequestGet({ request: new Request(`${prod}/api/jawab`), env: env(ai) }).json();
+  assert.equal(get.aktif, false);
+  assert.equal(get.model, null);
+  // Preview tetap aktif sebagai prototipe riset.
+  assert.equal((await f.onRequestGet({ request: new Request(`${asal}/api/jawab`), env: env(ai) }).json()).aktif, true);
+  const r = await f.onRequestPost({ request: new Request(`${prod}/api/jawab`, {
+    method: "POST", body: JSON.stringify({ tanya: "Apa kewajiban pengurus?", pasal: ids }),
+    headers: { origin: prod, "cf-connecting-ip": "203.0.113.9" },
+  }), env: env(ai) });
+  assert.equal(r.status, 503);
+  assert.equal((await r.json()).galat, "prototipe_riset_tidak_aktif_di_produksi");
+  assert.equal(panggilan.length, 0);
+});
+
 test("menyusun prompt sendiri dari korpus dan memanggil model yang dipatok", async () => {
   const f = await muatFungsi(true);
   const panggilan = [];

@@ -62,6 +62,8 @@ const NAMA_MODE = {
 };
 
 const sel = (m) => (m && m.n ? `${m.k} dari ${m.n} (${pct(m.nilai)})` : "-");
+// Nama lain untuk dipakai di mountEvaluation, yang punya variabel lokal bernama sel.
+const rasio = sel;
 
 // Kunci konfigurasi server di evaluasi.json, misalnya "bertahan-llama-3.3-70b".
 const KUNCI_MODEL_SERVER = MODEL_SERVER ? Object.entries(MODEL_SERVER_KANDIDAT).find(([, m]) => m === MODEL_SERVER)[0] : null;
@@ -71,10 +73,10 @@ const desimal = (x) => String(x).replace(".", ",");
 const ringkasMode = (x) => Object.entries(x.mode).map(([k, v]) => `${NAMA_MODE[k] ?? k} ${v}`).join(", ");
 const namaQwen = (g, konfig, cadangan) => (g.model_per_konfigurasi?.[konfig]?.model ?? cadangan).split("/").at(-1);
 
-// Kolom tabel generatif: mode server (eksperimental) bila hasil ujinya ada, lalu model lokal opsional.
+// Kolom tabel generatif: mode server (prototipe riset) bila hasil ujinya ada, lalu model lokal opsional.
 function kolomGeneratif(g, set) {
   const kolom = [];
-  if (KONFIG_SERVER && g[KONFIG_SERVER]?.[set]) kolom.push([`${MODEL_SERVER.nama} (eksperimental, server)`, g[KONFIG_SERVER][set], KONFIG_SERVER]);
+  if (KONFIG_SERVER && g[KONFIG_SERVER]?.[set]) kolom.push([`${MODEL_SERVER.nama} (prototipe riset, server)`, g[KONFIG_SERVER][set], KONFIG_SERVER]);
   if (g.bertahan?.[set]) kolom.push([`${namaQwen(g, "bertahan", "Qwen GPU")} (opsional, GPU)`, g.bertahan[set], "bertahan"]);
   if (g["bertahan-cpu"]?.[set]) kolom.push([`${namaQwen(g, "bertahan-cpu", "Qwen CPU")} (opsional, CPU)`, g["bertahan-cpu"][set], "bertahan-cpu"]);
   return kolom;
@@ -109,7 +111,7 @@ function bagianGeneratif(ev) {
       h("p", {}, "Hasil evaluasi mode generatif belum tersedia di versi ini. Angka di atas hanya untuk mode kutipan langsung."));
   }
   const [labelUtama, utama, konfigUtama] = kolom[0];
-  const namaUtama = labelUtama.replace(/ \((eksperimental|utama|opsional)[^)]*\)$/, "");
+  const namaUtama = labelUtama.replace(/ \((prototipe riset|eksperimental|utama|opsional)[^)]*\)$/, "");
   const server = konfigUtama === KONFIG_SERVER;
   const nli = g.penilai_nli;
   const waktu = utama.detik_per_jawaban_cpu;
@@ -159,7 +161,7 @@ function bagianTersegel(ev) {
   if (!s) return null;
   const kolom = [];
   for (const [konfig, x] of Object.entries(s.generatif)) {
-    const nm = konfig === KONFIG_SERVER ? `${MODEL_SERVER.nama} (eksperimental, server)`
+    const nm = konfig === KONFIG_SERVER ? `${MODEL_SERVER.nama} (prototipe riset, server)`
       : konfig === "bertahan" ? `${(x.model.model ?? "").split("/").at(-1)} (opsional, GPU)`
       : konfig === "bertahan-cpu" ? `${(x.model.model ?? "").split("/").at(-1)} (opsional, CPU)` : konfig;
     kolom.push([nm, x, konfig]);
@@ -174,6 +176,48 @@ function bagianTersegel(ev) {
     tabelGeneratif("Tabel hasil set tersegel", e, kolom),
     ps?.[kirim] ? h("p", { class: "catatan" }, `Pencarian mode kutipan pada set ini: pasal tepat di peringkat 1 pada ${pct(ps[kirim]["hit@1"].nilai)} pertanyaan terjawab dan di lima teratas pada ${pct(ps[kirim]["hit@5"].nilai)}.`) : null,
     h("p", { class: "catatan" }, "Pertanyaan tersegel tetap ditulis oleh asisten AI, bukan praktisi K3, jadi set ini mengurangi bias penyetelan tetapi tidak menghapus bias penulis. 20 pertanyaan injeksi dari penulis yang sama tidak termasuk run sekali jalan ini; pertanyaan itu sudah dievaluasi lebih dulu dan hasilnya ada di bagian prompt injection di atas."));
+}
+
+// Holdout v2: evaluasi akhir alur v2, dijalankan sekali dengan kriteria lolos yang dibekukan.
+const NAMA_KRITERIA = [
+  ["generatif_benar", "Jawaban generatif benar", (k) => `minimal ${pct(k.generatif_benar_min)}`, (v2) => sel(v2.benar_v2)],
+  ["lebih_baik_dari_kutipan", "Lebih baik dari kutipan langsung", () => "lebih tinggi", (v2) => `${v2.benar_v2.k} lawan ${v2.kutipan_bawaan_benar_v2.k}`],
+  ["tak_terjawab_keliru", "Pertanyaan tanpa dasar dijawab keliru", (k) => `paling banyak ${pct(k.tak_terjawab_keliru_maks)}`, (v2) => sel(v2.tak_terjawab_keliru_v2)],
+  ["sitasi_semua_sah", "Jawaban yang semua sitasinya tepat", (k) => `minimal ${pct(k.sitasi_semua_sah_min)}`, (v2) => `${v2.sitasi_semua_sah.k} dari ${v2.sitasi_semua_sah.n} (${desimal((v2.sitasi_semua_sah.nilai * 100).toFixed(1))}%)`],
+  ["kalimat_tanpa_sitasi", "Kalimat tanpa sitasi yang ditampilkan", () => "0", (v2) => String(v2.kalimat_tanpa_sitasi_tampil)],
+];
+
+function bagianHoldout(ev) {
+  const ho = ev.holdout_v2;
+  if (!ho) return null;
+  const { ambang, hasil } = ho.kriteria;
+  const v1 = ho.alur_v1;
+  const v2 = ho.alur_v2;
+  const sens = ho.sensitivitas_tanpa_duplikat;
+  const baris = [
+    ["Jawaban benar (pertanyaan terjawab)", (x) => sel(x.benar_v2), sel(v2.kutipan_bawaan_benar_v2)],
+    ["Dijawab (cakupan)", (x) => sel(x.dijawab_terjawab), sel(v2.kutipan_bawaan_dijawab_terjawab)],
+    ["Benar di antara yang dijawab", (x) => sel(x.benar_v2_di_antara_dijawab), sel(v2.kutipan_bawaan_benar_v2_di_antara_dijawab)],
+    ["Pertanyaan tanpa dasar: ditolak atau koreksi premis", (x) => `${x.tak_terjawab_ditolak.k + x.tak_terjawab_koreksi_premis.k} dari ${x.tak_terjawab_ditolak.n}`, `${v2.kutipan_bawaan_tak_terjawab_dijawab.n - v2.kutipan_bawaan_tak_terjawab_dijawab.k} dari ${v2.kutipan_bawaan_tak_terjawab_dijawab.n}`],
+    ["Pertanyaan tanpa dasar: dijawab keliru", (x) => sel(x.tak_terjawab_keliru_v2), sel(v2.kutipan_bawaan_tak_terjawab_dijawab)],
+    ["Jawaban yang semua sitasinya tepat", (x) => sel(x.sitasi_semua_sah), "-"],
+    ["Kalimat yang didukung pasal yang dikutipnya", (x) => sel(x.kalimat_didukung), "disalin, tidak dinilai"],
+  ];
+  return h("section", { "aria-labelledby": "e-holdout" },
+    h("h2", { id: "e-holdout" }, "Evaluasi akhir: holdout v2"),
+    h("div", { class: "kotak-jujur" },
+      h("p", {}, h("strong", {}, `Hasil: ${hasil.lolos ? "LOLOS" : "TIDAK LOLOS"}. `), hasil.lolos ? "Semua kriteria terpenuhi." : "Satu kriteria tidak terpenuhi, jadi mode generatif tetap prototipe riset dan tidak aktif di domain produksi. Kriteria tidak diubah setelah hasil keluar, dan set ini tidak akan dipakai lagi.")),
+    h("p", {}, `${ho.set.pertanyaan} pertanyaan baru (${ho.set.terjawab} ada jawabannya, ${ho.set.tak_terjawab} tidak ada) ditulis penulis terpisah, dikunci dengan SHA-256 sebelum ada run, dan dijalankan satu kali pada ${ho.waktu_utc.slice(0, 10)}. Alur v1, alur v2, dan kutipan langsung dinilai pada pertanyaan yang sama dengan penilaian v2 yang dibekukan lebih dulu (docs/penilaian-v2.md).`),
+    h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel kriteria holdout v2, dapat digulir" },
+      h("table", { class: "tabel" },
+        h("thead", {}, h("tr", {}, ...["Kriteria", "Syarat", "Alur v2", "Status"].map((x, i) => h("th", { scope: "col", class: i ? "num" : null }, x)))),
+        h("tbody", {}, NAMA_KRITERIA.map(([k, n, syarat, nilai]) => h("tr", {}, h("th", { scope: "row" }, n), h("td", { class: "num" }, syarat(ambang)), h("td", { class: "num" }, nilai(v2)), h("td", { class: "num" }, hasil[k] ? "lolos" : "gagal")))))),
+    h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan holdout v2, dapat digulir" },
+      h("table", { class: "tabel" },
+        h("thead", {}, h("tr", {}, ...["Ukuran", "Alur v1", "Alur v2", "Kutipan langsung"].map((x, i) => h("th", { scope: "col", class: i ? "num" : null }, x)))),
+        h("tbody", {}, baris.map(([n, f, kutip]) => h("tr", {}, h("th", { scope: "row" }, n), h("td", { class: "num" }, f(v1)), h("td", { class: "num" }, f(v2)), h("td", { class: "num" }, kutip)))))),
+    h("p", { class: "catatan" }, `Uji sensitivitas yang ditetapkan sebelum run: tanpa ${sens.dikeluarkan.length} pertanyaan yang teksnya kebetulan identik dengan set lain, alur v2 menjawab benar ${sel(sens.v2.benar_v2)} dan sitasinya tepat semua pada ${sel(sens.v2.sitasi_semua_sah)}. Kesimpulannya sama.`),
+    h("p", { class: "catatan" }, "Kegagalan sitasi umumnya berasal dari kalimat tambahan yang merujuk pasal terkait di luar label; sebagian jawabannya tetap benar. Pertanyaan ditulis asisten AI, bukan praktisi K3, dan revisi internal model Workers AI tidak dapat dikunci. Rincian lengkap: docs/holdout-v2-hasil.md."));
 }
 
 // Ringkasan model embedding dan reranker, dari selisih berpasangan di data uji.
@@ -213,7 +257,8 @@ export function mountEvaluation(main, { evaluasi: ev }) {
       h("p", {}, `Mode kutipan langsung: pasal yang tepat muncul di peringkat 1 pada ${pct(m["hit@1"].nilai)} pertanyaan uji dan di lima teratas pada ${pct(m["hit@5"].nilai)}. Namun dari ${salah.n} jawaban yang diberikan, ${salah.k} (${pct(salahCi.nilai)}) mengutip pasal yang salah. Selalu periksa pasal yang dikutip.`),
       genUtama ? h("p", {}, `Mode generatif server (${MODEL_SERVER.nama}) menjawab benar ${genUtama.jawaban_benar.k} dari ${genUtama.jawaban_benar.n} pertanyaan uji yang ada jawabannya (kutipan langsung: ${t.jawaban_benar.k}), ${pct(genUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip menurut penilai NLI, dan ${genUtama.dijawab_padahal_tak_terjawab.k} dari ${genUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Kalimatnya ditulis model, jadi tetap bisa keliru walau bersitasi.`) : null,
       segelUtama ? h("p", {}, `Pada set uji tersegel (${segel.set.pertanyaan} pertanyaan dari penulis terpisah, dijalankan sekali), angkanya lebih rendah: mode generatif server menjawab benar ${segelUtama.jawaban_benar.k} dari ${segelUtama.jawaban_benar.n} (${pct(segelUtama.jawaban_benar.nilai)}; kutipan langsung: ${segel.ekstraktif.jawaban_benar.k}), ${pct(segelUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip, dan ${segelUtama.dijawab_padahal_tak_terjawab.k} dari ${segelUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Angka tersegel inilah perkiraan yang lebih dapat dipercaya.`) : null,
-      genUtama ? h("p", {}, "Semua angka generatif di halaman ini diukur pada alur v1. Sejak 27 Oktober 2026 situs memakai alur v2: model dipanggil bila skor BM25 atau skor reranker mencapai ambangnya, pasal panjang diringkas menjadi ayat yang paling relevan, dan kutipan cadangan memakai urutan reranker. Alur v2 dipilih di data dev dan belum diuji pada set holdout baru, jadi mode generatif diberi label eksperimental dan kutipan langsung tetap mode utama.") : null,
+      genUtama ? h("p", {}, "Angka generatif pada data uji dan set tersegel di bawah diukur pada alur v1. Alur v2 (gerbang BM25 atau reranker, ringkasan ayat untuk pasal panjang, kutipan cadangan berurutan reranker) dipilih di data dev lalu diuji sekali pada holdout v2.") : null,
+      ev.holdout_v2 ? h("p", {}, `Evaluasi akhir (holdout v2, ${ev.holdout_v2.set.pertanyaan} pertanyaan baru): alur v2 menjawab benar ${rasio(ev.holdout_v2.alur_v2.benar_v2)}, kutipan langsung ${rasio(ev.holdout_v2.alur_v2.kutipan_bawaan_benar_v2)}, dan tidak ada pertanyaan tanpa dasar yang dijawab keliru. Namun jawaban yang semua sitasinya tepat baru ${rasio(ev.holdout_v2.alur_v2.sitasi_semua_sah)}, di bawah syarat 90%. Karena itu proyek ini berstatus RAG Research Prototype: di domain produksi hanya kutipan langsung yang aktif.`) : null,
       h("p", {}, `Angka data uji optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
 
   const hasil = h("section", { "aria-labelledby": "e-hasil" },
@@ -301,6 +346,6 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   clear(main).append(h("div", { class: "halaman halaman-lebar" },
     h("header", {}, h("h1", {}, "Evaluasi"),
       h("p", { class: "lead" }, "Seberapa sering sistem ini mengutip pasal yang tepat, seberapa sering ia salah, dan seberapa sering ia memilih diam. Semua angka dihitung dari set pertanyaan tetap, tetapi ada batas penting pada cara set itu dibuat; baca ringkasan jujur di bawah.")),
-    ringkas, hasil, salinan, bagianGeneratif(ev), bagianTersegel(ev), metode, ambang, gagal, protokol, ulang));
+    ringkas, hasil, salinan, bagianGeneratif(ev), bagianTersegel(ev), bagianHoldout(ev), metode, ambang, gagal, protokol, ulang));
   main.dataset.ready = "evaluasi";
 }

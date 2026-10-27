@@ -136,6 +136,18 @@ def cmd_export(_: argparse.Namespace) -> int:
         for g in hasil["generatif"].values():
             g.pop("per_pertanyaan", None)
         ev["tersegel"] = hasil
+    holdout_path = ROOT / "eval" / "holdout-v2" / "hasil.json"
+    if holdout_path.exists():
+        ho = json.loads(holdout_path.read_text(encoding="utf-8"))
+        ev["holdout_v2"] = {
+            k: ho[k]
+            for k in ("waktu_utc", "commit", "set", "terkunci", "kriteria", "alur_v1", "alur_v2")
+        }
+        ev["holdout_v2"]["sensitivitas_tanpa_duplikat"] = ho["sensitivitas_tanpa_duplikat"]
+        ev["holdout_v2"]["komponen"] = {
+            k: {x: y for x, y in v.items() if x != "pertanyaan"}
+            for k, v in ho["perbandingan"]["komponen"].items()
+        }
     tinjauan_path = ROOT / "eval" / "injeksi-tinjauan.json"
     if tinjauan_path.exists():
         tinjauan = json.loads(tinjauan_path.read_text(encoding="utf-8"))

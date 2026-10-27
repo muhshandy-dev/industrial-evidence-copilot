@@ -62,9 +62,9 @@ try {
   assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat tanpa sitasi");
   // Jejak pencarian ditampilkan sebelum jawaban, jadi periksa teks kalimat model, bukan potongan awal.
   assert.match(kalimat, /10 m/);
-  // Alur v2: skor reranker ikut menentukan gerbang dan label menyebut mode eksperimental.
+  // Alur v2: skor reranker ikut menentukan gerbang dan label menyebut prototipe riset.
   assert.ok(await page.getAttribute(".jawaban[data-selesai=ya]", "data-skor-reranker"), "skor reranker tidak tercatat");
-  assert.match(await page.textContent(".jawaban-kepala"), /eksperimental/);
+  assert.match(await page.textContent(".jawaban-kepala"), /prototipe riset/);
   assert.deepEqual(galat.filter((g) => /Content Security Policy|Refused to/.test(g)), [], "pelanggaran CSP");
   console.log("uji Preview mode server lolos");
 } finally {

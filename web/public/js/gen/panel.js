@@ -1,10 +1,12 @@
 // Pilihan mode jawaban di ruang kerja:
 // - Kutipan langsung: bawaan, tanpa unduhan, juga cadangan bila mode generatif gagal.
-// - Generatif lewat Cloudflare Workers AI (eksperimental sampai lolos holdout v2, lihat
-//   docs/penilaian-v2.md): peramban hanya memuat reranker; model bahasa berjalan di server.
+// - Generatif lewat Cloudflare Workers AI (prototipe riset; holdout v2 gagal pada kriteria sitasi,
+//   docs/holdout-v2-hasil.md): peramban hanya memuat reranker; model bahasa berjalan di server.
 // - Generatif di perangkat (opsional): model Qwen kecil berjalan di peramban.
-// Unduhan hanya terjadi setelah pengguna menekan tombol muat.
+// Unduhan hanya terjadi setelah pengguna menekan tombol muat. Di domain produksi kedua mode
+// generatif tidak ditampilkan (web/public/js/situs.js).
 import { h } from "../dom.js";
+import { generatifDiizinkan } from "../situs.js";
 import { MODEL, MODEL_CPU, MODEL_SERVER } from "./prompt.js";
 import { UKURAN_UNDUHAN_MB, muatJalur, periksaDukungan, serverTersedia, siap } from "./runtime.js";
 
@@ -12,7 +14,14 @@ const nama = (m) => m.id.split("/").at(-1);
 const mb = (b) => Math.round(b / 1e6).toLocaleString("id-ID");
 const ukuran = (k) => `sekitar ${UKURAN_UNDUHAN_MB[k].toLocaleString("id-ID")} MB`;
 
-export function createModePanel() {
+export function createModePanel(host = location.hostname) {
+  if (!generatifDiizinkan(host)) {
+    const el = h("fieldset", { class: "mode-jawab", "data-mode": "kutipan" },
+      h("legend", { class: "subjudul" }, "Mode jawaban"),
+      h("p", {}, h("strong", {}, "Kutipan langsung. "), "Kalimat disalin persis dari pasal, tanpa unduhan model."),
+      h("p", { class: "catatan" }, "Mode generatif (Llama 3.3 70B dengan sitasi) adalah prototipe riset dan tidak aktif di situs ini, karena belum lolos semua kriteria evaluasi akhir. Hasil dan batasnya ada di halaman Evaluasi."));
+    return { el, jalur: () => null };
+  }
   let mode = "kutipan";
   const status = h("p", { class: "mode-status", role: "status" });
   const batang = h("span", { class: "mode-batang-isi" });
@@ -28,9 +37,9 @@ export function createModePanel() {
     h("legend", { class: "subjudul" }, "Mode jawaban"),
     pilih("kutipan", "Kutipan langsung", "Kalimat disalin persis dari pasal. Cepat, tanpa unduhan model."),
     serverTersedia()
-      ? pilih("server", "Generatif dengan model server (eksperimental)", `Model bahasa ${MODEL_SERVER.nama} di Cloudflare Workers AI menulis jawaban singkat dengan sitasi [n] ke pasal. Peramban hanya mengunduh reranker untuk mengurutkan pasal. Mode ini masih diuji; kutipan langsung tetap mode utama.`)
+      ? pilih("server", "Generatif dengan model server (prototipe riset)", `Model bahasa ${MODEL_SERVER.nama} di Cloudflare Workers AI menulis jawaban singkat dengan sitasi [n] ke pasal. Peramban hanya mengunduh reranker untuk mengurutkan pasal. Prototipe ini belum lolos evaluasi akhir; kutipan langsung tetap mode utama.`)
       : null,
-    pilih("lokal", "Generatif di perangkat Anda (eksperimental)",
+    pilih("lokal", "Generatif di perangkat Anda (prototipe riset)",
       `Model kecil ${nama(MODEL)} di GPU (WebGPU), atau ${nama(MODEL_CPU)} di CPU, berjalan di peramban Anda. Unduhan besar dan hasilnya lebih lemah${serverTersedia() ? " daripada model server" : ""}.`),
     ...tombol, kemajuan, status);
 

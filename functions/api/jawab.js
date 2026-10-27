@@ -11,15 +11,18 @@
 // - Pengunjung: hanya dari halaman situs ini (header Origin wajib dan sama), masukan dibatasi, dan
 //   paling banyak BATAS_PER_MENIT permintaan per alamat IP per menit (per isolate, upaya terbaik).
 //   Batas keras biaya adalah kuota gratis harian Workers AI; bila habis, situs kembali ke kutipan.
+// - Domain produksi: mode generatif tidak aktif (status RAG Research Prototype, web/public/js/situs.js).
+//   GET melaporkan aktif false dan POST pengunjung ditolak 503 tanpa memanggil Workers AI.
 // - Evaluasi: memilih kandidat model, varian prompt, dan alur ({model, varian, alur}) hanya di deploy Preview
 //   (bukan domain produksi) dan hanya dengan token OIDC GitHub Actions dari workflow evaluasi
 //   repositori ini (server/oidc.js). Tanpa token itu, permintaan ditolak 401.
 import { periksaOidc } from "../../server/oidc.js";
+import { HOST_PRODUKSI, generatifDiizinkan } from "../../web/public/js/situs.js";
 import {
   ALUR, K_PASAL, MODEL_SERVER, MODEL_SERVER_KANDIDAT, VARIAN, VARIAN_SERVER, idfDariIndeks, pasalUntukPrompt, permintaanServer, susunPesan, teksServer,
 } from "../../web/public/js/gen/prompt.js";
 
-export const HOST_PRODUKSI = "industrial-evidence-copilot.pages.dev";
+export { HOST_PRODUKSI };
 
 const MAKS_TANYA = 500;
 const MAKS_BADAN = 4096;
@@ -69,8 +72,10 @@ async function muatKorpus(env, url) {
 // Kuota harian gratis habis: Workers AI mengembalikan galat 4006.
 const kuotaHabis = (e) => /4006|daily free allocation|neurons/i.test(String(e?.message ?? e));
 
-export function onRequestGet({ env }) {
-  return json({ aktif: MODEL_SERVER !== null, model: MODEL_SERVER?.id ?? null, binding: Boolean(env?.AI), alur: ALUR });
+export function onRequestGet({ request, env }) {
+  const host = request ? new URL(request.url).hostname : "";
+  const aktif = MODEL_SERVER !== null && generatifDiizinkan(host);
+  return json({ aktif, model: aktif ? MODEL_SERVER.id : null, binding: Boolean(env?.AI), alur: ALUR });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -84,6 +89,7 @@ export async function onRequestPost({ request, env }) {
     const hasil = await periksaOidc(otorisasi.slice(7)).catch(() => "verifikasi_gagal");
     if (typeof hasil === "string") return json({ galat: "evaluasi_ditolak", alasan: hasil }, 401);
   } else {
+    if (!generatifDiizinkan(url.hostname)) return json({ galat: "prototipe_riset_tidak_aktif_di_produksi" }, 503);
     // Pengunjung: hanya dari halaman situs ini sendiri.
     if (request.headers.get("origin") !== url.origin) return json({ galat: "asal_ditolak" }, 403);
     if (terlaluSering(request.headers.get("cf-connecting-ip") ?? "?")) return json({ galat: "terlalu_sering" }, 429);

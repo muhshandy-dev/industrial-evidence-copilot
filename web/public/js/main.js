@@ -5,7 +5,13 @@ import { mountEvaluation } from "./evaluation.js";
 import { mountMethod } from "./method.js";
 import "./motion.js";
 
+import { generatifDiizinkan } from "./situs.js";
+
 const main = document.getElementById("utama");
+// Di luar domain produksi (Preview, lokal) mode generatif prototipe riset dapat dipilih.
+if (generatifDiizinkan(location.hostname)) {
+  document.getElementById("mode-tip").textContent = "Bawaannya, kalimat jawaban disalin persis dari pasal dan pencarian berjalan di peramban Anda. Ini deploy riset: mode generatif (prototipe, belum lolos evaluasi akhir) dapat dipilih di panel Sumber. Mode generatif server mengirim pertanyaan dan nomor pasal ke Cloudflare Workers AI.";
+}
 let data = null;
 let loading = null;
 

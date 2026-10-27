@@ -80,6 +80,24 @@ await jalan("mode generatif lokal tanpa WebGPU: alasan dan pilihan CPU ditampilk
   await ctx.close();
 });
 
+await jalan("domain produksi: hanya kutipan langsung, mode generatif tidak ditawarkan", async () => {
+  const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
+  await siap(page, "");
+  const hasil = await page.evaluate(async () => {
+    const { HOST_PRODUKSI } = await import("./js/situs.js");
+    const { createModePanel } = await import("./js/gen/panel.js");
+    const p = createModePanel(HOST_PRODUKSI);
+    return { radio: p.el.querySelectorAll("input").length, tombol: p.el.querySelectorAll("button").length, jalur: p.jalur(), teks: p.el.textContent };
+  });
+  assert.equal(hasil.radio, 0);
+  assert.equal(hasil.tombol, 0);
+  assert.equal(hasil.jalur, null);
+  assert.match(hasil.teks, /prototipe riset/);
+  assert.match(await page.textContent("#mode-lencana"), /RAG Research Prototype/);
+  assert.deepEqual(log.errors, []); assert.deepEqual(log.luar, []);
+  await ctx.close();
+});
+
 await jalan("pertanyaan di luar korpus ditolak", async () => {
   const { ctx, page } = await halaman({ reducedMotion: "reduce" });
   await siap(page, "");
@@ -114,6 +132,11 @@ await jalan("halaman evaluasi memuat kartu angka, tabel, grafik, dan daftar kega
   assert.equal(await page.locator("section[aria-labelledby=e-metode] tbody tr").count(), Object.keys(ev.pencarian.per_sistem).length);
   assert.equal(await page.locator("svg.grafik").count(), 1);
   assert.ok(await page.locator("details.gagal").count() >= 1);
+  // Evaluasi akhir holdout v2: lima kriteria, hasil apa adanya.
+  if (ev.holdout_v2) {
+    assert.equal(await page.locator("section[aria-labelledby=e-holdout] table").first().locator("tbody tr").count(), 5);
+    assert.match(await page.textContent("section[aria-labelledby=e-holdout]"), ev.holdout_v2.kriteria.hasil.lolos ? /Hasil: LOLOS/ : /Hasil: TIDAK LOLOS/);
+  }
   assert.ok(!/NaN|undefined|null/.test(await page.textContent("main")), "teks mengandung NaN/undefined/null");
   await ctx.close();
 });

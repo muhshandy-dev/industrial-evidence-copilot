@@ -124,7 +124,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     const jawabCadangan = urut === null ? ans : extractAnswer(q, urut.peringkat, texts, idf, { topScore: generatif ? 1 : 0, threshold: 0.5, useStem: indeks.pakai_stem, displayTexts: shownTexts });
     const trace = buildTrace(tokens, top, scores, generatif);
     const lolos = generatif || !jawabCadangan.abstain;
-    const kepala = h("span", { class: "label-mode" }, generatif ? "Jawaban generatif (eksperimental)" : lolos ? "Jawaban ekstraktif" : "Tidak menjawab");
+    const kepala = h("span", { class: "label-mode" }, generatif ? "Jawaban generatif (prototipe riset)" : lolos ? "Jawaban ekstraktif" : "Tidak menjawab");
     const ringkas = h("span", {}, generatif ? keteranganModel(jalur) : lolos ? `${jawabCadangan.evidence.length} kutipan` : "Dasar tidak cukup");
     const skorTeks = skorRr === null
       ? `Skor ${num(topScore)} · ambang ${num(threshold)}`
@@ -232,7 +232,7 @@ export function mountWorkspace(main, { korpus, indeks, evaluasi }) {
     card.append(h("ol", { class: "gen-sumber masuk" }, pasal.map((p) => h("li", { data: { dikutip: dikutip.has(p.n) ? "ya" : "tidak" } },
       h("button", { type: "button", onclick: () => open(p.chunk, []) }, h("span", { class: "kode" }, `[${p.n}]`), h("span", {}, p.sumber))))));
     const dibuang = hasil.dibuang.length ? ` ${hasil.dibuang.length} kalimat tanpa sitasi yang sah dibuang.` : "";
-    card.append(h("p", { class: "jawaban-kaki masuk" }, `Kalimat di atas ditulis oleh model bahasa dari pasal bernomor, bukan disalin. Mode ini masih eksperimental: model bisa keliru membaca atau merangkum, jadi periksa pasal yang dirujuk.${dibuang} Ini bukan nasihat hukum.`));
+    card.append(h("p", { class: "jawaban-kaki masuk" }, `Kalimat di atas ditulis oleh model bahasa dari pasal bernomor, bukan disalin. Mode ini prototipe riset yang belum lolos evaluasi akhir: model bisa keliru membaca atau merangkum, jadi periksa pasal yang dirujuk.${dibuang} Ini bukan nasihat hukum.`));
     reader.show(pasal[hasil.kalimat[0].sitasi[0] - 1].chunk, { scroll: innerWidth > 1100 });
   }
 
