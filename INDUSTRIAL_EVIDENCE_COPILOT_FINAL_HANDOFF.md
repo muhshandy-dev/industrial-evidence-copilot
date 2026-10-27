@@ -203,4 +203,18 @@ Tidak ada evaluasi tambahan yang direncanakan. Evaluasi generalisasi apa pun di 
 
 ## 11. Verifikasi Production setelah penggabungan
 
-Diisi setelah PR #2 digabung dan Cloudflare Pages selesai deploy.
+PR #2 digabung ke `main` pada 27 Oktober 2026 pukul 11.07 UTC (merge commit `3f339eb`). Cloudflare Pages lalu men-deploy `main` ke Production.
+
+Workflow "Periksa situs terbit" (run 40494451393, 11.13 UTC, `tools/verify_published.py` pada commit `3f339eb`) terhadap https://industrial-evidence-copilot.pages.dev/: **lolos**.
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| Halaman utama HTTP 200, judul dan label "RAG Research Prototype" | lolos |
+| CSP dan header keamanan | lolos |
+| `data/korpus.json`, `data/indeks.json`, `data/evaluasi.json`, `js/situs.js` sama dengan repositori (SHA-256) | lolos |
+| `GET /api/jawab` | `{"aktif": false, "model": null, "binding": true, "alur": "v2"}` |
+| `POST /api/jawab` sebagai pengunjung | HTTP 503 `prototipe_riset_tidak_aktif_di_produksi`, tanpa panggilan model |
+
+Pemeriksaan yang sama terhadap deploy Preview riset (run 40493341509) juga lolos, dengan `aktif: true` untuk Llama 3.3 70B.
+
+Yang belum diverifikasi: tampilan visual Production di peramban sungguhan oleh manusia (lingkungan pengembangan tidak dapat membuka `pages.dev`). Perilaku tampilannya diuji e2e dengan nama host produksi yang disimulasikan.
