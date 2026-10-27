@@ -1,0 +1,6415 @@
+{
+ "versi": 1,
+ "waktu_utc": "2026-10-27T10:30:18Z",
+ "commit": "ef7df3d57f9864b0d9d57f4e027ae051c2ffcd51",
+ "aturan": "Dijalankan sekali setelah alur v2 dibekukan dan disetujui pemilik proyek. Penilaian v2 dan kriteria lolos dibekukan sebelum set ini ditulis (docs/penilaian-v2.md).",
+ "set": {
+  "sha256": "b8be17a728774d202d85657cb5d6ac2b13d85fa638c12f1649f4a0f2cdf8ed4e",
+  "pertanyaan": 120,
+  "terjawab": 90,
+  "tak_terjawab": 30
+ },
+ "terkunci": {
+  "metode_kutipan": "bm25_konteks",
+  "ambang_bm25": 14.0,
+  "ambang_reranker": 1.0
+ },
+ "alur_v1": {
+  "n": 120,
+  "mode": {
+   "tolak_gerbang": 35,
+   "tolak_model": 18,
+   "generatif": 67
+  },
+  "benar_v1": {
+   "n": 90,
+   "k": 55,
+   "nilai": 0.6111,
+   "bawah": 0.5078,
+   "atas": 0.7053
+  },
+  "benar_v2": {
+   "n": 90,
+   "k": 56,
+   "nilai": 0.6222,
+   "bawah": 0.519,
+   "atas": 0.7154
+  },
+  "dijawab_terjawab": {
+   "n": 90,
+   "k": 65,
+   "nilai": 0.7222,
+   "bawah": 0.622,
+   "atas": 0.8042
+  },
+  "benar_v2_di_antara_dijawab": {
+   "n": 65,
+   "k": 56,
+   "nilai": 0.8615,
+   "bawah": 0.7573,
+   "atas": 0.9254
+  },
+  "kutipan_bawaan_benar_v1": {
+   "n": 90,
+   "k": 48,
+   "nilai": 0.5333,
+   "bawah": 0.431,
+   "atas": 0.6329
+  },
+  "kutipan_bawaan_benar_v2": {
+   "n": 90,
+   "k": 48,
+   "nilai": 0.5333,
+   "bawah": 0.431,
+   "atas": 0.6329
+  },
+  "kutipan_bawaan_dijawab_terjawab": {
+   "n": 90,
+   "k": 75,
+   "nilai": 0.8333,
+   "bawah": 0.7431,
+   "atas": 0.8963
+  },
+  "kutipan_bawaan_benar_v2_di_antara_dijawab": {
+   "n": 75,
+   "k": 48,
+   "nilai": 0.64,
+   "bawah": 0.527,
+   "atas": 0.7394
+  },
+  "tak_terjawab_keliru_v2": {
+   "n": 30,
+   "k": 0,
+   "nilai": 0.0,
+   "bawah": 0.0,
+   "atas": 0.1135
+  },
+  "tak_terjawab_ditolak": {
+   "n": 30,
+   "k": 28,
+   "nilai": 0.9333,
+   "bawah": 0.7868,
+   "atas": 0.9815
+  },
+  "tak_terjawab_koreksi_premis": {
+   "n": 30,
+   "k": 2,
+   "nilai": 0.0667,
+   "bawah": 0.0185,
+   "atas": 0.2132
+  },
+  "tak_terjawab_dijawab_v1": {
+   "n": 30,
+   "k": 2,
+   "nilai": 0.0667,
+   "bawah": 0.0185,
+   "atas": 0.2132
+  },
+  "kutipan_bawaan_tak_terjawab_dijawab": {
+   "n": 30,
+   "k": 10,
+   "nilai": 0.3333,
+   "bawah": 0.1923,
+   "atas": 0.5122
+  },
+  "sitasi_ada_yang_sah": {
+   "n": 65,
+   "k": 62,
+   "nilai": 0.9538,
+   "bawah": 0.8729,
+   "atas": 0.9842
+  },
+  "sitasi_semua_sah": {
+   "n": 65,
+   "k": 56,
+   "nilai": 0.8615,
+   "bawah": 0.7573,
+   "atas": 0.9254
+  },
+  "kalimat_didukung": {
+   "n": 100,
+   "k": 75,
+   "nilai": 0.75,
+   "bawah": 0.657,
+   "atas": 0.8245
+  },
+  "kalimat_tanpa_sitasi_tampil": 0
+ },
+ "alur_v2": {
+  "n": 120,
+  "mode": {
+   "tolak_gerbang": 31,
+   "tolak_model": 17,
+   "generatif": 72
+  },
+  "benar_v1": {
+   "n": 90,
+   "k": 62,
+   "nilai": 0.6889,
+   "bawah": 0.5872,
+   "atas": 0.7751
+  },
+  "benar_v2": {
+   "n": 90,
+   "k": 63,
+   "nilai": 0.7,
+   "bawah": 0.5987,
+   "atas": 0.7849
+  },
+  "dijawab_terjawab": {
+   "n": 90,
+   "k": 70,
+   "nilai": 0.7778,
+   "bawah": 0.6815,
+   "atas": 0.8513
+  },
+  "benar_v2_di_antara_dijawab": {
+   "n": 70,
+   "k": 63,
+   "nilai": 0.9,
+   "bawah": 0.8077,
+   "atas": 0.9507
+  },
+  "kutipan_bawaan_benar_v1": {
+   "n": 90,
+   "k": 48,
+   "nilai": 0.5333,
+   "bawah": 0.431,
+   "atas": 0.6329
+  },
+  "kutipan_bawaan_benar_v2": {
+   "n": 90,
+   "k": 48,
+   "nilai": 0.5333,
+   "bawah": 0.431,
+   "atas": 0.6329
+  },
+  "kutipan_bawaan_dijawab_terjawab": {
+   "n": 90,
+   "k": 75,
+   "nilai": 0.8333,
+   "bawah": 0.7431,
+   "atas": 0.8963
+  },
+  "kutipan_bawaan_benar_v2_di_antara_dijawab": {
+   "n": 75,
+   "k": 48,
+   "nilai": 0.64,
+   "bawah": 0.527,
+   "atas": 0.7394
+  },
+  "tak_terjawab_keliru_v2": {
+   "n": 30,
+   "k": 0,
+   "nilai": 0.0,
+   "bawah": 0.0,
+   "atas": 0.1135
+  },
+  "tak_terjawab_ditolak": {
+   "n": 30,
+   "k": 28,
+   "nilai": 0.9333,
+   "bawah": 0.7868,
+   "atas": 0.9815
+  },
+  "tak_terjawab_koreksi_premis": {
+   "n": 30,
+   "k": 2,
+   "nilai": 0.0667,
+   "bawah": 0.0185,
+   "atas": 0.2132
+  },
+  "tak_terjawab_dijawab_v1": {
+   "n": 30,
+   "k": 2,
+   "nilai": 0.0667,
+   "bawah": 0.0185,
+   "atas": 0.2132
+  },
+  "kutipan_bawaan_tak_terjawab_dijawab": {
+   "n": 30,
+   "k": 10,
+   "nilai": 0.3333,
+   "bawah": 0.1923,
+   "atas": 0.5122
+  },
+  "sitasi_ada_yang_sah": {
+   "n": 70,
+   "k": 67,
+   "nilai": 0.9571,
+   "bawah": 0.8814,
+   "atas": 0.9853
+  },
+  "sitasi_semua_sah": {
+   "n": 70,
+   "k": 62,
+   "nilai": 0.8857,
+   "bawah": 0.7904,
+   "atas": 0.9409
+  },
+  "kalimat_didukung": {
+   "n": 100,
+   "k": 76,
+   "nilai": 0.76,
+   "bawah": 0.6677,
+   "atas": 0.8331
+  },
+  "kalimat_tanpa_sitasi_tampil": 0
+ },
+ "kriteria": {
+  "ambang": {
+   "generatif_benar_min": 0.7,
+   "tak_terjawab_keliru_maks": 0.1,
+   "sitasi_semua_sah_min": 0.9,
+   "kalimat_tanpa_sitasi_tampil_maks": 0
+  },
+  "hasil": {
+   "generatif_benar": true,
+   "lebih_baik_dari_kutipan": true,
+   "tak_terjawab_keliru": true,
+   "sitasi_semua_sah": false,
+   "kalimat_tanpa_sitasi": true,
+   "lolos": false
+  }
+ },
+ "sensitivitas_tanpa_duplikat": {
+  "dikeluarkan": [
+   "h023",
+   "h066",
+   "h072"
+  ],
+  "v1": {
+   "n": 117,
+   "mode": {
+    "tolak_gerbang": 33,
+    "tolak_model": 18,
+    "generatif": 66
+   },
+   "benar_v1": {
+    "n": 89,
+    "k": 54,
+    "nilai": 0.6067,
+    "bawah": 0.5029,
+    "atas": 0.7018
+   },
+   "benar_v2": {
+    "n": 89,
+    "k": 55,
+    "nilai": 0.618,
+    "bawah": 0.5141,
+    "atas": 0.7121
+   },
+   "dijawab_terjawab": {
+    "n": 89,
+    "k": 64,
+    "nilai": 0.7191,
+    "bawah": 0.6182,
+    "atas": 0.8019
+   },
+   "benar_v2_di_antara_dijawab": {
+    "n": 64,
+    "k": 55,
+    "nilai": 0.8594,
+    "bawah": 0.7538,
+    "atas": 0.9242
+   },
+   "kutipan_bawaan_benar_v1": {
+    "n": 89,
+    "k": 48,
+    "nilai": 0.5393,
+    "bawah": 0.4363,
+    "atas": 0.6391
+   },
+   "kutipan_bawaan_benar_v2": {
+    "n": 89,
+    "k": 48,
+    "nilai": 0.5393,
+    "bawah": 0.4363,
+    "atas": 0.6391
+   },
+   "kutipan_bawaan_dijawab_terjawab": {
+    "n": 89,
+    "k": 74,
+    "nilai": 0.8315,
+    "bawah": 0.7404,
+    "atas": 0.8951
+   },
+   "kutipan_bawaan_benar_v2_di_antara_dijawab": {
+    "n": 74,
+    "k": 48,
+    "nilai": 0.6486,
+    "bawah": 0.535,
+    "atas": 0.7476
+   },
+   "tak_terjawab_keliru_v2": {
+    "n": 28,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.1206
+   },
+   "tak_terjawab_ditolak": {
+    "n": 28,
+    "k": 26,
+    "nilai": 0.9286,
+    "bawah": 0.7735,
+    "atas": 0.9802
+   },
+   "tak_terjawab_koreksi_premis": {
+    "n": 28,
+    "k": 2,
+    "nilai": 0.0714,
+    "bawah": 0.0198,
+    "atas": 0.2265
+   },
+   "tak_terjawab_dijawab_v1": {
+    "n": 28,
+    "k": 2,
+    "nilai": 0.0714,
+    "bawah": 0.0198,
+    "atas": 0.2265
+   },
+   "kutipan_bawaan_tak_terjawab_dijawab": {
+    "n": 28,
+    "k": 10,
+    "nilai": 0.3571,
+    "bawah": 0.2071,
+    "atas": 0.5417
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 64,
+    "k": 61,
+    "nilai": 0.9531,
+    "bawah": 0.871,
+    "atas": 0.9839
+   },
+   "sitasi_semua_sah": {
+    "n": 64,
+    "k": 55,
+    "nilai": 0.8594,
+    "bawah": 0.7538,
+    "atas": 0.9242
+   },
+   "kalimat_didukung": {
+    "n": 99,
+    "k": 74,
+    "nilai": 0.7475,
+    "bawah": 0.6538,
+    "atas": 0.8227
+   },
+   "kalimat_tanpa_sitasi_tampil": 0
+  },
+  "v2": {
+   "n": 117,
+   "mode": {
+    "tolak_gerbang": 29,
+    "tolak_model": 17,
+    "generatif": 71
+   },
+   "benar_v1": {
+    "n": 89,
+    "k": 61,
+    "nilai": 0.6854,
+    "bawah": 0.583,
+    "atas": 0.7725
+   },
+   "benar_v2": {
+    "n": 89,
+    "k": 62,
+    "nilai": 0.6966,
+    "bawah": 0.5946,
+    "atas": 0.7824
+   },
+   "dijawab_terjawab": {
+    "n": 89,
+    "k": 69,
+    "nilai": 0.7753,
+    "bawah": 0.6782,
+    "atas": 0.8496
+   },
+   "benar_v2_di_antara_dijawab": {
+    "n": 69,
+    "k": 62,
+    "nilai": 0.8986,
+    "bawah": 0.8051,
+    "atas": 0.95
+   },
+   "kutipan_bawaan_benar_v1": {
+    "n": 89,
+    "k": 48,
+    "nilai": 0.5393,
+    "bawah": 0.4363,
+    "atas": 0.6391
+   },
+   "kutipan_bawaan_benar_v2": {
+    "n": 89,
+    "k": 48,
+    "nilai": 0.5393,
+    "bawah": 0.4363,
+    "atas": 0.6391
+   },
+   "kutipan_bawaan_dijawab_terjawab": {
+    "n": 89,
+    "k": 74,
+    "nilai": 0.8315,
+    "bawah": 0.7404,
+    "atas": 0.8951
+   },
+   "kutipan_bawaan_benar_v2_di_antara_dijawab": {
+    "n": 74,
+    "k": 48,
+    "nilai": 0.6486,
+    "bawah": 0.535,
+    "atas": 0.7476
+   },
+   "tak_terjawab_keliru_v2": {
+    "n": 28,
+    "k": 0,
+    "nilai": 0.0,
+    "bawah": 0.0,
+    "atas": 0.1206
+   },
+   "tak_terjawab_ditolak": {
+    "n": 28,
+    "k": 26,
+    "nilai": 0.9286,
+    "bawah": 0.7735,
+    "atas": 0.9802
+   },
+   "tak_terjawab_koreksi_premis": {
+    "n": 28,
+    "k": 2,
+    "nilai": 0.0714,
+    "bawah": 0.0198,
+    "atas": 0.2265
+   },
+   "tak_terjawab_dijawab_v1": {
+    "n": 28,
+    "k": 2,
+    "nilai": 0.0714,
+    "bawah": 0.0198,
+    "atas": 0.2265
+   },
+   "kutipan_bawaan_tak_terjawab_dijawab": {
+    "n": 28,
+    "k": 10,
+    "nilai": 0.3571,
+    "bawah": 0.2071,
+    "atas": 0.5417
+   },
+   "sitasi_ada_yang_sah": {
+    "n": 69,
+    "k": 66,
+    "nilai": 0.9565,
+    "bawah": 0.8798,
+    "atas": 0.9851
+   },
+   "sitasi_semua_sah": {
+    "n": 69,
+    "k": 61,
+    "nilai": 0.8841,
+    "bawah": 0.7875,
+    "atas": 0.9401
+   },
+   "kalimat_didukung": {
+    "n": 99,
+    "k": 75,
+    "nilai": 0.7576,
+    "bawah": 0.6646,
+    "atas": 0.8313
+   },
+   "kalimat_tanpa_sitasi_tampil": 0
+  }
+ },
+ "perbandingan": {
+  "komponen": {
+   "gerbang": {
+    "pertanyaan": [
+     "h005",
+     "h063",
+     "h093",
+     "h097"
+    ],
+    "terjawab_benar_v1": 0,
+    "terjawab_benar_v2": 2,
+    "terjawab": 2,
+    "tak_terjawab_keliru_v1": 0,
+    "tak_terjawab_keliru_v2": 0,
+    "tak_terjawab": 2,
+    "kalimat_didukung": "2/3",
+    "lolos_aturan": true
+   },
+   "ringkasan_ayat": {
+    "pertanyaan": [
+     "h007",
+     "h009",
+     "h019",
+     "h020",
+     "h025",
+     "h029",
+     "h036",
+     "h039",
+     "h042",
+     "h045",
+     "h049",
+     "h054",
+     "h055",
+     "h060",
+     "h064",
+     "h071",
+     "h073",
+     "h075",
+     "h077",
+     "h081",
+     "h090",
+     "h092",
+     "h095",
+     "h102",
+     "h103",
+     "h104",
+     "h105",
+     "h116",
+     "h119"
+    ],
+    "terjawab_benar_v1": 14,
+    "terjawab_benar_v2": 19,
+    "terjawab": 25,
+    "tak_terjawab_keliru_v1": 0,
+    "tak_terjawab_keliru_v2": 0,
+    "tak_terjawab": 4,
+    "kalimat_didukung": "17/27",
+    "lolos_aturan": false
+   },
+   "kutipan_cadangan": {
+    "pertanyaan": [],
+    "terjawab_benar_v1": 0,
+    "terjawab_benar_v2": 0,
+    "terjawab": 0,
+    "tak_terjawab_keliru_v1": 0,
+    "tak_terjawab_keliru_v2": 0,
+    "tak_terjawab": 0,
+    "kalimat_didukung": "0/0",
+    "lolos_aturan": true
+   }
+  },
+  "hasil_berubah": [
+   {
+    "id": "h036",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "tolak_model",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h045",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "tolak_model",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h054",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "generatif",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h060",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "tolak_model",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h063",
+    "komponen": "gerbang",
+    "v1": {
+     "mode": "tolak_gerbang",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h064",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "generatif",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h093",
+    "komponen": "gerbang",
+    "v1": {
+     "mode": "tolak_gerbang",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h103",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "tolak_model",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    }
+   },
+   {
+    "id": "h116",
+    "komponen": "ringkasan_ayat",
+    "v1": {
+     "mode": "generatif",
+     "benar_v2": true,
+     "tak_terjawab_v2": null
+    },
+    "v2": {
+     "mode": "generatif",
+     "benar_v2": false,
+     "tak_terjawab_v2": null
+    }
+   }
+  ]
+ },
+ "rekaman": {
+  "v1": [
+   {
+    "id": "h001",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h002",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-149"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h003",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-28",
+      "permenaker-37-2016#pasal-28"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h004",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h005",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h006",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-22"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-24",
+      "kepmenaker-187-1999#pasal-24"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h007",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-1"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-1"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h008",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-39"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h009",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-2",
+     "pp-50-2012#pasal-5"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-8"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h010",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h011",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h012",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-12",
+     "permenaker-2-1982#pasal-3"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h013",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-65"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-54",
+      "permenaker-2-1983#pasal-54"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h014",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h015",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-175"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-175",
+      "permenaker-8-2020#pasal-175"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h016",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-171"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-171"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h017",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-73"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-73",
+      "permenaker-37-2016#pasal-73",
+      "permenaker-37-2016#pasal-73"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h018",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-60"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-60"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h019",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-3",
+      "permenaker-13-2025#pasal-3"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h020",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-20"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h021",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-77"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-77"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h022",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-7",
+     "permenaker-11-2023#pasal-8"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-7",
+      "permenaker-11-2023#pasal-7",
+      "permenaker-11-2023#pasal-7"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h023",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-4"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-11",
+      "permenaker-2-1982#pasal-11"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h024",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-42",
+      "permenaker-2-1983#pasal-42"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h025",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-13-2025#pasal-6"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-6"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h026",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-105"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-105"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h027",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h028",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-10"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-10"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h029",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "pp-50-2012#pasal-21"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-21"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h030",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h031",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-82",
+     "permenaker-2-1983#pasal-83"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-83"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h032",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-15-2008#pasal-9"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-17",
+      "permenaker-11-2023#pasal-17"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h033",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-69"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-69"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h034",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-16"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-16",
+      "permenaker-37-2016#pasal-16"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h035",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h036",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-30",
+      "permenaker-26-2014#pasal-30",
+      "permenaker-26-2014#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h037",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-85"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-85",
+      "permenaker-8-2020#pasal-85",
+      "permenaker-8-2020#pasal-85"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h038",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2010#pasal-8"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2010#pasal-8"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h039",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-1",
+      "permenaker-37-2016#pasal-1"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h040",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-148"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-149"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h041",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-3-1998#pasal-4"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-4",
+      "permenaker-3-1998#pasal-4"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h042",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-3",
+      "permenaker-13-2025#pasal-3"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h043",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h044",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h045",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-72"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h046",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-157",
+     "permenaker-8-2020#pasal-166"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-166",
+      "permenaker-8-2020#pasal-166"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": false,
+    "benar_v2": false
+   },
+   {
+    "id": "h047",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h048",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-130"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-130"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h049",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-31"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-31",
+      "permenaker-37-2016#pasal-31"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h050",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h051",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-13-2025#pasal-7"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-7",
+      "permenaker-13-2025#pasal-7"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h052",
+    "terjawab": false,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-15-2008#pasal-10"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-10"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "koreksi_premis"
+   },
+   {
+    "id": "h053",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-83"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h054",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-148",
+     "permenaker-8-2020#pasal-165"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     true,
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-165",
+      "permenaker-8-2020#pasal-165"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h055",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "uu-1-1970#pasal-2"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     true,
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "uu-1-1970#pasal-2"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h056",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h057",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-176"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-176",
+      "permenaker-8-2020#pasal-176",
+      "permenaker-8-2020#pasal-176"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h058",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-4"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h059",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-84"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-84"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h060",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-165",
+      "permenaker-8-2020#pasal-165",
+      "permenaker-8-2020#pasal-165"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h061",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-4"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h062",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h063",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h064",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-81"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-80",
+      "permenaker-37-2016#pasal-80"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h065",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h066",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h067",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h068",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-31"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-31"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h069",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-186"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-2",
+      "permenaker-8-2020#pasal-2"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h070",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h071",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-87"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-86"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h072",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h073",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-26"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-26",
+      "permenaker-26-2014#pasal-26"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h074",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h075",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-36"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-36"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h076",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h077",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-33"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-33"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h078",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-61",
+     "permenaker-8-2020#pasal-93"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-93",
+      "permenaker-8-2020#pasal-93"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h079",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-8"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true,
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-8"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h080",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-5"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-5"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h081",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-3"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-3"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h082",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-3-1998#pasal-1"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-2",
+      "permenaker-3-1998#pasal-2"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h083",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-83",
+     "permenaker-3-1982#pasal-10",
+     "uu-1-1970#pasal-15"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     false,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "uu-1-1970#pasal-15"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h084",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h085",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-11"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-11"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h086",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-61"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-61",
+      "permenaker-2-1983#pasal-61"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h087",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-16"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-16"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h088",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h089",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h090",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-21"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-21",
+      "permenaker-26-2014#pasal-21",
+      "permenaker-26-2014#pasal-21"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h091",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-21"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-21"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h092",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-4-2025#pasal-10"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-10",
+      "permenaker-4-2025#pasal-10"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h093",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h094",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-39"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-39"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h095",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-11",
+     "kepmenaker-187-1999#pasal-16"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     false,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-11"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": false,
+    "benar_v2": false
+   },
+   {
+    "id": "h096",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-4-2025#pasal-13"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-13"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h097",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h098",
+    "terjawab": false,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-22"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-60"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "koreksi_premis"
+   },
+   {
+    "id": "h099",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h100",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h101",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-34",
+     "permenaker-2-1983#pasal-35",
+     "permenaker-2-1983#pasal-78"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-35"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h102",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-16"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h103",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2010#pasal-5"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h104",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-1",
+     "pp-50-2012#pasal-16"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-23"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h105",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-49"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-49"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h106",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-21"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h107",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h108",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-75"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-75"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h109",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h110",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h111",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-8"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-8"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h112",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-3-1982#pasal-10"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1982#pasal-10"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h113",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-45"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-30",
+      "permenaker-2-1983#pasal-30",
+      "permenaker-2-1983#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h114",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h115",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h116",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-4-2025#pasal-15"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-15",
+      "permenaker-4-2025#pasal-15"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h117",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-83",
+     "permenaker-3-1998#pasal-12"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-12"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h118",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h119",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-23"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-14"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": false,
+    "benar_v2": false
+   },
+   {
+    "id": "h120",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-15-2008#pasal-3"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-3",
+      "permenaker-15-2008#pasal-3"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   }
+  ],
+  "v2": [
+   {
+    "id": "h001",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h002",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-149"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h003",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-28",
+      "permenaker-37-2016#pasal-28"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h004",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h005",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h006",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-22"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-24",
+      "kepmenaker-187-1999#pasal-24"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h007",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-1"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-1"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h008",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-39"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h009",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "pp-50-2012#pasal-5"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-8"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h010",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h011",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h012",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-12",
+     "permenaker-2-1982#pasal-3"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h013",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-65"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-54",
+      "permenaker-2-1983#pasal-54"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h014",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h015",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-175"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-175",
+      "permenaker-8-2020#pasal-175"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h016",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-171"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-171"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h017",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-73"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-73",
+      "permenaker-37-2016#pasal-73",
+      "permenaker-37-2016#pasal-73"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h018",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-60"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-60"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h019",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-3",
+      "permenaker-13-2025#pasal-3"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h020",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-20"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h021",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-77"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-77"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h022",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-7",
+     "permenaker-11-2023#pasal-8"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-7",
+      "permenaker-11-2023#pasal-7",
+      "permenaker-11-2023#pasal-7"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h023",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-4"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-11",
+      "permenaker-2-1982#pasal-11"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h024",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-42",
+      "permenaker-2-1983#pasal-42"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h025",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-13-2025#pasal-6"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-6"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h026",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-105"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-105"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h027",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h028",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-10"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-10"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h029",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "pp-50-2012#pasal-21"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-21"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h030",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h031",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-82",
+     "permenaker-2-1983#pasal-83"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-83"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h032",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-15-2008#pasal-9"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-17",
+      "permenaker-11-2023#pasal-17"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h033",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-69"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-69"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h034",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-16"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-16",
+      "permenaker-37-2016#pasal-16"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h035",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h036",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-30"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-30",
+      "permenaker-26-2014#pasal-30",
+      "permenaker-26-2014#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h037",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-85"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-85",
+      "permenaker-8-2020#pasal-85",
+      "permenaker-8-2020#pasal-85"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h038",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2010#pasal-8"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2010#pasal-8"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h039",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-1",
+      "permenaker-37-2016#pasal-1"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h040",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-148"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-149"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h041",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-3-1998#pasal-4"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-4",
+      "permenaker-3-1998#pasal-4"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h042",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-3",
+      "permenaker-13-2025#pasal-3"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h043",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h044",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h045",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-72"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-72"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h046",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-157",
+     "permenaker-8-2020#pasal-166"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-166",
+      "permenaker-8-2020#pasal-166"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": false,
+    "benar_v2": false
+   },
+   {
+    "id": "h047",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h048",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-130"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-130"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h049",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-31"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-31",
+      "permenaker-37-2016#pasal-31"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h050",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h051",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-13-2025#pasal-7"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-13-2025#pasal-7",
+      "permenaker-13-2025#pasal-7"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h052",
+    "terjawab": false,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-15-2008#pasal-10"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-10"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "koreksi_premis"
+   },
+   {
+    "id": "h053",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-83"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h054",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-165"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-165",
+      "permenaker-8-2020#pasal-165"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h055",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "uu-1-1970#pasal-2"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h056",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h057",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-176"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-176",
+      "permenaker-8-2020#pasal-176",
+      "permenaker-8-2020#pasal-176"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h058",
+    "terjawab": true,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-4"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h059",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-84"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-84"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h060",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-165"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-165",
+      "permenaker-8-2020#pasal-165",
+      "permenaker-8-2020#pasal-165"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h061",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-4"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h062",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h063",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-58"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h064",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-81"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-80",
+      "permenaker-37-2016#pasal-80"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h065",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h066",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h067",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h068",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1982#pasal-31"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1982#pasal-31"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h069",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-186"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-2",
+      "permenaker-8-2020#pasal-2"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h070",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h071",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-87"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-86"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h072",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h073",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-26"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-26",
+      "permenaker-26-2014#pasal-26"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h074",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h075",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-36"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-36"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h076",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h077",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-33"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-33"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h078",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-61",
+     "permenaker-8-2020#pasal-93"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-93",
+      "permenaker-8-2020#pasal-93"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h079",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-8"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true,
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-8"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h080",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-5"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-5"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h081",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-3"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-3"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h082",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-3-1998#pasal-1"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-2",
+      "permenaker-3-1998#pasal-2"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h083",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-83",
+     "permenaker-3-1982#pasal-10",
+     "uu-1-1970#pasal-15"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     false,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "uu-1-1970#pasal-15"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h084",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h085",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-11"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-11"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h086",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-61"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-61",
+      "permenaker-2-1983#pasal-61"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h087",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-16"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-16"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h088",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h089",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h090",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-21"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-21",
+      "permenaker-26-2014#pasal-21",
+      "permenaker-26-2014#pasal-21"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h091",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-21"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-21"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h092",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-4-2025#pasal-10"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-10",
+      "permenaker-4-2025#pasal-10"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h093",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-13-2025#pasal-11"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h094",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-39"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-39"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h095",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "kepmenaker-187-1999#pasal-11",
+     "kepmenaker-187-1999#pasal-16"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false,
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-11"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": false,
+    "benar_v2": false
+   },
+   {
+    "id": "h096",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-4-2025#pasal-13"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-13"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h097",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h098",
+    "terjawab": false,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-22"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-60"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "koreksi_premis"
+   },
+   {
+    "id": "h099",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h100",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h101",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-34",
+     "permenaker-2-1983#pasal-35",
+     "permenaker-2-1983#pasal-78"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-35"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h102",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "kepmenaker-187-1999#pasal-16"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h103",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2010#pasal-4"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2010#pasal-5"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h104",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-1",
+     "pp-50-2012#pasal-16"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-26-2014#pasal-23"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h105",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-8-2020#pasal-49"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-8-2020#pasal-49"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h106",
+    "terjawab": false,
+    "mode": "tolak_model",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": true,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-21"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h107",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h108",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-37-2016#pasal-75"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-37-2016#pasal-75"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h109",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h110",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h111",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-11-2023#pasal-8"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-11-2023#pasal-8"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h112",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-3-1982#pasal-10"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1982#pasal-10"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h113",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-45"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-2-1983#pasal-30",
+      "permenaker-2-1983#pasal-30",
+      "permenaker-2-1983#pasal-30"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h114",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h115",
+    "terjawab": true,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": null,
+    "sitasi_ada_yang_sah": null,
+    "benar_v2": false
+   },
+   {
+    "id": "h116",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-4-2025#pasal-15"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     false
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-4-2025#pasal-15",
+      "permenaker-4-2025#pasal-15"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": false,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": false
+   },
+   {
+    "id": "h117",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-2-1983#pasal-83",
+     "permenaker-3-1998#pasal-12"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     false,
+     true,
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-3-1998#pasal-12"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   },
+   {
+    "id": "h118",
+    "terjawab": false,
+    "mode": "tolak_gerbang",
+    "menolak": true,
+    "sitasi": [],
+    "salinan_v1": false,
+    "didukung": [],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": true,
+     "sitasi": [],
+     "benar": false,
+     "benar_v2": false
+    },
+    "tak_terjawab_v2": "menolak"
+   },
+   {
+    "id": "h119",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-26-2014#pasal-23"
+    ],
+    "salinan_v1": false,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "pp-50-2012#pasal-14"
+     ],
+     "benar": false,
+     "benar_v2": false
+    },
+    "benar": false,
+    "sitasi_semua_sah": false,
+    "sitasi_ada_yang_sah": false,
+    "benar_v2": false
+   },
+   {
+    "id": "h120",
+    "terjawab": true,
+    "mode": "generatif",
+    "menolak": false,
+    "sitasi": [
+     "permenaker-15-2008#pasal-3"
+    ],
+    "salinan_v1": true,
+    "didukung": [
+     true
+    ],
+    "kalimat_tanpa_sitasi_tampil": 0,
+    "kutipan_bawaan": {
+     "menolak": false,
+     "sitasi": [
+      "permenaker-15-2008#pasal-3",
+      "permenaker-15-2008#pasal-3"
+     ],
+     "benar": true,
+     "benar_v2": true
+    },
+    "benar": true,
+    "sitasi_semua_sah": true,
+    "sitasi_ada_yang_sah": true,
+    "benar_v2": true
+   }
+  ]
+ }
+}
