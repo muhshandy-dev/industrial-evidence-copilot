@@ -142,7 +142,7 @@ Pada set tersegel, reranker mMiniLM tetap tinggi: peringkat 1 0,886, MRR@10 0,90
 | Paritas reranker Node dan Chromium terhadap PyTorch | selisih maksimum 0,00001 (run 40184983713, 40187699580) |
 | Keamanan `/api/jawab` di Preview sungguhan (tanpa Origin 403, pilihan model tanpa token 403, token palsu 401) | lolos (run 40187699580, 40188600616) |
 
-Pemeriksaan keamanan akhir (`docs/keamanan.md`): `npm audit` 0 kerentanan, `pip-audit` tanpa kerentanan yang diketahui, tidak ada secret di repositori, CSP `default-src 'none'` dan header keamanan lain, endpoint dibatasi, kode pihak ketiga dipatok dengan sidik SHA-256.
+Pemeriksaan keamanan akhir (`docs/keamanan.md`): `npm audit` 0 kerentanan, `pip-audit` tanpa kerentanan yang diketahui, tidak ada secret di repositori, CSP `default-src 'none'` dan header keamanan lain (`'wasm-unsafe-eval'` hanya untuk WebAssembly model di peramban), endpoint dibatasi, kode pihak ketiga dipatok dengan sidik SHA-256.
 
 ## 7. Bukti deploy
 

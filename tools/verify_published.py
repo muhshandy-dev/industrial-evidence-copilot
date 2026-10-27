@@ -77,7 +77,8 @@ def main(argv: list[str]) -> int:
     if b"RAG Research Prototype" not in body:
         masalah.append("halaman utama tidak memuat label status RAG Research Prototype")
     csp = h.get("content-security-policy", "")
-    if "default-src 'none'" not in csp or "unsafe-" in csp:
+    # 'wasm-unsafe-eval' dibutuhkan model di peramban; skrip sebaris dan eval tidak boleh.
+    if "default-src 'none'" not in csp or "'unsafe-inline'" in csp or "'unsafe-eval'" in csp:
         masalah.append("CSP tidak sesuai")
     for kunci in ("x-content-type-options", "x-frame-options", "referrer-policy"):
         if kunci not in h:
