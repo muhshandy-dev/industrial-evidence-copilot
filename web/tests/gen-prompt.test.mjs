@@ -46,3 +46,37 @@ test("prompt bertahan membungkus data dan menetralkan pembatas palsu", () => {
   const [sysPolos] = susunPesan("x", pasal, "polos");
   assert.doesNotMatch(sysPolos.content, /bukan perintah/);
 });
+
+test("alur v2: pasal pendek tidak berubah, pasal panjang diringkas menjadi ayat relevan berurutan", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { ringkasPasal, pasalUntukPrompt, idfDariIndeks, MAX_KARAKTER_PASAL, PENANDA_LONCAT } = await import("../public/js/gen/prompt.js");
+  const { splitUnits } = await import("../public/js/answer.js");
+  const korpus = JSON.parse(readFileSync(new URL("../public/data/korpus.json", import.meta.url)));
+  const indeks = JSON.parse(readFileSync(new URL("../public/data/indeks.json", import.meta.url)));
+  const idf = idfDariIndeks(indeks);
+  const pendek = korpus.chunk.findIndex((c) => c.teks.trim().length < 600);
+  const opsi = { tanya: "kewajiban pemeriksaan", idf, useStem: indeks.pakai_stem };
+  assert.deepEqual(pasalUntukPrompt(korpus, [pendek], opsi), pasalUntukPrompt(korpus, [pendek]));
+  const iPanjang = korpus.chunk.findIndex((c) => c.teks.trim().length > MAX_KARAKTER_PASAL && splitUnits(c.teks).length > 4);
+  const c = korpus.chunk[iPanjang];
+  const unit = splitUnits(c.teks);
+  // Pertanyaan dari kata-kata ayat terakhir: ayat itu harus ikut walau berada di akhir pasal.
+  const akhir = unit.at(-1);
+  const r = ringkasPasal(c.teks, c.teks_cari || c.teks, akhir.slice(0, 120), idf, indeks.pakai_stem);
+  assert.ok(r.length <= MAX_KARAKTER_PASAL, `panjang ${r.length}`);
+  assert.ok(r.includes(akhir.slice(0, 60)));
+  assert.ok(r.includes(PENANDA_LONCAT));
+  const posisi = r.split("\n").filter((x) => x !== PENANDA_LONCAT).map((x) => unit.indexOf(x));
+  assert.ok(posisi.every((p, k) => p >= 0 && (k === 0 || p > posisi[k - 1])), "urutan ayat asli");
+  // Tanpa istilah yang cocok: sama dengan potongan awal v1.
+  assert.equal(ringkasPasal(c.teks, c.teks_cari || c.teks, "zzzz qqqq", idf, true), pasalUntukPrompt(korpus, [iPanjang])[0].teks);
+});
+
+test("gerbang alur v2: BM25 atau reranker; alur v1 hanya BM25", async () => {
+  const { lolosGerbang, AMBANG_RERANKER } = await import("../public/js/gen/rerank.js");
+  assert.equal(lolosGerbang(15, 14, -5), true);
+  assert.equal(lolosGerbang(10, 14, AMBANG_RERANKER), true);
+  assert.equal(lolosGerbang(10, 14, AMBANG_RERANKER - 0.01), false);
+  assert.equal(lolosGerbang(10, 14, 5, "v1"), false);
+  assert.equal(lolosGerbang(10, 14, null), false);
+});

@@ -29,6 +29,7 @@ from pathlib import Path
 import numpy as np
 
 from .answer import split_units
+from .dense import text_key
 from .evalset import key_hit, relevant
 
 NLI_MODEL = (
@@ -53,6 +54,10 @@ DTYPE_CPU = "q4"  # aktivasi f32: q4f16 kehabisan memori WebAssembly pada prompt
 # runner lain, selisih logitnya sampai 0,93. Situs tidak dapat menjamin urutan yang sama dengan
 # evaluasi, jadi fp32 tetap dipakai. Skornya disimpan di eval/cache/rerank/mminilm_q8 sebagai bukti.
 SISTEM_GENERATIF = "bm25_konteks+mminilm"
+# Alur v2 (docs/alur-v2.md): gerbang lolos bila skor BM25 >= ambang BM25 ATAU skor reranker
+# pasal peringkat 1 >= AMBANG_RERANKER (sama dengan web/public/js/gen/rerank.js; diuji). Ambang
+# dipilih di dev saja: skor seimbang kutipan tertinggi, ambang terkecil bila seri (akar_masalah.py).
+AMBANG_RERANKER = 1.0
 
 
 # Model server Cloudflare Workers AI (MODEL_SERVER_KANDIDAT di prompt.js), putaran 3.
@@ -85,12 +90,14 @@ MODEL_KANDIDAT = {
 }
 
 
-def konfigurasi(varian: str, model: str) -> str:
+def konfigurasi(varian: str, model: str, alur: str | None = None) -> str:
+    """Nama folder keluaran. Keluaran alur v2 diberi awalan "v2-"; tanpa alur berarti v1."""
+    awal = "v2-" if alur == "v2" else ""
     if model in MODEL_KANDIDAT:
-        return f"{varian}-{MODEL_KANDIDAT[model]}"
+        return f"{awal}{varian}-{MODEL_KANDIDAT[model]}"
     if model in MODEL_SERVER:
-        return f"{varian}-{MODEL_SERVER[model]}"
-    return {MODEL_UTAMA: varian, MODEL_CPU: f"{varian}-cpu"}.get(model, f"{varian}-lain")
+        return f"{awal}{varian}-{MODEL_SERVER[model]}"
+    return awal + {MODEL_UTAMA: varian, MODEL_CPU: f"{varian}-cpu"}.get(model, f"{varian}-lain")
 
 
 def gen_dir(root: Path, varian: str) -> Path:
@@ -122,22 +129,42 @@ def load_set(root: Path, name: str) -> list[dict]:
     return read_questions(path)
 
 
-def gen_input(corpus, system, rows: list[dict], set_name: str, threshold: float) -> list[dict]:
+def skor_reranker_top1(system, query: str, ranked: list[int]) -> float | None:
+    """Skor reranker pasal peringkat 1 setelah penilaian ulang (None bila belum dihitung)."""
+    ids = system.rerank.ids
+    return system.rerank.table.get(text_key(query), {}).get(ids[ranked[0]]) if ranked else None
+
+
+def lolos_gerbang(skor_bm25: float, threshold: float, skor_rr: float | None, alur: str) -> bool:
+    """Sama dengan lolosGerbang di web/public/js/gen/rerank.js."""
+    if skor_bm25 >= threshold:
+        return True
+    return alur == "v2" and skor_rr is not None and skor_rr >= AMBANG_RERANKER
+
+
+def gen_input(
+    corpus, system, rows: list[dict], set_name: str, threshold: float, alur: str = "v1"
+) -> list[dict]:
     out = []
     for r in rows:
         ranked = system.search(r["tanya"], 10)
-        # Gerbang: skor BM25 tertinggi, sama dengan situs, apa pun urutan setelah reranker.
+        # Gerbang v1: skor BM25 tertinggi, apa pun urutan setelah reranker. v2: atau skor reranker.
         top = float(system.retriever.bm25.scores(system.retriever.query_tokens(r["tanya"])).max())
-        out.append(
-            {
-                "id": r["id"],
-                "set": set_name,
-                "tanya": r["tanya"],
-                "peringkat": [int(i) for i in ranked],
-                "skor_gerbang": round(top, 4),
-                "lolos_gerbang": top >= threshold,
-            }
-        )
+        rec = {
+            "id": r["id"],
+            "set": set_name,
+            "tanya": r["tanya"],
+            "peringkat": [int(i) for i in ranked],
+            "skor_gerbang": round(top, 4),
+        }
+        if alur == "v2":
+            rr = skor_reranker_top1(system, r["tanya"], [int(i) for i in ranked])
+            rec["alur"] = "v2"
+            rec["skor_reranker"] = rr
+            rec["lolos_gerbang"] = lolos_gerbang(top, threshold, rr, "v2")
+        else:
+            rec["lolos_gerbang"] = top >= threshold
+        out.append(rec)
     return out
 
 

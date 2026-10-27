@@ -1,11 +1,11 @@
-// Uji asap mode generatif utama di deploy Preview sungguhan (Pages Function + binding Workers AI):
+// Uji asap mode generatif server (eksperimental, alur v2) di deploy Preview sungguhan (Pages Function + binding Workers AI):
 // - perlindungan fungsi: tanpa Origin ditolak, pilihan model tanpa token OIDC ditolak;
 // - alur peramban: pilih mode server, muat reranker, satu pertanyaan dijawab model server dengan
 //   sitasi yang sah, tanpa pelanggaran CSP.
 // Memakai satu atau dua panggilan dari kuota gratis harian. Dilewati selama MODEL_SERVER null.
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
-import { MODEL_SERVER } from "../public/js/gen/prompt.js";
+import { ALUR, MODEL_SERVER } from "../public/js/gen/prompt.js";
 
 const BASE = (process.env.PREVIEW_URL ?? "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev").replace(/\/$/, "");
 if (!MODEL_SERVER) { console.log("MODEL_SERVER belum dipilih; uji Preview dilewati"); process.exit(0); }
@@ -13,7 +13,7 @@ if (!MODEL_SERVER) { console.log("MODEL_SERVER belum dipilih; uji Preview dilewa
 // Tunggu deploy Preview memakai model yang sama dengan kode ini (paling lama 10 menit).
 for (let i = 0; ; i++) {
   const j = await fetch(`${BASE}/api/jawab`).then((r) => r.json()).catch(() => ({}));
-  if (j.model === MODEL_SERVER.id && j.binding) break;
+  if (j.model === MODEL_SERVER.id && j.binding && j.alur === ALUR) break;
   if (i >= 20) throw new Error(`Preview belum memakai ${MODEL_SERVER.id}: ${JSON.stringify(j)}`);
   await new Promise((r) => setTimeout(r, 30000));
 }
@@ -62,6 +62,9 @@ try {
   assert.ok(await page.locator(".gen-kalimat .gen-sitasi").count() >= 1, "kalimat tanpa sitasi");
   // Jejak pencarian ditampilkan sebelum jawaban, jadi periksa teks kalimat model, bukan potongan awal.
   assert.match(kalimat, /10 m/);
+  // Alur v2: skor reranker ikut menentukan gerbang dan label menyebut mode eksperimental.
+  assert.ok(await page.getAttribute(".jawaban[data-selesai=ya]", "data-skor-reranker"), "skor reranker tidak tercatat");
+  assert.match(await page.textContent(".jawaban-kepala"), /eksperimental/);
   assert.deepEqual(galat.filter((g) => /Content Security Policy|Refused to/.test(g)), [], "pelanggaran CSP");
   console.log("uji Preview mode server lolos");
 } finally {

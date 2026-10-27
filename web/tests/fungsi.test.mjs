@@ -9,13 +9,14 @@ import { fileURLToPath } from "node:url";
 
 const akar = fileURLToPath(new URL("../..", import.meta.url));
 const korpus = readFileSync(join(akar, "web/public/data/korpus.json"), "utf8");
+const indeksTeks = readFileSync(join(akar, "web/public/data/indeks.json"), "utf8");
 
 // Salin fungsi dan prompt.js ke folder sementara dengan MODEL_SERVER aktif.
 async function muatFungsi(aktif) {
   const d = mkdtempSync(join(tmpdir(), "fungsi-"));
   cpSync(join(akar, "functions"), join(d, "functions"), { recursive: true });
   cpSync(join(akar, "server"), join(d, "server"), { recursive: true });
-  cpSync(join(akar, "web/public/js/gen"), join(d, "web/public/js/gen"), { recursive: true });
+  cpSync(join(akar, "web/public/js"), join(d, "web/public/js"), { recursive: true });
   const p = join(d, "web/public/js/gen/prompt.js");
   const isi = readFileSync(p, "utf8").replace(/export const MODEL_SERVER = [^;]+;/,
     aktif ? 'export const MODEL_SERVER = MODEL_SERVER_KANDIDAT["mistral-small-3.1"];' : "export const MODEL_SERVER = null;");
@@ -26,7 +27,7 @@ async function muatFungsi(aktif) {
 const asal = "https://contoh.pages.dev";
 const ids = JSON.parse(korpus).chunk.slice(0, 3).map((c) => c.id);
 function env(ai) {
-  return { ASSETS: { fetch: async () => new Response(korpus) }, AI: ai };
+  return { ASSETS: { fetch: async (u) => new Response(String(u).endsWith("/data/indeks.json") ? indeksTeks : korpus) }, AI: ai };
 }
 // Setiap permintaan uji dari IP berbeda, kecuali uji batas per menit yang menentukan IP sendiri.
 let nomorIp = 0;
@@ -37,7 +38,7 @@ const minta = (badan, headers = {}) => new Request(`${asal}/api/jawab`, {
 
 test("nonaktif selama MODEL_SERVER null", async () => {
   const f = await muatFungsi(false);
-  assert.deepEqual(await f.onRequestGet({ env: {} }).json(), { aktif: false, model: null, binding: false });
+  assert.deepEqual(await f.onRequestGet({ env: {} }).json(), { aktif: false, model: null, binding: false, alur: "v2" });
   const r = await f.onRequestPost({ request: minta({ tanya: "apa itu APD?", pasal: ids }), env: env({}) });
   assert.equal(r.status, 503);
 });
@@ -171,4 +172,22 @@ test("nama tampilan model tidak mengubah sidik prompt", async () => {
   const pesan = [{ role: "user", content: "uji" }];
   assert.equal(await promptSha(pesan, m), await promptSha(pesan, { ...m, nama: "lain" }));
   assert.notEqual(await promptSha(pesan, m), await promptSha(pesan, { ...m, id: "@cf/lain" }));
+});
+
+test("alur v2: pasal panjang diringkas menurut pertanyaan; v1 hanya lewat evaluasi", async () => {
+  const f = await muatFungsi(true);
+  const { MAX_KARAKTER_PASAL, PENANDA_LONCAT } = await import("../public/js/gen/prompt.js");
+  const k = JSON.parse(korpus);
+  const panjang = k.chunk.find((c) => c.teks.trim().length > MAX_KARAKTER_PASAL);
+  const panggilan = [];
+  const ai = { run: async (model, badan) => { panggilan.push(badan); return { response: "Jawaban [1]." }; } };
+  const r = await f.onRequestPost({ request: minta({ tanya: "apa saja syarat yang diatur?", pasal: [panjang.id] }), env: env(ai) });
+  assert.equal(r.status, 200);
+  assert.equal((await r.json()).alur, "v2");
+  const isi = panggilan[0].messages.at(-1).content;
+  assert.ok(isi.length < panjang.teks.length + 500);
+  assert.ok(isi.includes(PENANDA_LONCAT) || isi.includes(" …"));
+  // Pengunjung tidak boleh memilih alur.
+  const v1 = await f.onRequestPost({ request: minta({ tanya: "apa saja syarat yang diatur?", pasal: [panjang.id], alur: "v1" }), env: env(ai) });
+  assert.equal(v1.status, 403);
 });

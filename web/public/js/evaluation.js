@@ -71,10 +71,10 @@ const desimal = (x) => String(x).replace(".", ",");
 const ringkasMode = (x) => Object.entries(x.mode).map(([k, v]) => `${NAMA_MODE[k] ?? k} ${v}`).join(", ");
 const namaQwen = (g, konfig, cadangan) => (g.model_per_konfigurasi?.[konfig]?.model ?? cadangan).split("/").at(-1);
 
-// Kolom tabel generatif: mode utama (server) bila hasil ujinya ada, lalu model lokal opsional.
+// Kolom tabel generatif: mode server (eksperimental) bila hasil ujinya ada, lalu model lokal opsional.
 function kolomGeneratif(g, set) {
   const kolom = [];
-  if (KONFIG_SERVER && g[KONFIG_SERVER]?.[set]) kolom.push([`${MODEL_SERVER.nama} (utama, server)`, g[KONFIG_SERVER][set], KONFIG_SERVER]);
+  if (KONFIG_SERVER && g[KONFIG_SERVER]?.[set]) kolom.push([`${MODEL_SERVER.nama} (eksperimental, server)`, g[KONFIG_SERVER][set], KONFIG_SERVER]);
   if (g.bertahan?.[set]) kolom.push([`${namaQwen(g, "bertahan", "Qwen GPU")} (opsional, GPU)`, g.bertahan[set], "bertahan"]);
   if (g["bertahan-cpu"]?.[set]) kolom.push([`${namaQwen(g, "bertahan-cpu", "Qwen CPU")} (opsional, CPU)`, g["bertahan-cpu"][set], "bertahan-cpu"]);
   return kolom;
@@ -109,7 +109,7 @@ function bagianGeneratif(ev) {
       h("p", {}, "Hasil evaluasi mode generatif belum tersedia di versi ini. Angka di atas hanya untuk mode kutipan langsung."));
   }
   const [labelUtama, utama, konfigUtama] = kolom[0];
-  const namaUtama = labelUtama.replace(/ \((utama|opsional)[^)]*\)$/, "");
+  const namaUtama = labelUtama.replace(/ \((eksperimental|utama|opsional)[^)]*\)$/, "");
   const server = konfigUtama === KONFIG_SERVER;
   const nli = g.penilai_nli;
   const waktu = utama.detik_per_jawaban_cpu;
@@ -138,7 +138,7 @@ function bagianGeneratif(ev) {
       h("summary", {}, `Lihat keluaran mentah ${namaUtama} untuk ${inj.per_butir?.length ?? 0} pertanyaan`),
       h("ul", {}, (inj.per_butir ?? []).map((b) => h("li", {}, h("strong", {}, `${b.id}: ${NAMA_MODE[b.mode] ?? b.mode}`), h("pre", { class: "gen-mentah" }, b.mentah)))))) : null;
   const caraJalan = server
-    ? `Mode generatif utama dievaluasi lewat jalur yang sama dengan situs: gerbang skor yang sama, BM25 dengan reranker mMiniLM, ${K_PASAL} pasal teratas, prompt dari kode situs, lalu pemeriksaan sitasi yang sama. Keluaran ${namaUtama} diambil dari fungsi /api/jawab di deploy Preview (Workers AI, suhu 0) oleh workflow GitHub Actions yang membuktikan identitasnya dengan token OIDC, dan setiap keluaran di-commit sehingga angka ini dapat dihitung ulang. Workers AI tidak menyediakan patokan revisi model, dan suhu 0 tidak menjamin keluaran yang persis sama bila dijalankan ulang.`
+    ? `Mode generatif server dievaluasi lewat jalur yang sama dengan situs: gerbang skor yang sama, BM25 dengan reranker mMiniLM, ${K_PASAL} pasal teratas, prompt dari kode situs, lalu pemeriksaan sitasi yang sama. Keluaran ${namaUtama} diambil dari fungsi /api/jawab di deploy Preview (Workers AI, suhu 0) oleh workflow GitHub Actions yang membuktikan identitasnya dengan token OIDC, dan setiap keluaran di-commit sehingga angka ini dapat dihitung ulang. Workers AI tidak menyediakan patokan revisi model, dan suhu 0 tidak menjamin keluaran yang persis sama bila dijalankan ulang.`
     : `Mode generatif dievaluasi dengan alur yang sama dengan situs: gerbang skor yang sama, ${g.model.model.split("/")[1]} dengan bobot ${g.model.dtype} pada revisi yang dipatok, prompt dari kode situs, dekode serakah, lalu pemeriksaan sitasi yang sama. Model dijalankan offline di GitHub Actions dengan pustaka yang sama dengan peramban, dan keluarannya di-commit sehingga angka ini dapat dihitung ulang.`;
   const catatanWaktu = waktu
     ? (server ? ` Satu jawaban server butuh median ${desimal(waktu.median)} detik (persentil 90: ${desimal(waktu.p90)} detik), diukur dari runner GitHub Actions.` : ` Di CPU runner, satu jawaban butuh median ${desimal(waktu.median)} detik.`)
@@ -159,7 +159,7 @@ function bagianTersegel(ev) {
   if (!s) return null;
   const kolom = [];
   for (const [konfig, x] of Object.entries(s.generatif)) {
-    const nm = konfig === KONFIG_SERVER ? `${MODEL_SERVER.nama} (utama, server)`
+    const nm = konfig === KONFIG_SERVER ? `${MODEL_SERVER.nama} (eksperimental, server)`
       : konfig === "bertahan" ? `${(x.model.model ?? "").split("/").at(-1)} (opsional, GPU)`
       : konfig === "bertahan-cpu" ? `${(x.model.model ?? "").split("/").at(-1)} (opsional, CPU)` : konfig;
     kolom.push([nm, x, konfig]);
@@ -211,8 +211,9 @@ export function mountEvaluation(main, { evaluasi: ev }) {
     h("h2", { id: "e-ringkas" }, "Ringkasan jujur"),
     h("div", { class: "kotak-jujur" },
       h("p", {}, `Mode kutipan langsung: pasal yang tepat muncul di peringkat 1 pada ${pct(m["hit@1"].nilai)} pertanyaan uji dan di lima teratas pada ${pct(m["hit@5"].nilai)}. Namun dari ${salah.n} jawaban yang diberikan, ${salah.k} (${pct(salahCi.nilai)}) mengutip pasal yang salah. Selalu periksa pasal yang dikutip.`),
-      genUtama ? h("p", {}, `Mode generatif utama (${MODEL_SERVER.nama}) menjawab benar ${genUtama.jawaban_benar.k} dari ${genUtama.jawaban_benar.n} pertanyaan uji yang ada jawabannya (kutipan langsung: ${t.jawaban_benar.k}), ${pct(genUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip menurut penilai NLI, dan ${genUtama.dijawab_padahal_tak_terjawab.k} dari ${genUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Kalimatnya ditulis model, jadi tetap bisa keliru walau bersitasi.`) : null,
-      segelUtama ? h("p", {}, `Pada set uji tersegel (${segel.set.pertanyaan} pertanyaan dari penulis terpisah, dijalankan sekali), angkanya lebih rendah: mode generatif utama menjawab benar ${segelUtama.jawaban_benar.k} dari ${segelUtama.jawaban_benar.n} (${pct(segelUtama.jawaban_benar.nilai)}; kutipan langsung: ${segel.ekstraktif.jawaban_benar.k}), ${pct(segelUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip, dan ${segelUtama.dijawab_padahal_tak_terjawab.k} dari ${segelUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Angka tersegel inilah perkiraan yang lebih dapat dipercaya.`) : null,
+      genUtama ? h("p", {}, `Mode generatif server (${MODEL_SERVER.nama}) menjawab benar ${genUtama.jawaban_benar.k} dari ${genUtama.jawaban_benar.n} pertanyaan uji yang ada jawabannya (kutipan langsung: ${t.jawaban_benar.k}), ${pct(genUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip menurut penilai NLI, dan ${genUtama.dijawab_padahal_tak_terjawab.k} dari ${genUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Kalimatnya ditulis model, jadi tetap bisa keliru walau bersitasi.`) : null,
+      segelUtama ? h("p", {}, `Pada set uji tersegel (${segel.set.pertanyaan} pertanyaan dari penulis terpisah, dijalankan sekali), angkanya lebih rendah: mode generatif server menjawab benar ${segelUtama.jawaban_benar.k} dari ${segelUtama.jawaban_benar.n} (${pct(segelUtama.jawaban_benar.nilai)}; kutipan langsung: ${segel.ekstraktif.jawaban_benar.k}), ${pct(segelUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip, dan ${segelUtama.dijawab_padahal_tak_terjawab.k} dari ${segelUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Angka tersegel inilah perkiraan yang lebih dapat dipercaya.`) : null,
+      genUtama ? h("p", {}, "Semua angka generatif di halaman ini diukur pada alur v1. Sejak 27 Oktober 2026 situs memakai alur v2: model dipanggil bila skor BM25 atau skor reranker mencapai ambangnya, pasal panjang diringkas menjadi ayat yang paling relevan, dan kutipan cadangan memakai urutan reranker. Alur v2 dipilih di data dev dan belum diuji pada set holdout baru, jadi mode generatif diberi label eksperimental dan kutipan langsung tetap mode utama.") : null,
       h("p", {}, `Angka data uji optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
 
   const hasil = h("section", { "aria-labelledby": "e-hasil" },

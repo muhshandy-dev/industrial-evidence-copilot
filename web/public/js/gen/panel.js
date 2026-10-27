@@ -1,7 +1,7 @@
 // Pilihan mode jawaban di ruang kerja:
 // - Kutipan langsung: bawaan, tanpa unduhan, juga cadangan bila mode generatif gagal.
-// - Generatif lewat Cloudflare Workers AI (mode utama bila MODEL_SERVER dipilih): peramban hanya
-//   memuat reranker; model bahasa berjalan di server.
+// - Generatif lewat Cloudflare Workers AI (eksperimental sampai lolos holdout v2, lihat
+//   docs/penilaian-v2.md): peramban hanya memuat reranker; model bahasa berjalan di server.
 // - Generatif di perangkat (opsional): model Qwen kecil berjalan di peramban.
 // Unduhan hanya terjadi setelah pengguna menekan tombol muat.
 import { h } from "../dom.js";
@@ -28,9 +28,9 @@ export function createModePanel() {
     h("legend", { class: "subjudul" }, "Mode jawaban"),
     pilih("kutipan", "Kutipan langsung", "Kalimat disalin persis dari pasal. Cepat, tanpa unduhan model."),
     serverTersedia()
-      ? pilih("server", "Generatif dengan model server (utama)", `Model bahasa ${MODEL_SERVER.nama} di Cloudflare Workers AI menulis jawaban singkat dengan sitasi [n] ke pasal. Peramban hanya mengunduh reranker untuk mengurutkan pasal.`)
+      ? pilih("server", "Generatif dengan model server (eksperimental)", `Model bahasa ${MODEL_SERVER.nama} di Cloudflare Workers AI menulis jawaban singkat dengan sitasi [n] ke pasal. Peramban hanya mengunduh reranker untuk mengurutkan pasal. Mode ini masih diuji; kutipan langsung tetap mode utama.`)
       : null,
-    pilih("lokal", serverTersedia() ? "Generatif di perangkat Anda (opsional)" : "Generatif di perangkat Anda",
+    pilih("lokal", "Generatif di perangkat Anda (eksperimental)",
       `Model kecil ${nama(MODEL)} di GPU (WebGPU), atau ${nama(MODEL_CPU)} di CPU, berjalan di peramban Anda. Unduhan besar dan hasilnya lebih lemah${serverTersedia() ? " daripada model server" : ""}.`),
     ...tombol, kemajuan, status);
 

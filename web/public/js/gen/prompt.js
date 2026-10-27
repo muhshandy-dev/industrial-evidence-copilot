@@ -1,6 +1,8 @@
 // Tahap generatif: susunan prompt, pembacaan sitasi [n], dan pemeriksaan pascagenerasi.
 // Modul ini dipakai apa adanya oleh situs (peramban) dan oleh evaluasi offline
 // (web/scripts/generate.mjs di GitHub Actions), jadi prompt yang diuji sama dengan yang dipakai.
+import { coverage, splitUnits } from "../answer.js";
+import { tokenize } from "../text.js";
 
 // Model utama untuk WebGPU. Bobot 4-bit dengan aktivasi f16, sama di peramban dan evaluasi.
 export const MODEL = {
@@ -93,13 +95,70 @@ function potong(teks) {
   return t.length <= MAX_KARAKTER_PASAL ? t : `${t.slice(0, MAX_KARAKTER_PASAL).trimEnd()} …`;
 }
 
+// Alur jawaban generatif. v1: sistem pada set tersegel lama (pasal panjang dipotong dari awal,
+// gerbang skor BM25). v2: pasal panjang diringkas menjadi ayat yang paling relevan, dan gerbang
+// menerima skor BM25 ATAU skor reranker (AMBANG_RERANKER di rerank.js). Dipilih di dev saja
+// (docs/alur-v2.md). Situs memakai ALUR; evaluasi dapat meminta v1 sebagai pembanding.
+export const ALUR = "v2";
+export const PENANDA_LONCAT = "[…]";
+
+// Alur v2: pasal yang lebih panjang dari MAX_KARAKTER_PASAL diringkas menjadi ayat atau butir yang
+// paling relevan dengan pertanyaan, urutan asli dipertahankan, dan bagian yang dilewati ditandai
+// PENANDA_LONCAT. Relevansi = cakupan istilah pertanyaan berbobot idf, fungsi yang sama dengan
+// kutipan langsung. Urutan pilih: ayat berskor tertinggi (seri: yang lebih awal), lalu ayat tepat
+// sebelum ayat terpilih (sering memuat subjek "sebagaimana dimaksud pada ayat (1)"), lalu ayat
+// pertama. Tanpa ayat yang relevan, kembali ke potongan awal seperti v1.
+export function ringkasPasal(tampil, cocok, tanya, idf, useStem = true) {
+  const t = tampil.trim();
+  if (t.length <= MAX_KARAKTER_PASAL) return t;
+  let unitTampil = splitUnits(tampil);
+  let unitCocok = splitUnits(cocok || tampil);
+  if (unitTampil.length !== unitCocok.length) unitCocok = unitTampil;
+  const q = tokenize(tanya, { useStem });
+  const nilaiIdf = Object.values(idf);
+  const oov = nilaiIdf.length ? Math.max(...nilaiIdf) : 1;
+  const skor = unitCocok.map((u) => coverage(q, new Set(tokenize(u, { useStem })), idf, oov));
+  const urut = skor.map((s, i) => ({ s, i })).filter((x) => x.s > 0).sort((a, b) => b.s - a.s || a.i - b.i);
+  if (!urut.length) return potong(t);
+  const pilih = new Set();
+  const susun = (set) => {
+    const xs = [...set].sort((a, b) => a - b);
+    const out = [];
+    if (xs[0] > 0) out.push(PENANDA_LONCAT);
+    xs.forEach((i, k) => {
+      if (k > 0 && i !== xs[k - 1] + 1) out.push(PENANDA_LONCAT);
+      out.push(unitTampil[i]);
+    });
+    if (xs.at(-1) < unitTampil.length - 1) out.push(PENANDA_LONCAT);
+    return out.join("\n");
+  };
+  const coba = (i) => {
+    if (i < 0 || pilih.has(i)) return;
+    pilih.add(i);
+    if (susun(pilih).length > MAX_KARAKTER_PASAL) pilih.delete(i);
+  };
+  for (const { i } of urut) coba(i);
+  // Satu ayat terbaik pun lebih panjang dari batas: potong ayat itu.
+  if (!pilih.size) return potong(unitTampil[urut[0].i]);
+  for (const { i } of urut) if (pilih.has(i)) coba(i - 1);
+  coba(0);
+  return susun(pilih);
+}
+
 // korpus: isi data/korpus.json. idx: indeks pasal berurutan dari peringkat 1.
-export function pasalUntukPrompt(korpus, idx) {
+// opsi (alur v2): {tanya, idf, useStem}. Tanpa opsi, pasal panjang dipotong dari awal (alur v1).
+export function pasalUntukPrompt(korpus, idx, opsi = null) {
   return idx.slice(0, K_PASAL).map((ci, i) => {
     const c = korpus.chunk[ci];
     const d = korpus.dokumen[c.dok];
-    return { n: i + 1, chunk: ci, id: c.id, sumber: `${d.judul} tentang ${d.tentang}, ${c.label}`, teks: potong(c.teks) };
+    const teks = opsi ? ringkasPasal(c.teks, c.teks_cari || c.teks, opsi.tanya, opsi.idf, opsi.useStem ?? true) : potong(c.teks);
+    return { n: i + 1, chunk: ci, id: c.id, sumber: `${d.judul} tentang ${d.tentang}, ${c.label}`, teks };
   });
+}
+
+// Peta istilah -> idf BM25 dari data/indeks.json (sama dengan kutipan langsung).
+export function idfDariIndeks(indeks) {
+  return Object.fromEntries(Object.entries(indeks.bm25).map(([t, v]) => [t, v[0]]));
 }
 
 function bersihkan(s) {

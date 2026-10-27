@@ -207,3 +207,21 @@ def test_tinjauan_nli_sama_dengan_sampel_evaluasi():
     assert [(b["id"], b["kalimat"], b["nli_didukung"]) for b in t["butir"]] == [
         (x["id"], x["kalimat"], x["nli"]) for x in sampel
     ]
+
+
+def test_alur_v2_ambang_reranker_sama_dengan_situs():
+    js = (ROOT / "web/public/js/gen/rerank.js").read_text(encoding="utf-8")
+    m = re.search(r"export const AMBANG_RERANKER = ([0-9.]+);", js)
+    assert m and float(m.group(1)) == G.AMBANG_RERANKER
+    p = (ROOT / "web/public/js/gen/prompt.js").read_text(encoding="utf-8")
+    assert 'export const ALUR = "v2";' in p
+
+
+def test_alur_v2_gerbang_dan_nama_konfigurasi():
+    lolos = G.lolos_gerbang
+    assert lolos(15.0, 14.0, -3.0, "v1") and lolos(15.0, 14.0, None, "v2")
+    assert lolos(10.0, 14.0, 1.0, "v2") and not lolos(10.0, 14.0, 1.0, "v1")
+    assert not lolos(10.0, 14.0, 0.99, "v2") and not lolos(10.0, 14.0, None, "v2")
+    m = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+    assert G.konfigurasi("bertahan", m) == "bertahan-llama-3.3-70b"
+    assert G.konfigurasi("bertahan", m, "v2") == "v2-bertahan-llama-3.3-70b"

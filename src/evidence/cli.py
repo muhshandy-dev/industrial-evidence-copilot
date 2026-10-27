@@ -292,7 +292,7 @@ def cmd_gen_input(args: argparse.Namespace) -> int:
     corpus, system, threshold = _generative()
     lines = []
     for s in sets:
-        lines += gen_input(corpus, system, load_set(ROOT, s), s, threshold)
+        lines += gen_input(corpus, system, load_set(ROOT, s), s, threshold, args.alur)
     text = "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines)
     if args.out:
         Path(args.out).write_text(text, encoding="utf-8")
@@ -310,7 +310,8 @@ def cmd_gen_merge(args: argparse.Namespace) -> int:
         for line in Path(f).read_text(encoding="utf-8").splitlines():
             if line.strip():
                 r = json.loads(line)
-                new.setdefault((konfigurasi(r["varian"], r["model"]), r["set"]), {})[r["id"]] = r
+                key = (konfigurasi(r["varian"], r["model"], r.get("alur")), r["set"])
+                new.setdefault(key, {})[r["id"]] = r
     for (varian, s), recs in sorted(new.items()):
         path = gen_dir(ROOT, varian) / f"{s}.jsonl"
         old = {}
@@ -365,6 +366,28 @@ def cmd_nli_merge(args: argparse.Namespace) -> int:
         scores.update(json.loads(Path(f).read_text(encoding="utf-8")))
     write_nli(scores, nli_path(ROOT))
     print(f"{len(scores)} skor NLI baru digabung")
+    return 0
+
+
+def cmd_eval_v2(args: argparse.Namespace) -> int:
+    """Bandingkan alur v1 dan v2 pada satu set -> eval/analisis/alur-v2-<set>.json."""
+    from .alur_v2 import jalankan
+
+    res = jalankan(ROOT, args.set)
+    out = ROOT / "eval" / "analisis" / f"alur-v2-{args.set}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    for alur in ("v1", "v2"):
+        r = res[alur]
+        print(
+            f"{alur}: benar v1 {r['benar_v1']['k']}/{r['benar_v1']['n']}, "
+            f"v2 {r['benar_v2']['k']}/{r['benar_v2']['n']}, "
+            f"tak terjawab keliru {r['tak_terjawab_keliru_v2']['k']}"
+            f"/{r['tak_terjawab_keliru_v2']['n']}, "
+            f"belum {len(r['belum_dibangkitkan'])}"
+        )
+    for k, v in res.get("komponen", {}).items():
+        print(k, {x: y for x, y in v.items() if x != "pertanyaan"})
     return 0
 
 
@@ -443,10 +466,14 @@ def main(argv: list[str] | None = None) -> int:
     gi = sub.add_parser("gen-input", help="masukan generator (peringkat pasal dan gerbang)")
     gi.add_argument("--set", default="dev,test,stress", help="dev,test,stress,injeksi")
     gi.add_argument("--out")
+    gi.add_argument("--alur", default="v1", choices=("v1", "v2"), help="gerbang alur v1 atau v2")
     gi.set_defaults(fn=cmd_gen_input)
     gm = sub.add_parser("gen-merge", help="gabungkan keluaran shard generator")
     gm.add_argument("files", nargs="+")
     gm.set_defaults(fn=cmd_gen_merge)
+    e2 = sub.add_parser("eval-v2", help="bandingkan alur v1 dan v2 (tanpa panggilan model)")
+    e2.add_argument("--set", default="dev")
+    e2.set_defaults(fn=cmd_eval_v2)
     nl = sub.add_parser("nli", help="skor NLI kalimat jawaban -> eval/cache/nli")
     nl.add_argument("--konfigurasi", help="daftar konfigurasi (default: konfigurasi situs)")
     nl.add_argument("--shard", type=int, default=0)

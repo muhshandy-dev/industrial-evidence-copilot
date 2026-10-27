@@ -4,19 +4,19 @@
 // hanya menerima pertanyaan dan nomor pasal, lalu menyusun prompt sendiri dari korpus situs dengan
 // kode prompt yang sama dengan evaluasi. Jadi kuota tidak bisa dipakai untuk prompt bebas.
 //
-//   GET  /api/jawab  -> {aktif, model, binding}
-//   POST /api/jawab  {tanya, pasal: [id pasal, urut dari peringkat 1]} -> {mentah, model, pasal, usage}
+//   GET  /api/jawab  -> {aktif, model, binding, alur}
+//   POST /api/jawab  {tanya, pasal: [id pasal, urut dari peringkat 1]} -> {mentah, model, alur, pasal, usage}
 //
 // Perlindungan:
 // - Pengunjung: hanya dari halaman situs ini (header Origin wajib dan sama), masukan dibatasi, dan
 //   paling banyak BATAS_PER_MENIT permintaan per alamat IP per menit (per isolate, upaya terbaik).
 //   Batas keras biaya adalah kuota gratis harian Workers AI; bila habis, situs kembali ke kutipan.
-// - Evaluasi: memilih kandidat model dan varian prompt ({model, varian}) hanya di deploy Preview
+// - Evaluasi: memilih kandidat model, varian prompt, dan alur ({model, varian, alur}) hanya di deploy Preview
 //   (bukan domain produksi) dan hanya dengan token OIDC GitHub Actions dari workflow evaluasi
 //   repositori ini (server/oidc.js). Tanpa token itu, permintaan ditolak 401.
 import { periksaOidc } from "../../server/oidc.js";
 import {
-  K_PASAL, MODEL_SERVER, MODEL_SERVER_KANDIDAT, VARIAN, VARIAN_SERVER, pasalUntukPrompt, permintaanServer, susunPesan, teksServer,
+  ALUR, K_PASAL, MODEL_SERVER, MODEL_SERVER_KANDIDAT, VARIAN, VARIAN_SERVER, idfDariIndeks, pasalUntukPrompt, permintaanServer, susunPesan, teksServer,
 } from "../../web/public/js/gen/prompt.js";
 
 export const HOST_PRODUKSI = "industrial-evidence-copilot.pages.dev";
@@ -39,6 +39,8 @@ function terlaluSering(ip, sekarang = Date.now()) {
 
 let korpus = null;
 let indeks = null;
+let idf = null;
+let pakaiStem = true;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -55,6 +57,11 @@ async function muatKorpus(env, url) {
   if (korpus) return;
   const res = await env.ASSETS.fetch(new URL("/data/korpus.json", url));
   if (!res.ok) throw new Error(`korpus: HTTP ${res.status}`);
+  const resIndeks = await env.ASSETS.fetch(new URL("/data/indeks.json", url));
+  if (!resIndeks.ok) throw new Error(`indeks: HTTP ${resIndeks.status}`);
+  const bm25 = await resIndeks.json();
+  idf = idfDariIndeks(bm25);
+  pakaiStem = bm25.pakai_stem;
   korpus = await res.json();
   indeks = new Map(korpus.chunk.map((c, i) => [c.id, i]));
 }
@@ -63,7 +70,7 @@ async function muatKorpus(env, url) {
 const kuotaHabis = (e) => /4006|daily free allocation|neurons/i.test(String(e?.message ?? e));
 
 export function onRequestGet({ env }) {
-  return json({ aktif: MODEL_SERVER !== null, model: MODEL_SERVER?.id ?? null, binding: Boolean(env?.AI) });
+  return json({ aktif: MODEL_SERVER !== null, model: MODEL_SERVER?.id ?? null, binding: Boolean(env?.AI), alur: ALUR });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -90,11 +97,13 @@ export async function onRequestPost({ request, env }) {
   const ids = Array.isArray(badan?.pasal) ? badan.pasal : [];
   let model = MODEL_SERVER;
   let varian = VARIAN_SERVER;
-  if (badan?.model !== undefined || badan?.varian !== undefined) {
+  let alur = ALUR;
+  if (badan?.model !== undefined || badan?.varian !== undefined || badan?.alur !== undefined) {
     if (!evaluasi) return json({ galat: "pilihan_model_butuh_evaluasi" }, 403);
     if (badan.model !== undefined) model = MODEL_SERVER_KANDIDAT[badan.model];
     if (badan.varian !== undefined) varian = VARIAN.includes(badan.varian) ? badan.varian : null;
-    if (!model || !varian) return json({ galat: "model_atau_varian_tidak_dikenal" }, 400);
+    if (badan.alur !== undefined) alur = ["v1", "v2"].includes(badan.alur) ? badan.alur : null;
+    if (!model || !varian || !alur) return json({ galat: "model_atau_varian_tidak_dikenal" }, 400);
   }
   if (!model) return json({ galat: "mode_server_nonaktif" }, 503);
   if (tanya.length < 3 || tanya.length > MAKS_TANYA) return json({ galat: "pertanyaan_tidak_sah" }, 400);
@@ -104,11 +113,12 @@ export async function onRequestPost({ request, env }) {
   const idx = ids.map((id) => indeks.get(id));
   if (idx.some((i) => i === undefined)) return json({ galat: "pasal_tidak_dikenal" }, 400);
 
-  const pasal = pasalUntukPrompt(korpus, idx);
+  // Alur v2: pasal panjang diringkas menjadi ayat yang relevan; v1: dipotong dari awal.
+  const pasal = pasalUntukPrompt(korpus, idx, alur === "v2" ? { tanya, idf, useStem: pakaiStem } : null);
   const pesan = susunPesan(tanya, pasal, varian);
   try {
     const hasil = await env.AI.run(model.id, permintaanServer(pesan));
-    return json({ mentah: teksServer(hasil), model: model.id, varian, pasal: pasal.map((p) => p.id), usage: hasil?.usage ?? null });
+    return json({ mentah: teksServer(hasil), model: model.id, varian, alur, pasal: pasal.map((p) => p.id), usage: hasil?.usage ?? null });
   } catch (e) {
     // Rincian galat hanya untuk evaluasi, untuk diagnosis.
     const rinci = evaluasi ? { rinci: String(e?.message ?? e).slice(0, 300) } : {};

@@ -13,6 +13,14 @@ export const RERANKER = {
 // skornya berubah menurut CPU (selisih logit sampai 0,93 antara dua runner), jadi urutan pasal di
 // perangkat pengunjung tidak dapat dijamin sama dengan evaluasi. Lihat docs/eksperimen-prompt.md.
 export const RERANK_TOP = 20; // sama dengan TOP di src/evidence/rerank.py
+// Alur v2: gerbang penolakan mode generatif lolos bila skor BM25 tertinggi >= ambang BM25 ATAU skor
+// reranker pasal peringkat 1 >= AMBANG_RERANKER. Ambang dipilih di dev saja (skor seimbang kutipan
+// tertinggi, ambang terkecil bila seri), sama dengan AMBANG_RERANKER di src/evidence/generation.py.
+export const AMBANG_RERANKER = 1.0;
+export function lolosGerbang(skorBm25, ambangBm25, skorReranker, alur = "v2") {
+  if (skorBm25 >= ambangBm25) return true;
+  return alur === "v2" && skorReranker != null && skorReranker >= AMBANG_RERANKER;
+}
 const MAX_TOKEN = 512; // sama dengan max_length CrossEncoder di evaluasi
 const BATCH = 4;
 

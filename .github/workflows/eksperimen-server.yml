@@ -24,6 +24,9 @@ on:
       model:
         description: "Model: llama-4-scout, mistral-small-3.1, llama-3.3-70b (dipisah koma)"
         default: "llama-4-scout,mistral-small-3.1,llama-3.3-70b"
+      alur:
+        description: "Alur: v1 (sistem set tersegel lama) atau v2 (gerbang BM25 atau reranker, ringkasan ayat; docs/alur-v2.md)"
+        default: "v1"
       batas:
         description: "Batas pertanyaan per model (kosong = semua); untuk uji asap"
         default: ""
@@ -44,6 +47,7 @@ env:
   SET: ${{ inputs.set || 'dev' }}
   MODEL: ${{ inputs.model }}
   BATAS: ${{ inputs.batas }}
+  ALUR: ${{ inputs.alur || 'v1' }}
   ENDPOINT: ${{ inputs.endpoint }}
 
 jobs:
@@ -60,14 +64,15 @@ jobs:
         with:
           node-version: "22"
       - run: pip install -e .
-      - run: evidence gen-input --set "$SET" --out web/masukan.jsonl && wc -l web/masukan.jsonl
+      - run: evidence gen-input --set "$SET" --alur "$ALUR" --out web/masukan.jsonl && wc -l web/masukan.jsonl
       - name: Periksa binding AI di Preview
         run: |
           # Tunggu sampai deploy Preview memuat versi fungsi yang melaporkan binding (paling lama 10 menit).
           for i in $(seq 1 20); do
             j=$(curl -fsS "$ENDPOINT" || true)
             echo "$j"
-            if echo "$j" | grep -q '"binding":true'; then exit 0; fi
+            # Deploy Preview harus sudah memuat fungsi dengan alur yang sama dengan kode ini.
+            if echo "$j" | grep -q '"binding":true' && echo "$j" | grep -q "\"alur\":\"$(node -e 'import("./web/public/js/gen/prompt.js").then((p)=>console.log(p.ALUR))')\""; then exit 0; fi
             if echo "$j" | grep -q '"binding":false'; then echo "::error::Binding Workers AI (AI) belum terpasang di Preview"; exit 1; fi
             sleep 30
           done
@@ -80,13 +85,17 @@ jobs:
           for v in ${VARIAN//,/ }; do
             for m in ${MODEL//,/ }; do
               f="keluaran-$v-$m.jsonl"
+              awal=""; if [ "$ALUR" = v2 ]; then awal="v2-"; fi
               # Lanjutkan dari keluaran yang sudah di-commit (baris dengan prompt yang sama dilewati).
-              cat ../eval/cache/gen/$v-$m/*.jsonl > "$f" 2>/dev/null || true
+              cat ../eval/cache/gen/$awal$v-$m/*.jsonl > "$f" 2>/dev/null || true
+              # Alur v2: prompt yang identik dengan v1 memakai ulang keluaran v1 tanpa panggilan.
+              cat ../eval/cache/gen/$v-$m/*.jsonl > "lama-$v-$m.jsonl" 2>/dev/null || true
               # Varian polos hanya pembanding pertahanan injeksi.
               s="$SET"; if [ "$v" = polos ]; then s=injeksi; fi
               rc=0
+              salin=""; if [ "$ALUR" = v2 ]; then salin="--salin-dari lama-$v-$m.jsonl"; fi
               node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" --set "$s" \
-                --lolos ${BATAS:+--batas "$BATAS"} --endpoint "$ENDPOINT" || rc=$?
+                --lolos --alur "$ALUR" $salin ${BATAS:+--batas "$BATAS"} --endpoint "$ENDPOINT" || rc=$?
               if [ "$rc" = 3 ]; then kuota=1; break 2; fi
               # Galat lain: hentikan, tetapi keluaran yang sudah ada tetap dinilai dan di-commit.
               if [ "$rc" != 0 ]; then gagal=1; break 2; fi
@@ -107,14 +116,18 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -e ".[model]"
           evidence gen-merge "${files[@]}"
-          K=$(python -c "import os;print(','.join(f'{v}-{m}' for v in os.environ['VARIAN'].split(',') for m in os.environ['MODEL'].split(',')))")
+          K=$(python -c "import os;a='v2-' if os.environ['ALUR']=='v2' else '';print(','.join(f'{a}{v}-{m}' for v in os.environ['VARIAN'].split(',') for m in os.environ['MODEL'].split(',')))")
           evidence nli --konfigurasi "$K"
-          evidence gen-eksperimen --varian bertahan,k1,k2,k3,k4
+          if [ "$ALUR" = v2 ]; then
+            for s in ${SET//,/ }; do evidence eval-v2 --set "$s"; done
+          else
+            evidence gen-eksperimen --varian bertahan,k1,k2,k3,k4
+          fi
       - name: Commit hasil ke cabang ini
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add eval/cache/gen eval/cache/nli eval/eksperimen-prompt.json
+          git add eval/cache/gen eval/cache/nli eval/eksperimen-prompt.json eval/analisis
           if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
           git commit -m "Eksperimen model server (dev): keluaran Workers AI, skor NLI, ringkasan"
           git pull --rebase origin "$GITHUB_REF_NAME"
