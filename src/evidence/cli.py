@@ -289,6 +289,9 @@ def cmd_gen_input(args: argparse.Namespace) -> int:
     if "sealed" in sets:
         print("set tersegel hanya lewat `evidence eval-sealed`.", file=sys.stderr)
         return 1
+    if "holdout-v2" in sets:
+        print("holdout v2 hanya lewat `evidence holdout`.", file=sys.stderr)
+        return 1
     corpus, system, threshold = _generative()
     lines = []
     for s in sets:
@@ -366,6 +369,28 @@ def cmd_nli_merge(args: argparse.Namespace) -> int:
         scores.update(json.loads(Path(f).read_text(encoding="utf-8")))
     write_nli(scores, nli_path(ROOT))
     print(f"{len(scores)} skor NLI baru digabung")
+    return 0
+
+
+def cmd_holdout(args: argparse.Namespace) -> int:
+    """Holdout v2, sekali jalan: rerank, input per alur, run -> eval/holdout-v2/hasil.json."""
+    from . import holdout
+
+    if args.action == "rerank":
+        print(f"{holdout.rerank(ROOT)} pertanyaan holdout dinilai reranker")
+    elif args.action == "input":
+        lines = holdout.make_input(ROOT, args.alur)
+        text = "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines)
+        Path(args.out).write_text(text, encoding="utf-8")
+        print(
+            f"alur {args.alur}: {sum(x['lolos_gerbang'] for x in lines)}/{len(lines)} lolos gerbang"
+        )
+    else:
+        res = holdout.run(ROOT)
+        holdout.result_path(ROOT).write_text(
+            json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        )
+        print(json.dumps({k: res[k] for k in ("set", "kriteria")}, ensure_ascii=False, indent=1))
     return 0
 
 
@@ -471,6 +496,11 @@ def main(argv: list[str] | None = None) -> int:
     gm = sub.add_parser("gen-merge", help="gabungkan keluaran shard generator")
     gm.add_argument("files", nargs="+")
     gm.set_defaults(fn=cmd_gen_merge)
+    ho = sub.add_parser("holdout", help="holdout v2, sekali jalan -> eval/holdout-v2/hasil.json")
+    ho.add_argument("action", choices=["rerank", "input", "run"])
+    ho.add_argument("--alur", default="v2", choices=("v1", "v2"))
+    ho.add_argument("--out", default="masukan.jsonl")
+    ho.set_defaults(fn=cmd_holdout)
     e2 = sub.add_parser("eval-v2", help="bandingkan alur v1 dan v2 (tanpa panggilan model)")
     e2.add_argument("--set", default="dev")
     e2.set_defaults(fn=cmd_eval_v2)

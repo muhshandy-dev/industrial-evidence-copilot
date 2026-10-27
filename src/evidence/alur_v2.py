@@ -183,8 +183,8 @@ def jalankan(root: Path, s: str) -> dict:
     from .corpus import Corpus
     from .evalrag import build_systems
 
-    if s in ("sealed",):
-        raise SystemExit("set tersegel lama tidak dievaluasi ulang")
+    if s in ("sealed", "holdout-v2"):
+        raise SystemExit("set tersegel dan holdout v2 tidak dievaluasi lewat perintah ini")
     corpus = Corpus.read(root / "corpus" / "korpus.json")
     locked = json.loads((root / "eval" / "results.json").read_text(encoding="utf-8"))
     thr, metode = locked["ambang"]["terpilih"], locked["metode_dikirim"]

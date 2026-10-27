@@ -55,3 +55,8 @@ Prompt yang identik memakai ulang keluaran v1. Uji kering mencatat 25 panggilan:
 ## 3. Hasil dev
 
 Diisi setelah run dev (`eval/analisis/alur-v2-dev.json`).
+
+## 4. Catatan keterbukaan
+
+- **Satu angka holdout sudah terlihat.** Saat menguji kode `evidence holdout input` di lokal, pengembang melihat jumlah pertanyaan holdout v2 yang lolos gerbang alur v1: 85 dari 120. Pada saat itu skor reranker untuk pertanyaan holdout belum dihitung. Isi pertanyaan, label, dan keluaran apa pun tidak terlihat. Angka itu tidak dipakai untuk memilih atau menyetel apa pun.
+- **Validasi penulis.** Validasi set oleh penulis hanya melaporkan hitungan komposisi dan hasil pemeriksaan otomatis.

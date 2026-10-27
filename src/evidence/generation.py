@@ -38,7 +38,7 @@ NLI_MODEL = (
 )
 NLI_AMBANG = 0.5  # peluang entailment minimum agar kalimat dianggap didukung
 JENDELA_KARAKTER = 900  # premis NLI: jendela ayat berurutan, supaya muat 512 token
-SETS = ("dev", "test", "stress", "injeksi", "sealed")
+SETS = ("dev", "test", "stress", "injeksi", "sealed", "holdout-v2")
 # Model situs (sama dengan MODEL dan MODEL_CPU di web/public/js/gen/prompt.js; diuji).
 MODEL_UTAMA = "onnx-community/Qwen2.5-1.5B-Instruct"  # WebGPU
 MODEL_CPU = "onnx-community/Qwen2.5-0.5B-Instruct"  # jalur CPU (WebAssembly)
@@ -125,6 +125,7 @@ def load_set(root: Path, name: str) -> list[dict]:
         "stress": ev / "stress.jsonl",
         "injeksi": ev / "sealed" / "injeksi.jsonl",
         "sealed": ev / "sealed" / "questions.jsonl",
+        "holdout-v2": ev / "holdout-v2" / "questions.jsonl",
     }[name]
     return read_questions(path)
 
