@@ -28,38 +28,16 @@ from .answer import extract_answer
 from .corpus import Corpus
 from .dense import text_key
 from .evalrag import _balanced, answer_all, build_systems
-from .evalset import key_hit, key_tokens, relevant
+from .evalset import key_hit, relevant
+from .penilaian import key_hit_v2
 
 ROOT = Path(__file__).resolve().parents[2]
 SETS = ("dev", "test", "sealed")
 MAKS_KARAKTER_PASAL = 1800  # sama dengan web/public/js/gen/prompt.js
 
-# Aturan "setara angka", ditulis setelah melihat kegagalan tersegel, jadi pasca-hoc. Diterapkan sama
-# pada semua set dan semua mode. Jawaban dianggap memuat kunci bila cocok menurut aturan resmi ATAU
-# menurut aturan ini: angka yang ditulis dengan ejaan dalam kurung ("3 (tiga) bulan") cukup ditulis
-# angkanya, kata bilangan sebelum satuan waktu dianggap angka, "%" sama dengan "persen", dan
-# "meter" sama dengan "m".
-_ANGKA = {
-    "dua belas": "12", "sebelas": "11", "sepuluh": "10", "sembilan": "9", "delapan": "8",
-    "tujuh": "7", "enam": "6", "lima": "5", "empat": "4", "tiga": "3", "dua": "2", "satu": "1",
-}  # fmt: skip
-_SATUAN = r"(?=\s+(?:bulan|tahun|hari|jam|minggu|kali|orang|m|meter)\b)"
-
-
-def _norm(t: str) -> str:
-    t = t.lower()
-    t = re.sub(r"(\d[\d.,]*)\s*\(\s*[a-z ]+\s*\)", r"\1", t)
-    for w, d in _ANGKA.items():
-        t = re.sub(rf"\b{w}\b{_SATUAN}", d, t)
-    t = re.sub(r"(\d)\s*%", r"\1 persen", t)
-    return re.sub(r"\bmeter\b", "m", t)
-
-
-def key_hit_setara(kunci: list[str], text: str) -> bool:
-    if key_hit(kunci, text):
-        return True
-    toks = key_tokens(_norm(text))
-    return all(key_tokens(_norm(k)) <= toks for k in kunci)
+# Aturan "setara angka" (kini aturan kunci v2 di penilaian.py), ditulis setelah
+# melihat kegagalan tersegel, jadi pasca-hoc untuk set itu. Diterapkan sama pada semua set dan mode.
+key_hit_setara = key_hit_v2
 
 
 def tahap(r: dict) -> str:
