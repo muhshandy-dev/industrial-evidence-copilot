@@ -1,0 +1,178 @@
+name: Tersegel
+
+# Evaluasi set tersegel, SEKALI jalan, setelah desain sistem dibekukan. Memakai metode, ambang,
+# prompt, dan model yang sudah dikunci di eval/results.json. Hasilnya (eval/sealed/hasil.json)
+# sekaligus menjadi penanda: `evidence eval-sealed` menolak berjalan lagi bila berkas itu ada.
+on:
+  # Push yang mengubah berkas ini hanya memeriksa penjaga (hash set dan penanda), tanpa generasi.
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/tersegel.yml"]
+  workflow_dispatch:
+    inputs:
+      konfirmasi:
+        description: "Ketik SEKALI untuk menjalankan set tersegel (tidak dapat diulang)"
+        required: true
+      shards:
+        description: "Jumlah shard paralel"
+        default: "8"
+      endpoint:
+        description: "Pages Function Preview untuk model server (Workers AI)"
+        default: "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/api/jawab"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tersegel-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  SHARDS: ${{ inputs.shards || '8' }}
+
+jobs:
+  siapkan:
+    runs-on: ubuntu-latest
+    outputs:
+      shards: ${{ steps.m.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Penjaga (hash set, belum pernah dijalankan)
+        run: python -c "from pathlib import Path; from evidence import sealed; sealed.guard(Path('.')); print('penjaga lolos')"
+      - name: Konfirmasi
+        if: github.event_name == 'workflow_dispatch' && inputs.konfirmasi != 'SEKALI'
+        run: |
+          echo "konfirmasi harus SEKALI"
+          exit 1
+      - if: github.event_name == 'workflow_dispatch'
+        run: evidence eval-sealed input --out masukan.jsonl
+      - id: m
+        run: echo "shards=$(python -c "import json;print(json.dumps(list(range(int('$SHARDS')))))")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          name: masukan
+          path: masukan.jsonl
+
+  bangkitkan:
+    needs: siapkan
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.siapkan.outputs.shards) }}
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: web/node_modules/@huggingface/transformers/.cache
+          key: tjs-${{ hashFiles('web/public/js/gen/prompt.js') }}
+          restore-keys: tjs-
+      - uses: actions/download-artifact@v4
+        with:
+          name: masukan
+          path: web
+      - name: Model utama (varian bertahan)
+        run: node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian bertahan --shard ${{ matrix.shard }} --shards "$SHARDS"
+      - name: Model CPU situs (varian bertahan)
+        run: node scripts/generate.mjs --in masukan.jsonl --out keluaran.jsonl --varian bertahan --model cpu --shard ${{ matrix.shard }} --shards "$SHARDS"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: keluaran-${{ matrix.shard }}
+          path: web/keluaran.jsonl
+          if-no-files-found: ignore
+
+  # Model server situs (Workers AI) lewat Pages Function Preview dengan token OIDC. Isi jawaban tidak
+  # dicetak ke log. Bila kuota harian habis, job gagal, hasil tersegel tidak ditulis, dan workflow
+  # dapat dijalankan lagi setelah kuota pulih.
+  bangkitkan-server:
+    needs: siapkan
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: masukan
+          path: web
+      - name: Model server situs
+        env:
+          ENDPOINT: ${{ inputs.endpoint }}
+        run: |
+          pilihan=$(node -e 'import("./public/js/gen/prompt.js").then((p) => { const k = Object.keys(p.MODEL_SERVER_KANDIDAT).find((x) => p.MODEL_SERVER_KANDIDAT[x] === p.MODEL_SERVER); if (!k) { console.error("MODEL_SERVER belum dipilih"); process.exit(1); } console.log(k, p.VARIAN_SERVER); })')
+          read -r m v <<< "$pilihan"
+          node scripts/generate-server.mjs --in masukan.jsonl --out keluaran-server.jsonl --model "$m" --varian "$v" \
+            --lolos --senyap --endpoint "$ENDPOINT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keluaran-server
+          path: web/keluaran-server.jsonl
+
+  gabung:
+    needs: [bangkitkan, bangkitkan-server]
+    if: github.event_name == 'workflow_dispatch' && needs.bangkitkan.result == 'success' && needs.bangkitkan-server.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nli-${{ hashFiles('src/evidence/generation.py') }}
+          restore-keys: hf-
+      - name: Pasang dependensi (torch CPU)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,model]"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: keluaran-*
+          path: keluaran
+      - run: evidence gen-merge keluaran/*/*.jsonl
+      - run: evidence nli
+      - name: Evaluasi tersegel (sekali)
+        run: evidence eval-sealed run
+      - name: Ekspor dan uji
+        run: |
+          evidence export
+          pytest -q
+      - name: Commit hasil ke cabang ini
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/cache eval/sealed/hasil.json web/public/data
+          git commit -m "Tersegel: keluaran model, skor NLI, dan hasil evaluasi sekali jalan"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

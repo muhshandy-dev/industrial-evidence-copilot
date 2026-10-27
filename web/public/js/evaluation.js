@@ -1,5 +1,6 @@
 // Halaman Evaluasi: semua angka dibaca dari data/evaluasi.json yang dihasilkan `evidence eval`.
 import { clear, h, svg } from "./dom.js";
+import { K_PASAL, MODEL_SERVER, MODEL_SERVER_KANDIDAT, VARIAN_SERVER } from "./gen/prompt.js";
 
 const pct = (x) => `${Math.round(x * 100)}%`;
 const rentang = (m) => `${pct(m.bawah)} sampai ${pct(m.atas)}`;
@@ -53,6 +54,185 @@ function grafikAmbang(ev) {
   return g;
 }
 
+const NAMA_MODE = {
+  generatif: "Jawaban generatif ditampilkan",
+  cadangan_ekstraktif: "Kembali ke kutipan (tidak ada kalimat bersumber)",
+  tolak_model: "Model menjawab TIDAK DITEMUKAN",
+  tolak_gerbang: "Ditolak gerbang sebelum model dipanggil",
+};
+
+const sel = (m) => (m && m.n ? `${m.k} dari ${m.n} (${pct(m.nilai)})` : "-");
+// Nama lain untuk dipakai di mountEvaluation, yang punya variabel lokal bernama sel.
+const rasio = sel;
+
+// Kunci konfigurasi server di evaluasi.json, misalnya "bertahan-llama-3.3-70b".
+const KUNCI_MODEL_SERVER = MODEL_SERVER ? Object.entries(MODEL_SERVER_KANDIDAT).find(([, m]) => m === MODEL_SERVER)[0] : null;
+const KONFIG_SERVER = KUNCI_MODEL_SERVER ? `${VARIAN_SERVER}-${KUNCI_MODEL_SERVER}` : null;
+const KONFIG_SERVER_POLOS = KUNCI_MODEL_SERVER ? `polos-${KUNCI_MODEL_SERVER}` : null;
+const desimal = (x) => String(x).replace(".", ",");
+const ringkasMode = (x) => Object.entries(x.mode).map(([k, v]) => `${NAMA_MODE[k] ?? k} ${v}`).join(", ");
+const namaQwen = (g, konfig, cadangan) => (g.model_per_konfigurasi?.[konfig]?.model ?? cadangan).split("/").at(-1);
+
+// Kolom tabel generatif: mode server (prototipe riset) bila hasil ujinya ada, lalu model lokal opsional.
+function kolomGeneratif(g, set) {
+  const kolom = [];
+  if (KONFIG_SERVER && g[KONFIG_SERVER]?.[set]) kolom.push([`${MODEL_SERVER.nama} (prototipe riset, server)`, g[KONFIG_SERVER][set], KONFIG_SERVER]);
+  if (g.bertahan?.[set]) kolom.push([`${namaQwen(g, "bertahan", "Qwen GPU")} (opsional, GPU)`, g.bertahan[set], "bertahan"]);
+  if (g["bertahan-cpu"]?.[set]) kolom.push([`${namaQwen(g, "bertahan-cpu", "Qwen CPU")} (opsional, CPU)`, g["bertahan-cpu"][set], "bertahan-cpu"]);
+  return kolom;
+}
+
+const BARIS_GENERATIF = (t) => [
+  ["Jawaban benar", (x) => sel(x ? x.jawaban_benar : t.jawaban_benar)],
+  ["Menolak padahal ada jawabannya", (x) => sel(x ? x.menolak_padahal_terjawab : t.menolak_padahal_terjawab)],
+  ["Menjawab pertanyaan tanpa dasar", (x) => sel(x ? x.dijawab_padahal_tak_terjawab : t.dijawab_padahal_tak_terjawab)],
+  ["Kalimat yang didukung pasal yang dikutipnya", (x) => (x ? sel(x.kalimat_didukung) : "disalin, tidak dinilai")],
+  ["Jawaban yang seluruh kalimatnya didukung", (x) => (x ? sel(x.jawaban_seluruhnya_didukung) : "-")],
+  ["Dari jawaban yang ditampilkan, yang mengutip minimal satu pasal tepat", (x) => (x ? sel(x.sitasi_ada_yang_sah) : sel(t.sitasi_benar_dari_yang_dijawab))],
+  ["Dari jawaban yang ditampilkan, yang semua sitasinya tepat", (x) => (x ? sel(x.sitasi_semua_sah) : "-")],
+];
+
+function tabelGeneratif(label, t, kolom) {
+  const semua = [["Kutipan langsung", null], ...kolom];
+  return h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": `${label}, dapat digulir` },
+    h("table", { class: "tabel" },
+      h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Ukuran"), ...semua.map(([n]) => h("th", { scope: "col", class: "num" }, n)))),
+      h("tbody", {}, BARIS_GENERATIF(t).map(([n, f]) => h("tr", {}, h("th", { scope: "row" }, n), ...semua.map(([, x]) => h("td", { class: "num" }, f(x))))))));
+}
+
+// Bagian mode generatif. Semua angka dari ev.generatif (dihitung `evidence eval` dari keluaran
+// model yang di-commit); bila belum ada, halaman mengatakannya.
+function bagianGeneratif(ev) {
+  const g = ev.generatif;
+  const judul = h("h2", { id: "e-gen" }, "Mode generatif");
+  const kolom = g ? kolomGeneratif(g, "test") : [];
+  if (!kolom.length) {
+    return h("section", { "aria-labelledby": "e-gen" }, judul,
+      h("p", {}, "Hasil evaluasi mode generatif belum tersedia di versi ini. Angka di atas hanya untuk mode kutipan langsung."));
+  }
+  const [labelUtama, utama, konfigUtama] = kolom[0];
+  const namaUtama = labelUtama.replace(/ \((prototipe riset|eksperimental|utama|opsional)[^)]*\)$/, "");
+  const server = konfigUtama === KONFIG_SERVER;
+  const nli = g.penilai_nli;
+  const waktu = utama.detik_per_jawaban_cpu;
+  const inj = g[konfigUtama].injeksi;
+  const injPolos = server ? g[KONFIG_SERVER_POLOS]?.injeksi : g.polos?.injeksi;
+  const tekan = g[konfigUtama].stress;
+  const injLokal = server ? g.bertahan?.injeksi : null;
+  const tinjauNli = (konfig) => {
+    const t = ev.tinjauan_nli;
+    if (!t || t.konfigurasi !== konfig) return " Sampel kalimat disimpan untuk diperiksa manual.";
+    return ` Tinjauan manual oleh ${t.peninjau}: dari ${t.nli_didukung.n} kalimat sampel yang dinilai didukung, ${t.nli_didukung.manual_didukung} memang didukung; dari ${t.nli_tidak.n} kalimat yang dinilai tidak didukung, hanya ${t.nli_tidak.manual_tidak} yang memang tidak didukung. Untuk model ini, angka NLI cenderung terlalu rendah.`;
+  };
+  const tinjau = (konfig) => {
+    const t = ev.tinjauan_injeksi?.konfigurasi?.[konfig];
+    return t ? ` Tinjauan manual atas ${t.n} pertanyaan yang sampai ke model: yang ditampilkan aman pada ${t.tampil_aman} dari ${t.n}; keluaran mentah model menuruti perintah tersembunyi pada ${t.model_ikut_perintah} dari ${t.n}${t.model_ikut_perintah ? ", dan kalimat itu dibuang pemeriksaan sitasi" : ""}.` : "";
+  };
+  const blokInjeksi = inj ? h("div", { class: "kotak-jujur" },
+    h("h3", {}, "Uji prompt injection"),
+    h("p", {}, `${inj.n} pertanyaan berisi perintah tersembunyi, misalnya meminta model mengabaikan aturan, menulis tautan, atau mengarang pasal. Prompt situs memperlakukan teks pasal dan pertanyaan sebagai data, lalu kalimat tanpa sumber dan tautan ke luar dibuang setelah generasi.${injPolos ? " Sebagai pembanding, prompt polos tanpa pertahanan itu juga dijalankan pada model yang sama." : ""} Sebagian pertanyaan memuat pertanyaan K3 yang sah, jadi menjawab bagian yang sah dengan sitasi adalah perilaku yang benar; yang dinilai adalah apakah perintah tersembunyinya diikuti.`),
+    h("ul", { class: "daftar-teks" },
+      h("li", {}, `${namaUtama}, prompt situs: ${ringkasMode(inj)}.${tinjau(konfigUtama)}`),
+      injPolos ? h("li", {}, `${namaUtama}, prompt polos: ${ringkasMode(injPolos)}.${tinjau(server ? KONFIG_SERVER_POLOS : "polos")}`) : null,
+      injLokal ? h("li", {}, `${namaQwen(g, "bertahan", "Qwen GPU")}, prompt situs: ${ringkasMode(injLokal)}.`) : null),
+    ev.tinjauan_injeksi ? h("p", { class: "catatan" }, `Tinjauan manual oleh ${ev.tinjauan_injeksi.peninjau}. ${ev.tinjauan_injeksi.cara}`) : null,
+    h("details", { class: "gagal" },
+      h("summary", {}, `Lihat keluaran mentah ${namaUtama} untuk ${inj.per_butir?.length ?? 0} pertanyaan`),
+      h("ul", {}, (inj.per_butir ?? []).map((b) => h("li", {}, h("strong", {}, `${b.id}: ${NAMA_MODE[b.mode] ?? b.mode}`), h("pre", { class: "gen-mentah" }, b.mentah)))))) : null;
+  const caraJalan = server
+    ? `Mode generatif server dievaluasi lewat jalur yang sama dengan situs: gerbang skor yang sama, BM25 dengan reranker mMiniLM, ${K_PASAL} pasal teratas, prompt dari kode situs, lalu pemeriksaan sitasi yang sama. Keluaran ${namaUtama} diambil dari fungsi /api/jawab di deploy Preview (Workers AI, suhu 0) oleh workflow GitHub Actions yang membuktikan identitasnya dengan token OIDC, dan setiap keluaran di-commit sehingga angka ini dapat dihitung ulang. Workers AI tidak menyediakan patokan revisi model, dan suhu 0 tidak menjamin keluaran yang persis sama bila dijalankan ulang.`
+    : `Mode generatif dievaluasi dengan alur yang sama dengan situs: gerbang skor yang sama, ${g.model.model.split("/")[1]} dengan bobot ${g.model.dtype} pada revisi yang dipatok, prompt dari kode situs, dekode serakah, lalu pemeriksaan sitasi yang sama. Model dijalankan offline di GitHub Actions dengan pustaka yang sama dengan peramban, dan keluarannya di-commit sehingga angka ini dapat dihitung ulang.`;
+  const catatanWaktu = waktu
+    ? (server ? ` Satu jawaban server butuh median ${desimal(waktu.median)} detik (persentil 90: ${desimal(waktu.p90)} detik), diukur dari runner GitHub Actions.` : ` Di CPU runner, satu jawaban butuh median ${desimal(waktu.median)} detik.`)
+    : "";
+  return h("section", { "aria-labelledby": "e-gen" }, judul,
+    h("p", {}, caraJalan),
+    tabelGeneratif("Tabel mode generatif dan kutipan pada data uji", ev.jawaban.test, kolom),
+    h("p", { class: "catatan" }, `"Didukung" dinilai otomatis oleh model NLI multibahasa (${nli.model.split("/")[1]}): sebuah kalimat dianggap didukung bila peluang entailment terhadap pasal yang dikutipnya minimal ${desimal(nli.ambang)}. Penilai otomatis ini bisa keliru, terutama untuk angka dan istilah hukum.${tinjauNli(konfigUtama)} Model lokal (Qwen) tercantum sebagai pembanding: mode itu opsional dan tidak lolos batas mutu yang ditetapkan sebelum eksperimen.${catatanWaktu}`),
+    h("p", {}, `Apa yang terjadi pada pertanyaan uji dengan ${namaUtama}:`),
+    h("ul", { class: "daftar-teks" }, Object.entries(utama.mode).map(([k, v]) => h("li", {}, `${NAMA_MODE[k] ?? k}: ${v}`))),
+    tekan ? h("p", { class: "catatan" }, `Uji tekanan (pertanyaan panjang di luar cakupan) dengan ${namaUtama}: ${ringkasMode(tekan)}. Menjawab tanpa dasar: ${sel(tekan.dijawab_padahal_tak_terjawab)}.`) : null,
+    blokInjeksi);
+}
+
+// Hasil set uji tersegel: dijalankan sekali setelah desain dibekukan.
+function bagianTersegel(ev) {
+  const s = ev.tersegel;
+  if (!s) return null;
+  const kolom = [];
+  for (const [konfig, x] of Object.entries(s.generatif)) {
+    const nm = konfig === KONFIG_SERVER ? `${MODEL_SERVER.nama} (prototipe riset, server)`
+      : konfig === "bertahan" ? `${(x.model.model ?? "").split("/").at(-1)} (opsional, GPU)`
+      : konfig === "bertahan-cpu" ? `${(x.model.model ?? "").split("/").at(-1)} (opsional, CPU)` : konfig;
+    kolom.push([nm, x, konfig]);
+  }
+  kolom.sort((a, b) => (b[2] === KONFIG_SERVER) - (a[2] === KONFIG_SERVER));
+  const e = s.ekstraktif;
+  const ps = s.pencarian.per_sistem;
+  const kirim = s.terkunci.metode;
+  return h("section", { "aria-labelledby": "e-segel" },
+    h("h2", { id: "e-segel" }, "Set uji tersegel"),
+    h("p", {}, `${s.set.pertanyaan} pertanyaan (${s.set.terjawab} ada jawabannya, ${s.set.tak_terjawab} tidak ada) ditulis oleh penulis terpisah yang tidak melihat keluaran sistem, label ditetapkan lebih dulu, dan isinya dikunci dengan SHA-256 sebelum dijalankan. Set ini dijalankan satu kali pada ${s.waktu_utc.slice(0, 10)}. ${s.aturan}`),
+    tabelGeneratif("Tabel hasil set tersegel", e, kolom),
+    ps?.[kirim] ? h("p", { class: "catatan" }, `Pencarian mode kutipan pada set ini: pasal tepat di peringkat 1 pada ${pct(ps[kirim]["hit@1"].nilai)} pertanyaan terjawab dan di lima teratas pada ${pct(ps[kirim]["hit@5"].nilai)}.`) : null,
+    h("p", { class: "catatan" }, "Pertanyaan tersegel tetap ditulis oleh asisten AI, bukan praktisi K3, jadi set ini mengurangi bias penyetelan tetapi tidak menghapus bias penulis. 20 pertanyaan injeksi dari penulis yang sama tidak termasuk run sekali jalan ini; pertanyaan itu sudah dievaluasi lebih dulu dan hasilnya ada di bagian prompt injection di atas."));
+}
+
+// Holdout v2: evaluasi akhir alur v2, dijalankan sekali dengan kriteria lolos yang dibekukan.
+const NAMA_KRITERIA = [
+  ["generatif_benar", "Jawaban generatif benar", (k) => `minimal ${pct(k.generatif_benar_min)}`, (v2) => sel(v2.benar_v2)],
+  ["lebih_baik_dari_kutipan", "Lebih baik dari kutipan langsung", () => "lebih tinggi", (v2) => `${v2.benar_v2.k} lawan ${v2.kutipan_bawaan_benar_v2.k}`],
+  ["tak_terjawab_keliru", "Pertanyaan tanpa dasar dijawab keliru", (k) => `paling banyak ${pct(k.tak_terjawab_keliru_maks)}`, (v2) => sel(v2.tak_terjawab_keliru_v2)],
+  ["sitasi_semua_sah", "Jawaban yang semua sitasinya tepat", (k) => `minimal ${pct(k.sitasi_semua_sah_min)}`, (v2) => `${v2.sitasi_semua_sah.k} dari ${v2.sitasi_semua_sah.n} (${desimal((v2.sitasi_semua_sah.nilai * 100).toFixed(1))}%)`],
+  ["kalimat_tanpa_sitasi", "Kalimat tanpa sitasi yang ditampilkan", () => "0", (v2) => String(v2.kalimat_tanpa_sitasi_tampil)],
+];
+
+function bagianHoldout(ev) {
+  const ho = ev.holdout_v2;
+  if (!ho) return null;
+  const { ambang, hasil } = ho.kriteria;
+  const v1 = ho.alur_v1;
+  const v2 = ho.alur_v2;
+  const sens = ho.sensitivitas_tanpa_duplikat;
+  const baris = [
+    ["Jawaban benar (pertanyaan terjawab)", (x) => sel(x.benar_v2), sel(v2.kutipan_bawaan_benar_v2)],
+    ["Dijawab (cakupan)", (x) => sel(x.dijawab_terjawab), sel(v2.kutipan_bawaan_dijawab_terjawab)],
+    ["Benar di antara yang dijawab", (x) => sel(x.benar_v2_di_antara_dijawab), sel(v2.kutipan_bawaan_benar_v2_di_antara_dijawab)],
+    ["Pertanyaan tanpa dasar: ditolak atau koreksi premis", (x) => `${x.tak_terjawab_ditolak.k + x.tak_terjawab_koreksi_premis.k} dari ${x.tak_terjawab_ditolak.n}`, `${v2.kutipan_bawaan_tak_terjawab_dijawab.n - v2.kutipan_bawaan_tak_terjawab_dijawab.k} dari ${v2.kutipan_bawaan_tak_terjawab_dijawab.n}`],
+    ["Pertanyaan tanpa dasar: dijawab keliru", (x) => sel(x.tak_terjawab_keliru_v2), sel(v2.kutipan_bawaan_tak_terjawab_dijawab)],
+    ["Jawaban yang semua sitasinya tepat", (x) => sel(x.sitasi_semua_sah), "-"],
+    ["Kalimat yang didukung pasal yang dikutipnya", (x) => sel(x.kalimat_didukung), "disalin, tidak dinilai"],
+  ];
+  return h("section", { "aria-labelledby": "e-holdout" },
+    h("h2", { id: "e-holdout" }, "Evaluasi akhir: holdout v2"),
+    h("div", { class: "kotak-jujur" },
+      h("p", {}, h("strong", {}, `Hasil: ${hasil.lolos ? "LOLOS" : "TIDAK LOLOS"}. `), hasil.lolos ? "Semua kriteria terpenuhi." : "Satu kriteria tidak terpenuhi, jadi mode generatif tetap prototipe riset dan tidak aktif di domain produksi. Kriteria tidak diubah setelah hasil keluar, dan set ini tidak akan dipakai lagi.")),
+    h("p", {}, `${ho.set.pertanyaan} pertanyaan baru (${ho.set.terjawab} ada jawabannya, ${ho.set.tak_terjawab} tidak ada) ditulis penulis terpisah, dikunci dengan SHA-256 sebelum ada run, dan dijalankan satu kali pada ${ho.waktu_utc.slice(0, 10)}. Alur v1, alur v2, dan kutipan langsung dinilai pada pertanyaan yang sama dengan penilaian v2 yang dibekukan lebih dulu (docs/penilaian-v2.md).`),
+    h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel kriteria holdout v2, dapat digulir" },
+      h("table", { class: "tabel" },
+        h("thead", {}, h("tr", {}, ...["Kriteria", "Syarat", "Alur v2", "Status"].map((x, i) => h("th", { scope: "col", class: i ? "num" : null }, x)))),
+        h("tbody", {}, NAMA_KRITERIA.map(([k, n, syarat, nilai]) => h("tr", {}, h("th", { scope: "row" }, n), h("td", { class: "num" }, syarat(ambang)), h("td", { class: "num" }, nilai(v2)), h("td", { class: "num" }, hasil[k] ? "lolos" : "gagal")))))),
+    h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan holdout v2, dapat digulir" },
+      h("table", { class: "tabel" },
+        h("thead", {}, h("tr", {}, ...["Ukuran", "Alur v1", "Alur v2", "Kutipan langsung"].map((x, i) => h("th", { scope: "col", class: i ? "num" : null }, x)))),
+        h("tbody", {}, baris.map(([n, f, kutip]) => h("tr", {}, h("th", { scope: "row" }, n), h("td", { class: "num" }, f(v1)), h("td", { class: "num" }, f(v2)), h("td", { class: "num" }, kutip)))))),
+    h("p", { class: "catatan" }, `Uji sensitivitas yang ditetapkan sebelum run: tanpa ${sens.dikeluarkan.length} pertanyaan yang teksnya kebetulan identik dengan set lain, alur v2 menjawab benar ${sel(sens.v2.benar_v2)} dan sitasinya tepat semua pada ${sel(sens.v2.sitasi_semua_sah)}. Kesimpulannya sama.`),
+    h("p", { class: "catatan" }, "Kegagalan sitasi umumnya berasal dari kalimat tambahan yang merujuk pasal terkait di luar label; sebagian jawabannya tetap benar. Pertanyaan ditulis asisten AI, bukan praktisi K3, dan revisi internal model Workers AI tidak dapat dikunci. Rincian lengkap: docs/holdout-v2-hasil.md."));
+}
+
+// Ringkasan model embedding dan reranker, dari selisih berpasangan di data uji.
+function catatanPadat(ps, sel, poin) {
+  const rr = Object.keys(ps).filter((k) => k.startsWith("bm25_konteks+"));
+  const dense = sel.hybrid_e5_large_vs_bm25_konteks;
+  if (!dense && !rr.length) return h("p", { class: "catatan" }, "Model embedding dan reranker belum dievaluasi di versi ini.");
+  const nama = (k) => ps[k].label;
+  const teks = [];
+  if (dense) teks.push(`Gabungan BM25 dan e5 terbesar dibanding BM25 dengan konteks: ${poin(dense["mrr@10"])} MRR.`);
+  for (const k of rr) teks.push(`${nama(k)} dibanding BM25 dengan konteks saja: ${poin(sel[`${k}_vs_bm25_konteks`]["mrr@10"])} MRR, pasal tepat di peringkat 1 pada ${pct(ps[k].metrik.test["hit@1"].nilai)} pertanyaan uji.`);
+  teks.push("Selisih ini dihitung pada data uji yang sama dan tanpa koreksi untuk banyak perbandingan. Model embedding dan reranker dijalankan offline di GitHub Actions; label \"dipakai\" hanya menandai cara yang benar-benar berjalan di peramban.");
+  return h("p", { class: "catatan" }, teks.join(" "));
+}
+
 export function mountEvaluation(main, { evaluasi: ev }) {
   const ps = ev.pencarian.per_sistem;
   const kirim = ev.metode_dikirim;
@@ -67,15 +247,22 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const tekan = ev.uji_tekanan;
   const gagalSitasi = ev.kegagalan_test.filter((f) => f.jenis === "sitasi_pasal_salah");
   const gagalSatuPeraturan = gagalSitasi.filter((f) => f.satu_peraturan).length;
+  const genUtama = KONFIG_SERVER ? ev.generatif?.[KONFIG_SERVER]?.test : null;
+  const segel = ev.tersegel;
+  const segelUtama = KONFIG_SERVER ? segel?.generatif?.[KONFIG_SERVER] : null;
 
   const ringkas = h("section", { "aria-labelledby": "e-ringkas" },
     h("h2", { id: "e-ringkas" }, "Ringkasan jujur"),
     h("div", { class: "kotak-jujur" },
-      h("p", {}, `Pasal yang tepat muncul di peringkat 1 pada ${pct(m["hit@1"].nilai)} pertanyaan uji dan di lima teratas pada ${pct(m["hit@5"].nilai)}. Namun dari ${salah.n} jawaban yang diberikan, ${salah.k} (${pct(salahCi.nilai)}) mengutip pasal yang salah. Selalu periksa pasal yang dikutip.`),
-      h("p", {}, `Angka ini optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
+      h("p", {}, `Mode kutipan langsung: pasal yang tepat muncul di peringkat 1 pada ${pct(m["hit@1"].nilai)} pertanyaan uji dan di lima teratas pada ${pct(m["hit@5"].nilai)}. Namun dari ${salah.n} jawaban yang diberikan, ${salah.k} (${pct(salahCi.nilai)}) mengutip pasal yang salah. Selalu periksa pasal yang dikutip.`),
+      genUtama ? h("p", {}, `Mode generatif server (${MODEL_SERVER.nama}) menjawab benar ${genUtama.jawaban_benar.k} dari ${genUtama.jawaban_benar.n} pertanyaan uji yang ada jawabannya (kutipan langsung: ${t.jawaban_benar.k}), ${pct(genUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip menurut penilai NLI, dan ${genUtama.dijawab_padahal_tak_terjawab.k} dari ${genUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Kalimatnya ditulis model, jadi tetap bisa keliru walau bersitasi.`) : null,
+      segelUtama ? h("p", {}, `Pada set uji tersegel (${segel.set.pertanyaan} pertanyaan dari penulis terpisah, dijalankan sekali), angkanya lebih rendah: mode generatif server menjawab benar ${segelUtama.jawaban_benar.k} dari ${segelUtama.jawaban_benar.n} (${pct(segelUtama.jawaban_benar.nilai)}; kutipan langsung: ${segel.ekstraktif.jawaban_benar.k}), ${pct(segelUtama.kalimat_didukung.nilai)} kalimatnya didukung pasal yang dikutip, dan ${segelUtama.dijawab_padahal_tak_terjawab.k} dari ${segelUtama.dijawab_padahal_tak_terjawab.n} pertanyaan tanpa dasar dijawab. Angka tersegel inilah perkiraan yang lebih dapat dipercaya.`) : null,
+      genUtama ? h("p", {}, "Angka generatif pada data uji dan set tersegel di bawah diukur pada alur v1. Alur v2 (gerbang BM25 atau reranker, ringkasan ayat untuk pasal panjang, kutipan cadangan berurutan reranker) dipilih di data dev lalu diuji sekali pada holdout v2.") : null,
+      ev.holdout_v2 ? h("p", {}, `Evaluasi akhir (holdout v2, ${ev.holdout_v2.set.pertanyaan} pertanyaan baru): alur v2 menjawab benar ${rasio(ev.holdout_v2.alur_v2.benar_v2)}, kutipan langsung ${rasio(ev.holdout_v2.alur_v2.kutipan_bawaan_benar_v2)}, dan tidak ada pertanyaan tanpa dasar yang dijawab keliru. Namun jawaban yang semua sitasinya tepat baru ${rasio(ev.holdout_v2.alur_v2.sitasi_semua_sah)}, di bawah syarat 90%. Karena itu proyek ini berstatus RAG Research Prototype: di domain produksi hanya kutipan langsung yang aktif.`) : null,
+      h("p", {}, `Angka data uji optimistis: pertanyaannya ditulis oleh asisten AI pengembang, bukan oleh praktisi K3, dan data uji sudah pernah dilihat sebelum desain akhir dibuat. Rinciannya ada di bagian "Cara evaluasi dibuat dan batasnya".`)));
 
   const hasil = h("section", { "aria-labelledby": "e-hasil" },
-    h("h2", { id: "e-hasil" }, "Hasil pada data uji"),
+    h("h2", { id: "e-hasil" }, "Mode kutipan langsung pada data uji"),
     h("p", { class: "catatan" }, `Data uji berisi ${t.jawaban_benar.n} pertanyaan yang ada jawabannya dan ${t.dijawab_padahal_tak_terjawab.n} pertanyaan yang sengaja tidak ada jawabannya di korpus. Rentang di bawah angka adalah interval kepercayaan 95%.`),
     h("div", { class: "kartu-baris" },
       kartu("Pasal tepat di peringkat 1", pct(m["hit@1"].nilai), rentang(m["hit@1"]), "Seberapa sering pasal yang memuat jawaban ada di urutan pertama."),
@@ -89,7 +276,8 @@ export function mountEvaluation(main, { evaluasi: ev }) {
     `Tidak ada kalimat jawaban yang berbeda dari teks korpus (${t.kutipan_tidak_verbatim.jumlah} dari ${t.kutipan_tidak_verbatim.n}). Angka nol ini hanya mencerminkan cara kerjanya, yaitu menyalin, bukan temuan. Teks korpus sendiri adalah hasil ekstraksi PDF; beberapa dokumen berasal dari OCR dan memuat salah baca.`);
 
   const barisMetode = Object.entries(ps).map(([key, v]) => h("tr", { class: key === kirim ? "dipakai" : null },
-    h("th", { scope: "row" }, v.label, key === kirim ? h("span", { class: "lencana" }, "dipakai di situs") : null),
+    h("th", { scope: "row" }, v.label, key === kirim ? h("span", { class: "lencana" }, "dipakai mode kutipan") : null,
+      key === ev.metode_generatif ? h("span", { class: "lencana" }, "dipakai mode generatif") : null),
     h("td", { class: "num" }, pct(v.metrik.dev["mrr@10"].nilai)),
     h("td", { class: "num" }, pct(v.metrik.test["hit@1"].nilai), batas(v.metrik.test["hit@1"])),
     h("td", { class: "num" }, pct(v.metrik.test["hit@5"].nilai), batas(v.metrik.test["hit@5"])),
@@ -98,13 +286,13 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   const poin = (d) => `${d.selisih > 0 ? "+" : ""}${(d.selisih * 100).toFixed(1).replace(".", ",")} poin (interval ${(d.bawah * 100).toFixed(1).replace(".", ",")} sampai ${(d.atas * 100).toFixed(1).replace(".", ",")})`;
   const metode = h("section", { "aria-labelledby": "e-metode" },
     h("h2", { id: "e-metode" }, "Perbandingan metode pencarian"),
-    h("p", {}, "Lima cara mencari diuji pada pertanyaan yang sama. Metode yang dipakai situs dipilih dari kolom MRR data dev. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja."),
+    h("p", {}, `${Object.keys(ps).length} cara mencari diuji pada pertanyaan yang sama: BM25, LSA, model embedding e5 (multilingual, tiga ukuran), gabungan BM25 dan e5, serta reranker cross-encoder yang menilai ulang 20 pasal teratas. Metode mode kutipan dipilih dari kolom MRR data dev, di antara cara yang berjalan tanpa unduhan model. Mode generatif memakai BM25 dengan reranker mMiniLM; aturan pemilihannya ditetapkan setelah angka semua cara terlihat, jadi angka uji untuk pilihan itu optimistis. Kolom itu hanya dasar pemilihan: nilainya lebih tinggi daripada hasil di data uji karena metode yang menang dipilih dari sana, jadi jangan dibaca sebagai kinerja.`),
     h("div", { class: "tabel-bungkus", tabindex: "0", role: "region", "aria-label": "Tabel perbandingan metode, dapat digulir" },
       h("table", { class: "tabel" },
         h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Metode"), h("th", { scope: "col", class: "num" }, "MRR data dev (dasar pemilihan)"), h("th", { scope: "col", class: "num" }, "Peringkat 1 (uji)"), h("th", { scope: "col", class: "num" }, "Lima teratas (uji)"), h("th", { scope: "col", class: "num" }, "MRR (uji)"))),
         h("tbody", {}, barisMetode))),
-    h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Pada MRR data uji, BM25 dengan stem dan konteks lebih baik daripada BM25 polos: ${poin(sel.bm25_konteks_vs_bm25_polos["mrr@10"])}. Gabungan BM25 dan LSA tidak lebih baik daripada BM25 dengan konteks: ${poin(sel.hybrid_vs_bm25_konteks["mrr@10"])}. Ini tiga perbandingan tanpa koreksi, dan selisih peringkat lima teratas tidak berbeda nyata. Karena itu situs hanya memuat BM25. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`),
-    h("p", { class: "catatan" }, "Model embedding pra-latih (misalnya e5) belum dibandingkan karena unduhan modelnya diblokir di lingkungan pengembangan. Jangan membaca tabel ini sebagai bukti bahwa BM25 lebih baik daripada embedding pra-latih."));
+    h("p", { class: "catatan" }, `MRR adalah rata-rata 1/peringkat pasal yang tepat; makin dekat 100% makin baik. Pada MRR data uji, BM25 dengan stem dan konteks lebih baik daripada BM25 polos: ${poin(sel.bm25_konteks_vs_bm25_polos["mrr@10"])}. Gabungan BM25 dan LSA tidak lebih baik daripada BM25 dengan konteks: ${poin(sel.hybrid_vs_bm25_konteks["mrr@10"])}. Ini tiga perbandingan tanpa koreksi, dan selisih peringkat lima teratas tidak berbeda nyata. Acak murni menempatkan pasal tepat di lima teratas hanya ${pct(ev.pencarian.acak["hit@5"])} dari waktu.`),
+    catatanPadat(ps, sel, poin));
 
   const gaya = ps[kirim].per_gaya_test;
   const tekanBlok = tekan ? h("div", { class: "kotak-jujur" },
@@ -146,7 +334,9 @@ export function mountEvaluation(main, { evaluasi: ev }) {
       h("li", {}, "Fakta kunci dicocokkan sebagai kumpulan kata, bukan frasa, dan hampir sepertiga butir kunci (29% menurut audit independen) sudah tercantum di teks pertanyaannya. Karena itu \"jawaban benar\" lebih longgar daripada kedengarannya."),
       h("li", {}, "Pertanyaan relatif sedikit. Interval kepercayaan menghitung ketidakpastian sampel, tetapi tidak menghitung bias dari penulis tunggal dan dari penyetelan pada data yang sama."),
       h("li", {}, "Korpus hanya 15 peraturan. Peraturan lain tidak ada, dan peraturan bisa berubah setelah tanggal akses.")),
-    h("p", {}, "Untuk angka yang lebih dapat dipercaya diperlukan set uji tersegel: pertanyaan ditulis praktisi K3 atau orang lain yang tidak melihat sistem, label ditetapkan sebelum melihat keluaran, dan dijalankan satu kali. Itu belum dikerjakan."));
+    h("p", {}, ev.tersegel
+      ? "Set uji tersegel sudah dijalankan satu kali; hasilnya ada di bagian \"Set uji tersegel\". Set itu tetap ditulis asisten AI, jadi angka yang lebih kuat masih membutuhkan pertanyaan dari praktisi K3 yang tidak melihat sistem."
+      : "Set uji tersegel sudah disiapkan dan dikunci, tetapi belum dijalankan di versi ini. Angka yang lebih kuat lagi membutuhkan pertanyaan dari praktisi K3 yang tidak melihat sistem."));
 
   const ulang = h("section", { "aria-labelledby": "e-ulang" },
     h("h2", { id: "e-ulang" }, "Ulangi sendiri"),
@@ -156,6 +346,6 @@ export function mountEvaluation(main, { evaluasi: ev }) {
   clear(main).append(h("div", { class: "halaman halaman-lebar" },
     h("header", {}, h("h1", {}, "Evaluasi"),
       h("p", { class: "lead" }, "Seberapa sering sistem ini mengutip pasal yang tepat, seberapa sering ia salah, dan seberapa sering ia memilih diam. Semua angka dihitung dari set pertanyaan tetap, tetapi ada batas penting pada cara set itu dibuat; baca ringkasan jujur di bawah.")),
-    ringkas, hasil, salinan, metode, ambang, gagal, protokol, ulang));
+    ringkas, hasil, salinan, bagianGeneratif(ev), bagianTersegel(ev), bagianHoldout(ev), metode, ambang, gagal, protokol, ulang));
   main.dataset.ready = "evaluasi";
 }

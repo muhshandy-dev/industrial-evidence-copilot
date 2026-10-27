@@ -268,3 +268,25 @@ tr.dipakai th, tr.dipakai td { background: var(--aksen-latar); }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .pasal .ayat[data-bukti] { background-size: 100% 100%; }
 }
+
+/* Mode jawaban dan jawaban generatif */
+.mode-jawab { border: 1px solid var(--garis); border-radius: 12px; padding: 12px 14px; margin: 0; display: flex; flex-direction: column; gap: 10px; background: var(--kertas); }
+.mode-jawab legend { padding: 0 4px; }
+.mode-pilih { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; cursor: pointer; }
+.mode-pilih input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--aksen); }
+.mode-pilih > span { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.mode-status { font-size: 13px; color: var(--redup); line-height: 1.5; }
+.mode-status:empty { display: none; }
+.mode-batang { height: 6px; border-radius: 6px; background: var(--kertas-2); border: 1px solid var(--garis); overflow: hidden; }
+.mode-batang-isi { display: block; height: 100%; width: 0; background: var(--aksen); transition: width 0.2s; }
+.gen-mentah { font: 400 16px/1.65 var(--baca); color: var(--redup); white-space: pre-wrap; }
+.gen-isi { gap: 10px; }
+.gen-kalimat { font: 400 17.5px/1.65 var(--baca); }
+.gen-sitasi { font: 600 12px var(--mono); color: var(--aksen-tinta); background: var(--aksen-latar); border: 1px solid transparent; border-radius: 6px; padding: 1px 6px; margin-left: 2px; vertical-align: 2px; }
+.gen-sitasi:hover, .gen-sitasi:focus-visible { border-color: var(--aksen); }
+.gen-sumber { list-style: none; margin: 4px 18px 0; padding: 10px 0 0; border-top: 1px solid var(--garis); display: flex; flex-direction: column; gap: 4px; }
+.gen-sumber button { display: flex; gap: 10px; align-items: baseline; width: 100%; text-align: left; background: none; border: 0; padding: 6px 4px; font-size: 13.5px; border-radius: 6px; }
+.gen-sumber button:hover { background: var(--kertas-2); }
+.gen-sumber li[data-dikutip="tidak"] button { color: var(--redup); }
+.gen-sumber .kode { font: 600 12px var(--mono); color: var(--aksen-tinta); }
+.gen-catatan { margin: 12px 18px 0; font-size: 13.5px; border-left: 4px solid var(--sedang); background: var(--sedang-latar); padding: 10px 12px; border-radius: 0 8px 8px 0; }

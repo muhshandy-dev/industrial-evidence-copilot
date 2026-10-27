@@ -1,0 +1,142 @@
+name: Model
+
+# Tahap yang butuh model dari Hugging Face: embedding dan reranker. Hasilnya disimpan di
+# eval/cache/ dan di-commit ke cabang yang sama, sehingga evaluasi biasa (CI) dapat diulang
+# tanpa mengunduh model. Reranker dibagi ke beberapa shard paralel karena cross-encoder
+# besar di CPU lambat (satu runner tidak selesai dalam 3,5 jam).
+on:
+  # Push yang mengubah berkas ini menjalankan semua tahap (juga mendaftarkan workflow ke GitHub).
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/model.yml"]
+  workflow_dispatch:
+    inputs:
+      tahap:
+        description: "embed, rerank, atau semua"
+        required: true
+        default: semua
+      shards:
+        description: "Jumlah shard reranker"
+        default: "8"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: model-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  TAHAP: ${{ inputs.tahap || 'semua' }}
+  SHARDS: ${{ inputs.shards || '8' }}
+
+jobs:
+  embed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      shards: ${{ steps.m.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-emb-${{ hashFiles('src/evidence/dense.py') }}
+          restore-keys: hf-
+      - name: Pasang dependensi (torch CPU)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,model]"
+      - name: Embedding
+        if: env.TAHAP == 'embed' || env.TAHAP == 'semua'
+        run: evidence embed
+      - id: m
+        run: echo "shards=$(python -c "import json;print(json.dumps(list(range(int('$SHARDS')))))")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: emb
+          path: eval/cache/emb
+
+  rerank:
+    needs: embed
+    if: inputs.tahap != 'embed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.embed.outputs.shards) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-rerank-${{ hashFiles('src/evidence/rerank.py') }}
+          restore-keys: hf-
+      - name: Pasang dependensi (torch CPU)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,model]"
+      - uses: actions/download-artifact@v4
+        with:
+          name: emb
+          path: eval/cache/emb
+      - name: Reranker (shard ${{ matrix.shard }})
+        run: evidence rerank --shard ${{ matrix.shard }} --shards "$SHARDS" --out-dir rerank-shard
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rerank-${{ matrix.shard }}
+          path: rerank-shard
+
+  gabung:
+    needs: [embed, rerank]
+    if: always() && needs.embed.result == 'success' && (needs.rerank.result == 'success' || needs.rerank.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - uses: actions/download-artifact@v4
+        with:
+          name: emb
+          path: eval/cache/emb
+      - uses: actions/download-artifact@v4
+        if: needs.rerank.result == 'success'
+        with:
+          pattern: rerank-*
+          path: rerank-shard
+          merge-multiple: true
+      - name: Gabungkan skor reranker
+        if: needs.rerank.result == 'success'
+        run: evidence rerank-merge rerank-shard/*.json
+      # Cache di-commit lebih dulu, supaya hasil model yang mahal tidak hilang bila evaluasi gagal.
+      - name: Commit cache model
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/cache
+          if git diff --cached --quiet; then echo "cache tidak berubah"; exit 0; fi
+          git commit -m "Model: perbarui cache ($TAHAP)"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Evaluasi dan ekspor
+        run: |
+          evidence eval
+          evidence export
+          pytest -q
+      - name: Commit hasil evaluasi
+        run: |
+          git add eval/results.json web/public/data
+          if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
+          git commit -m "Model: hasil evaluasi setelah cache ($TAHAP)"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

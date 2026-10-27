@@ -19,10 +19,14 @@ from pathlib import Path
 
 import numpy as np
 
+from . import generation
 from . import metrics as M
 from .answer import extract_answer
 from .corpus import Corpus
+from .dense import MODELS, DenseIndex
 from .evalset import key_hit, relevant, summary
+from .fusion import rank_order, rrf
+from .rerank import RERANKERS, RerankCache
 from .retriever import Retriever
 
 # Dicatat apa adanya di eval/results.json dan ditampilkan di halaman Evaluasi.
@@ -72,12 +76,36 @@ VARIANTS = (
 class System:
     key: str
     label: str
-    retriever: Retriever
-    method: str
+    retriever: Retriever  # selalu ada: BM25 dipakai untuk gerbang penolakan dan idf
+    method: str  # bm25 | lsa | hybrid | dense | hybrid_dense
     context: bool
+    dense: DenseIndex | None = None
+    rerank: RerankCache | None = None
+    # True hanya bila situs benar-benar menjalankan sistem ini dan paritasnya diuji. Sistem padat
+    # baru boleh True setelah embedding pertanyaan di peramban memakai bobot ONNX yang sama dengan
+    # evaluasi; sampai itu, ia hanya kandidat (layak_peramban).
+    situs: bool = True
+    layak_peramban: bool = True
+    rrf_k: int = 60
+
+    def scores(self, query: str) -> np.ndarray:
+        if self.method in ("bm25", "lsa", "hybrid"):
+            s = self.retriever.scores(query, self.method)
+        elif self.method == "dense":
+            s = self.dense.scores(query)
+        elif self.method == "hybrid_dense":
+            s = rrf([self.retriever.scores(query, "bm25"), self.dense.scores(query)], k=self.rrf_k)
+        else:
+            raise ValueError(f"metode tidak dikenal: {self.method}")
+        return self.rerank.apply(query, s) if self.rerank else s
+
+    def search(self, query: str, k: int = 10) -> list[int]:
+        return [int(i) for i in rank_order(self.scores(query))[:k]]
 
 
-def build_systems(corpus: Corpus) -> dict[str, System]:
+def build_systems(corpus: Corpus, root: Path | None = None) -> dict[str, System]:
+    """Sistem leksikal selalu ada. Sistem padat dan reranker ikut bila cache-nya tersedia
+    (lihat dense.py dan rerank.py)."""
     cache: dict[tuple[bool, bool], Retriever] = {}
     out: dict[str, System] = {}
     for key, label, cfg, method in VARIANTS:
@@ -87,8 +115,53 @@ def build_systems(corpus: Corpus) -> dict[str, System]:
                 corpus.index_text(i, context=cfg["context"]) for i in range(len(corpus.chunks))
             ]
             cache[sig] = Retriever(texts, use_stem=cfg["use_stem"])
-        out[key] = System(key, label, cache[sig], method, cfg["context"])
+        out[key] = System(key, label, cache[sig], method, cfg["context"], situs=method == "bm25")
+    if root is None:
+        return out
+    sha = corpus_sha(corpus)
+    base = out["bm25_konteks"]
+    ids = [c.id for c in corpus.chunks]
+    for mkey, (repo, _rev, _dim, situs) in MODELS.items():
+        idx = DenseIndex.load(root, mkey, sha)
+        if idx is None:
+            continue
+        name = repo.split("/")[-1]
+        out[f"dense_{mkey}"] = System(
+            f"dense_{mkey}", f"Dense {name}", base.retriever, "dense", True, idx,
+            situs=False, layak_peramban=situs,
+        )  # fmt: skip
+        out[f"hybrid_{mkey}"] = System(
+            f"hybrid_{mkey}", f"Hibrida BM25 + {name} (RRF)", base.retriever, "hybrid_dense",
+            True, idx, situs=False, layak_peramban=situs,
+        )  # fmt: skip
+    for rkey, (repo, _rev, r_situs) in RERANKERS.items():
+        rc = RerankCache.load(root, rkey, sha, ids)
+        if rc is None:
+            continue
+        # Hanya sistem tahap pertama (tanpa reranker) yang di-rerank; reranker tidak ditumpuk.
+        firsts = [
+            k for k in out if "+" not in k and (k == "bm25_konteks" or k.startswith("hybrid_e5"))
+        ]
+        # Varian 8-bit memakai repositori yang sama, jadi labelnya perlu penanda sendiri.
+        nama_r = repo.split("/")[-1] + (
+            " 8-bit (ditolak, skor bergantung CPU)" if rkey.endswith("_q8") else ""
+        )
+        for first in firsts:
+            f = out[first]
+            out[f"{first}+{rkey}"] = System(
+                f"{first}+{rkey}", f"{f.label} + rerank {nama_r}", f.retriever,
+                f.method, True, f.dense, rc, situs=False,
+                layak_peramban=f.layak_peramban and r_situs,
+            )  # fmt: skip
     return out
+
+
+def corpus_sha(corpus: Corpus) -> str:
+    """Sidik isi korpus yang mempengaruhi pencarian (id dan teks pasal), bukan metadata."""
+    blob = json.dumps(
+        [(c.id, corpus.index_text(i)) for i, c in enumerate(corpus.chunks)], ensure_ascii=False
+    )
+    return hashlib.sha256(blob.encode()).hexdigest()
 
 
 def _random_hit(n: int, g: int, k: int) -> float:
@@ -98,9 +171,14 @@ def _random_hit(n: int, g: int, k: int) -> float:
     return 1.0 - math.comb(n - g, k) / math.comb(n, k)
 
 
-def _retrieval_row(ranked: list[str], gold: set[str]) -> dict[str, float]:
+def _retrieval_row(
+    ranked: list[str], gold: set[str], primary: set[str] | None = None
+) -> dict[str, float]:
     row = {f"hit@{k}": M.hit_at_k(ranked, gold, k) for k in K_LIST}
     row["mrr@10"] = M.reciprocal_rank(ranked, gold, 10)
+    if primary is not None:
+        for k in (5, 10, 20):
+            row[f"recall@{k}"] = M.recall_at_k(ranked, primary, k)
     row["ndcg@10"] = M.ndcg_at_k(ranked, gold, 10)
     return row
 
@@ -120,13 +198,22 @@ def eval_retrieval(corpus: Corpus, systems: dict[str, System], rows: list[dict])
         per_q[key] = {"dev": [], "test": []}
         strict[key] = {"dev": [], "test": []}
         for r in answerable:
-            ranked = [ids[i] for i in sys_.retriever.search(r["tanya"], sys_.method, 10)]
-            per_q[key][r["split"]].append(_retrieval_row(ranked, relevant(r)))
+            ranked = [ids[i] for i in sys_.search(r["tanya"], 20)]
+            per_q[key][r["split"]].append(_retrieval_row(ranked, relevant(r), set(r["gold"])))
             strict[key][r["split"]].append(_retrieval_row(ranked, set(r["gold"])))
     result: dict = {"per_sistem": {}, "selisih_berpasangan": {}}
     metric_names = list(next(iter(per_q.values()))["test"][0].keys())
     for key, sys_ in systems.items():
-        entry: dict = {"label": sys_.label, "metrik": {}}
+        entry: dict = {
+            "label": sys_.label,
+            "situs": sys_.situs,
+            "layak_peramban": sys_.layak_peramban,
+            "metrik": {},
+        }
+        if sys_.dense is not None:
+            entry["model_embedding"] = {k: sys_.dense.meta[k] for k in ("model", "revisi")}
+        if sys_.rerank is not None:
+            entry["model_reranker"] = sys_.rerank.meta
         for split in ("dev", "test"):
             entry["metrik"][split] = {
                 m: _mean_ci([q[m] for q in per_q[key][split]]) for m in metric_names
@@ -156,11 +243,15 @@ def eval_retrieval(corpus: Corpus, systems: dict[str, System], rows: list[dict])
         )
         for k in K_LIST
     }
-    for a, b in (
-        ("hybrid", "bm25_konteks"),
-        ("hybrid", "bm25_polos"),
-        ("bm25_konteks", "bm25_polos"),
-    ):
+    pairs = [("hybrid", "bm25_konteks"), ("hybrid", "bm25_polos"), ("bm25_konteks", "bm25_polos")]
+    for key in systems:
+        if "+" in key:
+            pairs.append((key, key.split("+")[0]))
+        elif key.startswith(("dense_", "hybrid_e5")):
+            pairs.append((key, "bm25_konteks"))
+        if key.startswith("hybrid_e5") and "+" not in key:
+            pairs.append((key, "dense_" + key.removeprefix("hybrid_")))
+    for a, b in pairs:
         d: dict = {}
         for m in ("hit@5", "mrr@10"):
             mean, lo, hi = M.paired_bootstrap_diff(
@@ -188,7 +279,7 @@ def answer_all(corpus: Corpus, system: System, rows: list[dict], threshold: floa
     idf = system.retriever.bm25.idf
     out = []
     for r in rows:
-        ranked = system.retriever.search(r["tanya"], system.method, 10)
+        ranked = system.search(r["tanya"], 10)
         top_score = (
             float(
                 system.retriever.bm25.scores(system.retriever.query_tokens(r["tanya"]))[ranked[0]]
@@ -377,10 +468,10 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         raise SystemExit("set pertanyaan tidak valid:\n" + "\n".join(problems[:20]))
     if corpus.asal != "nyata":
         raise SystemExit("evaluasi hanya sah pada korpus nyata")
-    systems = build_systems(corpus)
+    systems = build_systems(corpus, corpus_path.resolve().parents[1])
     retrieval = eval_retrieval(corpus, systems, rows)
     shipped_key = max(
-        retrieval["per_sistem"],
+        (k for k in retrieval["per_sistem"] if systems[k].situs),
         key=lambda k: retrieval["per_sistem"][k]["metrik"]["dev"]["mrr@10"]["nilai"],
     )
     shipped = systems[shipped_key]
@@ -421,7 +512,10 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "pertanyaan": {"sha256": _sha(questions_path), **summary(rows)},
         "lingkungan": {"python": platform.python_version(), "numpy": np.__version__},
         "metode_dikirim": shipped_key,
-        "aturan_pilih_metode": "MRR@10 tertinggi pada split dev, di antara lima konfigurasi.",
+        "aturan_pilih_metode": (
+            "MRR@10 tertinggi pada split dev, di antara konfigurasi yang benar-benar dijalankan "
+            "situs (paritas diuji)."
+        ),
         "protokol": PROTOKOL,
         "uji_tekanan": stress_probe(
             corpus, shipped, threshold, questions_path.parent / "stress.jsonl"
@@ -431,6 +525,17 @@ def run(corpus_path: Path, questions_path: Path) -> dict:
         "jawaban": ans_summary,
         "pembanding_jawaban": base,
         "kegagalan_test": failures(rows, recs, corpus),
+        "metode_generatif": generation.SISTEM_GENERATIF
+        if generation.SISTEM_GENERATIF in systems
+        else None,
+        "generatif": generation.evaluate(
+            corpus_path.resolve().parents[1],
+            corpus,
+            systems.get(generation.SISTEM_GENERATIF, shipped),
+            threshold,
+            rows,
+            recs,
+        ),
         "per_pertanyaan": recs,
     }
 

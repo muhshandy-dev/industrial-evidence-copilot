@@ -1,0 +1,170 @@
+name: Holdout v2
+
+# Evaluasi holdout v2, SEKALI jalan, setelah alur v2 dibekukan dan pemilik proyek menyetujui
+# (docs/penilaian-v2.md bagian 3). Alur v1 dan v2 dengan model server situs (Workers AI lewat Pages
+# Function Preview dan token OIDC), lalu NLI, lalu ringkasan dan kriteria lolos. Isi jawaban tidak
+# dicetak ke log. eval/holdout-v2/hasil.json menjadi penanda: `evidence holdout` menolak berjalan
+# lagi bila berkas itu ada. Bila kuota harian habis, hasil tidak ditulis dan workflow dapat
+# dijalankan lagi setelah kuota pulih (keluaran yang sudah ada tidak dipakai untuk memilih apa pun).
+on:
+  # Push yang mengubah berkas ini hanya memeriksa penjaga (hash set dan penanda), tanpa generasi.
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/holdout-v2.yml"]
+  workflow_dispatch:
+    inputs:
+      konfirmasi:
+        description: "Ketik SEKALI untuk menjalankan holdout v2 (tidak dapat diulang setelah hasil ditulis)"
+        required: true
+      endpoint:
+        description: "Pages Function Preview untuk model server (Workers AI)"
+        default: "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/api/jawab"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: holdout-v2-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  siapkan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Penjaga (hash set, belum pernah dijalankan)
+        run: python -c "from pathlib import Path; from evidence import holdout; holdout.guard(Path('.')); print('penjaga lolos')"
+      - name: Konfirmasi
+        if: github.event_name == 'workflow_dispatch' && inputs.konfirmasi != 'SEKALI'
+        run: |
+          echo "konfirmasi harus SEKALI"
+          exit 1
+      - uses: actions/cache@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          path: ~/.cache/huggingface
+          key: hf-rerank-${{ hashFiles('src/evidence/rerank.py') }}
+          restore-keys: hf-
+      - name: Skor reranker untuk pertanyaan holdout
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[model]"
+          evidence holdout rerank
+      - name: Masukan generator alur v1 dan v2
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          evidence holdout input --alur v1 --out masukan-v1.jsonl
+          evidence holdout input --alur v2 --out masukan-v2.jsonl
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          name: masukan
+          path: |
+            masukan-v1.jsonl
+            masukan-v2.jsonl
+            eval/cache/rerank/mminilm/skor.json
+
+  bangkitkan:
+    needs: siapkan
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: masukan
+          path: web/masukan
+      - name: Tunggu Preview memuat alur yang sama
+        env:
+          ENDPOINT: ${{ inputs.endpoint }}
+        run: |
+          alur=$(node -e 'import("./public/js/gen/prompt.js").then((p)=>console.log(p.ALUR))')
+          for i in $(seq 1 20); do
+            j=$(curl -fsS "$ENDPOINT" || true)
+            echo "$j"
+            if echo "$j" | grep -q '"binding":true' && echo "$j" | grep -q "\"alur\":\"$alur\""; then exit 0; fi
+            sleep 30
+          done
+          echo "::error::Preview belum memuat fungsi alur $alur"; exit 1
+      - name: Model server situs, alur v1 lalu v2
+        env:
+          ENDPOINT: ${{ inputs.endpoint }}
+        run: |
+          pilihan=$(node -e 'import("./public/js/gen/prompt.js").then((p) => { const k = Object.keys(p.MODEL_SERVER_KANDIDAT).find((x) => p.MODEL_SERVER_KANDIDAT[x] === p.MODEL_SERVER); if (!k) { console.error("MODEL_SERVER belum dipilih"); process.exit(1); } console.log(k, p.VARIAN_SERVER); })')
+          read -r m v <<< "$pilihan"
+          node scripts/generate-server.mjs --in masukan/masukan-v1.jsonl --out keluaran-v1.jsonl --model "$m" --varian "$v" \
+            --alur v1 --lolos --senyap --endpoint "$ENDPOINT"
+          # Prompt v2 yang identik dengan v1 memakai ulang keluaran v1 tanpa panggilan.
+          node scripts/generate-server.mjs --in masukan/masukan-v2.jsonl --out keluaran-v2.jsonl --model "$m" --varian "$v" \
+            --alur v2 --salin-dari keluaran-v1.jsonl --lolos --senyap --endpoint "$ENDPOINT"
+      # Keluaran disimpan juga bila generasi berhenti (misalnya kuota habis), sebagai jejak.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: keluaran
+          path: web/keluaran-v*.jsonl
+          if-no-files-found: ignore
+
+  gabung:
+    needs: [siapkan, bangkitkan]
+    if: github.event_name == 'workflow_dispatch' && needs.bangkitkan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nli-${{ hashFiles('src/evidence/generation.py') }}
+          restore-keys: hf-
+      - name: Pasang dependensi (torch CPU)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,model]"
+      - uses: actions/download-artifact@v4
+        with:
+          name: masukan
+          path: masukan
+      - uses: actions/download-artifact@v4
+        with:
+          name: keluaran
+          path: keluaran
+      - run: cp masukan/eval/cache/rerank/mminilm/skor.json eval/cache/rerank/mminilm/skor.json
+      - run: evidence gen-merge keluaran/*.jsonl
+      - run: evidence nli --konfigurasi bertahan-llama-3.3-70b,v2-bertahan-llama-3.3-70b
+      - name: Holdout v2 (sekali)
+        run: evidence holdout run
+      # Hasil di-commit apa pun isinya (termasuk bila kriteria gagal) dan sebelum uji, supaya
+      # kegagalan uji tidak membuang hasil yang sudah dihitung.
+      - name: Commit hasil ke cabang ini
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/cache eval/holdout-v2/hasil.json
+          git commit -m "Holdout v2: keluaran model, skor NLI, dan hasil evaluasi sekali jalan"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Uji
+        run: pytest -q

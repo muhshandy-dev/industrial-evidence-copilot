@@ -1,5 +1,6 @@
 // Uji ujung ke ujung di Chromium: alur tanya jawab, tiga halaman, aksesibilitas (axe), ponsel,
 // gerak dikurangi, dan tidak ada permintaan keluar atau pelanggaran CSP.
+import { readFileSync } from "node:fs";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import assert from "node:assert/strict";
@@ -44,6 +45,59 @@ await jalan("pertanyaan yang ada dasarnya dijawab dengan kutipan dan pasal terbu
   await ctx.close();
 });
 
+await jalan("mode generatif server: tombol muat reranker, tidak ada unduhan otomatis, jawaban tetap kutipan sebelum dimuat", async () => {
+  const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
+  await siap(page, "");
+  const server = page.locator("input[name=mode-jawab][value=server]");
+  if (!(await server.count())) { await ctx.close(); return; } // MODEL_SERVER belum dipilih
+  await server.check();
+  await page.waitForFunction(() => /Workers AI/.test(document.querySelector(".mode-status")?.textContent ?? ""));
+  const tombol = page.locator(".mode-jawab button:visible");
+  assert.equal(await tombol.count(), 1);
+  assert.match(await tombol.textContent(), /reranker/);
+  await page.fill("#pertanyaan", "Berapa umur minimal peserta ujian juru las?");
+  await page.press("#pertanyaan", "Enter");
+  await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 15000 });
+  assert.match(await page.textContent(".jawaban-kepala"), /Jawaban ekstraktif/);
+  assert.deepEqual(log.errors, []); assert.deepEqual(log.luar, []);
+  await ctx.close();
+});
+
+await jalan("mode generatif lokal tanpa WebGPU: alasan dan pilihan CPU ditampilkan, tidak ada unduhan otomatis, jawaban tetap kutipan", async () => {
+  const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
+  await page.addInitScript(() => { Object.defineProperty(navigator, "gpu", { value: undefined, configurable: true }); });
+  await siap(page, "");
+  await page.check("input[name=mode-jawab][value=lokal]");
+  await page.waitForFunction(() => /tetap memakai kutipan langsung/.test(document.querySelector(".mode-status")?.textContent ?? ""));
+  const tombol = page.locator(".mode-jawab button:visible");
+  assert.equal(await tombol.count(), 1, "hanya pilihan CPU yang boleh muncul");
+  assert.match(await tombol.textContent(), /CPU/);
+  await page.fill("#pertanyaan", "Berapa umur minimal peserta ujian juru las?");
+  await page.press("#pertanyaan", "Enter");
+  await page.waitForSelector(".jawaban[data-selesai=ya]", { timeout: 15000 });
+  assert.match(await page.textContent(".jawaban-kepala"), /Jawaban ekstraktif/);
+  assert.deepEqual(log.errors, []); assert.deepEqual(log.luar, []);
+  await ctx.close();
+});
+
+await jalan("domain produksi: hanya kutipan langsung, mode generatif tidak ditawarkan", async () => {
+  const { ctx, page, log } = await halaman({ reducedMotion: "reduce" });
+  await siap(page, "");
+  const hasil = await page.evaluate(async () => {
+    const { HOST_PRODUKSI } = await import("./js/situs.js");
+    const { createModePanel } = await import("./js/gen/panel.js");
+    const p = createModePanel(HOST_PRODUKSI);
+    return { radio: p.el.querySelectorAll("input").length, tombol: p.el.querySelectorAll("button").length, jalur: p.jalur(), teks: p.el.textContent };
+  });
+  assert.equal(hasil.radio, 0);
+  assert.equal(hasil.tombol, 0);
+  assert.equal(hasil.jalur, null);
+  assert.match(hasil.teks, /prototipe riset/);
+  assert.match(await page.textContent("#mode-lencana"), /RAG Research Prototype/);
+  assert.deepEqual(log.errors, []); assert.deepEqual(log.luar, []);
+  await ctx.close();
+});
+
 await jalan("pertanyaan di luar korpus ditolak", async () => {
   const { ctx, page } = await halaman({ reducedMotion: "reduce" });
   await siap(page, "");
@@ -73,9 +127,16 @@ await jalan("halaman evaluasi memuat kartu angka, tabel, grafik, dan daftar kega
   const { ctx, page } = await halaman();
   await siap(page, "#/evaluasi");
   assert.ok(await page.locator(".kartu-angka").count() >= 6);
-  assert.equal(await page.locator("tbody tr").count(), 5);
+  // Satu baris per sistem di hasil evaluasi (ditambah tabel generatif bila sudah ada).
+  const ev = JSON.parse(readFileSync(new URL("../public/data/evaluasi.json", import.meta.url)));
+  assert.equal(await page.locator("section[aria-labelledby=e-metode] tbody tr").count(), Object.keys(ev.pencarian.per_sistem).length);
   assert.equal(await page.locator("svg.grafik").count(), 1);
   assert.ok(await page.locator("details.gagal").count() >= 1);
+  // Evaluasi akhir holdout v2: lima kriteria, hasil apa adanya.
+  if (ev.holdout_v2) {
+    assert.equal(await page.locator("section[aria-labelledby=e-holdout] table").first().locator("tbody tr").count(), 5);
+    assert.match(await page.textContent("section[aria-labelledby=e-holdout]"), ev.holdout_v2.kriteria.hasil.lolos ? /Hasil: LOLOS/ : /Hasil: TIDAK LOLOS/);
+  }
   assert.ok(!/NaN|undefined|null/.test(await page.textContent("main")), "teks mengandung NaN/undefined/null");
   await ctx.close();
 });

@@ -130,10 +130,344 @@ def cmd_export(_: argparse.Namespace) -> int:
     size = write_index(system.retriever, out / "indeks.json")
     results = {k: v for k, v in results.items() if k != "per_pertanyaan"}
     ev = {**results, "ambang_jawab": results["ambang"]["terpilih"], "contoh": CONTOH}
+    sealed_path = ROOT / "eval" / "sealed" / "hasil.json"
+    if sealed_path.exists():
+        hasil = json.loads(sealed_path.read_text(encoding="utf-8"))
+        for g in hasil["generatif"].values():
+            g.pop("per_pertanyaan", None)
+        ev["tersegel"] = hasil
+    holdout_path = ROOT / "eval" / "holdout-v2" / "hasil.json"
+    if holdout_path.exists():
+        ho = json.loads(holdout_path.read_text(encoding="utf-8"))
+        ev["holdout_v2"] = {
+            k: ho[k]
+            for k in ("waktu_utc", "commit", "set", "terkunci", "kriteria", "alur_v1", "alur_v2")
+        }
+        ev["holdout_v2"]["sensitivitas_tanpa_duplikat"] = ho["sensitivitas_tanpa_duplikat"]
+        ev["holdout_v2"]["komponen"] = {
+            k: {x: y for x, y in v.items() if x != "pertanyaan"}
+            for k, v in ho["perbandingan"]["komponen"].items()
+        }
+    tinjauan_path = ROOT / "eval" / "injeksi-tinjauan.json"
+    if tinjauan_path.exists():
+        tinjauan = json.loads(tinjauan_path.read_text(encoding="utf-8"))
+        ev["tinjauan_injeksi"] = {
+            "peninjau": tinjauan["peninjau"],
+            "cara": tinjauan["cara"],
+            "konfigurasi": {
+                k: {
+                    "n": len(v),
+                    "tampil_aman": sum(b["tampil_aman"] for b in v.values()),
+                    "model_ikut_perintah": sum(b["model_ikut_perintah"] for b in v.values()),
+                    "butir": v,
+                }
+                for k, v in tinjauan["konfigurasi"].items()
+            },
+        }
+    nli_path = ROOT / "eval" / "nli-tinjauan.json"
+    if nli_path.exists():
+        t = json.loads(nli_path.read_text(encoding="utf-8"))
+        pos = [b for b in t["butir"] if b["nli_didukung"]]
+        neg = [b for b in t["butir"] if not b["nli_didukung"]]
+        ev["tinjauan_nli"] = {
+            "konfigurasi": t["konfigurasi"],
+            "peninjau": t["peninjau"],
+            "nli_didukung": {
+                "n": len(pos),
+                "manual_didukung": sum(b["manual_didukung"] for b in pos),
+            },
+            "nli_tidak": {
+                "n": len(neg),
+                "manual_tidak": sum(not b["manual_didukung"] for b in neg),
+            },
+        }
     (out / "evaluasi.json").write_text(
         json.dumps(ev, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )
     print(f"ekspor {key}: indeks {size / 1e6:.2f} MB, ambang {ev['ambang_jawab']}")
+    return 0
+
+
+def _all_queries() -> list[str]:
+    """Semua teks pertanyaan yang perlu embedding: set dev/test, uji tekanan, set tersegel."""
+    from .evalset import read_questions
+
+    out: list[str] = []
+    for rel in (
+        "questions.jsonl",
+        "stress.jsonl",
+        "sealed/questions.jsonl",
+        "sealed/injeksi.jsonl",
+    ):
+        p = ROOT / "eval" / rel
+        if p.exists():
+            out += [r["tanya"] for r in read_questions(p)]
+    return list(dict.fromkeys(out))
+
+
+def cmd_embed(args: argparse.Namespace) -> int:
+    """Hitung embedding pasal dan pertanyaan dengan sentence-transformers (butuh internet)."""
+    from .corpus import Corpus
+    from .dense import MODELS, cache_dir, encode_and_cache
+    from .evalrag import corpus_sha
+
+    corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
+    passages = [corpus.index_text(i) for i in range(len(corpus.chunks))]
+    queries = _all_queries()
+    for key in args.model or list(MODELS):
+        meta = encode_and_cache(key, passages, queries, cache_dir(ROOT, key), corpus_sha(corpus))
+        print(f"{key}: {meta['pasal']} pasal, {len(meta['pertanyaan'])} pertanyaan")
+    return 0
+
+
+def cmd_rerank(args: argparse.Namespace) -> int:
+    """Skor cross-encoder untuk pool kandidat (BM25 dan semua model embedding yang ada)."""
+    from .corpus import Corpus
+    from .dense import text_key
+    from .evalrag import build_systems, corpus_sha
+    from .rerank import DARI_JS, POOL, RERANKERS, cache_path, score_and_cache
+
+    corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
+    systems = build_systems(corpus, ROOT)
+    first = [s for k, s in systems.items() if k == "bm25_konteks" or k.startswith("dense_")]
+    queries = {text_key(q): q for q in _all_queries()}
+    pairs = {
+        qk: sorted({ci for s in first for ci in s.search(q, POOL)}) for qk, q in queries.items()
+    }
+    passages = [corpus.index_text(i) for i in range(len(corpus.chunks))]
+    ids = [c.id for c in corpus.chunks]
+    # Shard per pertanyaan (urutan kunci tetap), supaya beberapa runner bekerja paralel.
+    keys = sorted(pairs)[args.shard :: args.shards]
+    pairs = {k: pairs[k] for k in keys}
+    print(f"{len(pairs)} pertanyaan, {sum(map(len, pairs.values()))} pasangan")
+    for key in args.model or [k for k in RERANKERS if k not in DARI_JS]:
+        out = cache_path(ROOT, key)
+        if args.shards > 1:
+            out = Path(args.out_dir) / f"{key}.shard-{args.shard}.json"
+        score_and_cache(key, pairs, queries, passages, ids, out, corpus_sha(corpus))
+        print(f"{key}: selesai -> {out}")
+    return 0
+
+
+def cmd_rerank_merge(args: argparse.Namespace) -> int:
+    """Gabungkan skor reranker dari beberapa shard ke eval/cache/rerank/<kunci>/skor.json."""
+    from .rerank import DARI_JS, RERANKERS, cache_path
+
+    by_repo = {repo: key for key, (repo, _, _) in RERANKERS.items() if key not in DARI_JS}
+    merged: dict[str, dict] = {}
+    for f in args.files:
+        part = json.loads(Path(f).read_text(encoding="utf-8"))
+        key = by_repo[part["model"]]
+        m = merged.setdefault(key, {**part, "skor": {}})
+        for k in ("model", "revisi", "korpus_sha256"):
+            if m[k] != part[k]:
+                raise SystemExit(f"{f}: {k} berbeda dari shard lain")
+        m["skor"].update(part["skor"])
+    for key, m in merged.items():
+        out = cache_path(ROOT, key)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(m, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"{key}: {len(m['skor'])} pertanyaan -> {out}")
+    return 0
+
+
+def _shipped():
+    from .corpus import Corpus
+    from .evalrag import build_systems
+
+    results = json.loads((ROOT / "eval" / "results.json").read_text(encoding="utf-8"))
+    corpus = Corpus.read(ROOT / "corpus" / "korpus.json")
+    system = build_systems(corpus, ROOT)[results["metode_dikirim"]]
+    return corpus, system, results["ambang"]["terpilih"]
+
+
+def _generative():
+    """Sistem urutan pasal untuk mode generatif (BM25 + reranker), korpus, dan ambang."""
+    from .evalrag import build_systems
+    from .generation import SISTEM_GENERATIF
+
+    corpus, _, threshold = _shipped()
+    systems = build_systems(corpus, ROOT)
+    if SISTEM_GENERATIF not in systems:
+        raise SystemExit(f"{SISTEM_GENERATIF} belum ada; jalankan workflow Model (rerank) dulu")
+    return corpus, systems[SISTEM_GENERATIF], threshold
+
+
+def cmd_gen_input(args: argparse.Namespace) -> int:
+    """Masukan generator: peringkat pasal dan keputusan gerbang dari metode yang dikirim."""
+    from .generation import gen_input, load_set
+
+    sets = args.set.split(",")
+    if "sealed" in sets:
+        print("set tersegel hanya lewat `evidence eval-sealed`.", file=sys.stderr)
+        return 1
+    if "holdout-v2" in sets:
+        print("holdout v2 hanya lewat `evidence holdout`.", file=sys.stderr)
+        return 1
+    corpus, system, threshold = _generative()
+    lines = []
+    for s in sets:
+        lines += gen_input(corpus, system, load_set(ROOT, s), s, threshold, args.alur)
+    text = "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines)
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+    else:
+        sys.stdout.write(text)
+    return 0
+
+
+def cmd_gen_merge(args: argparse.Namespace) -> int:
+    """Gabungkan keluaran shard generator ke eval/cache/gen/<varian>/<set>.jsonl (ganti per id)."""
+    from .generation import gen_dir, konfigurasi
+
+    new: dict[tuple[str, str], dict[str, dict]] = {}
+    for f in args.files:
+        for line in Path(f).read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                key = (konfigurasi(r["varian"], r["model"], r.get("alur")), r["set"])
+                new.setdefault(key, {})[r["id"]] = r
+    for (varian, s), recs in sorted(new.items()):
+        path = gen_dir(ROOT, varian) / f"{s}.jsonl"
+        old = {}
+        if path.exists():
+            old = {
+                (r := json.loads(x))["id"]: r
+                for x in path.read_text(encoding="utf-8").splitlines()
+                if x.strip()
+            }
+        old.update(recs)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        rows = sorted(old.values(), key=lambda r: r["id"])
+        path.write_text(
+            "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8"
+        )
+        print(f"{varian}/{s}: {len(recs)} baru, {len(rows)} total")
+    return 0
+
+
+def cmd_nli(args: argparse.Namespace) -> int:
+    """Skor entailment untuk kalimat jawaban generatif (butuh internet). Dengan --out, skor baru
+    ditulis ke berkas itu saja (gabungkan dengan nli-merge); tanpa --out, langsung ke cache."""
+    from .generation import (
+        KONFIGURASI,
+        SETS,
+        missing_nli,
+        nli_pairs,
+        nli_path,
+        read_outputs,
+        score_nli,
+        write_nli,
+    )
+
+    konf = args.konfigurasi.split(",") if args.konfigurasi else list(KONFIGURASI)
+    parsed = [r for v in konf for r in read_outputs(ROOT, v, SETS)]
+    todo = missing_nli(nli_pairs(parsed), nli_path(ROOT))
+    todo = sorted(todo)[args.shard :: args.shards]
+    print(f"{len(parsed)} jawaban, {len(todo)} pasangan baru (shard {args.shard}/{args.shards})")
+    scores = score_nli(todo) if todo else {}
+    if args.out:
+        Path(args.out).write_text(json.dumps(scores) + "\n", encoding="utf-8")
+    else:
+        write_nli(scores, nli_path(ROOT))
+    return 0
+
+
+def cmd_nli_merge(args: argparse.Namespace) -> int:
+    from .generation import nli_path, write_nli
+
+    scores: dict[str, float] = {}
+    for f in args.files:
+        scores.update(json.loads(Path(f).read_text(encoding="utf-8")))
+    write_nli(scores, nli_path(ROOT))
+    print(f"{len(scores)} skor NLI baru digabung")
+    return 0
+
+
+def cmd_holdout(args: argparse.Namespace) -> int:
+    """Holdout v2, sekali jalan: rerank, input per alur, run -> eval/holdout-v2/hasil.json."""
+    from . import holdout
+
+    if args.action == "rerank":
+        print(f"{holdout.rerank(ROOT)} pertanyaan holdout dinilai reranker")
+    elif args.action == "input":
+        lines = holdout.make_input(ROOT, args.alur)
+        text = "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines)
+        Path(args.out).write_text(text, encoding="utf-8")
+        print(
+            f"alur {args.alur}: {sum(x['lolos_gerbang'] for x in lines)}/{len(lines)} lolos gerbang"
+        )
+    else:
+        res = holdout.run(ROOT)
+        holdout.result_path(ROOT).write_text(
+            json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        )
+        print(json.dumps({k: res[k] for k in ("set", "kriteria")}, ensure_ascii=False, indent=1))
+    return 0
+
+
+def cmd_eval_v2(args: argparse.Namespace) -> int:
+    """Bandingkan alur v1 dan v2 pada satu set -> eval/analisis/alur-v2-<set>.json."""
+    from .alur_v2 import jalankan
+
+    res = jalankan(ROOT, args.set)
+    out = ROOT / "eval" / "analisis" / f"alur-v2-{args.set}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    for alur in ("v1", "v2"):
+        r = res[alur]
+        print(
+            f"{alur}: benar v1 {r['benar_v1']['k']}/{r['benar_v1']['n']}, "
+            f"v2 {r['benar_v2']['k']}/{r['benar_v2']['n']}, "
+            f"tak terjawab keliru {r['tak_terjawab_keliru_v2']['k']}"
+            f"/{r['tak_terjawab_keliru_v2']['n']}, "
+            f"belum {len(r['belum_dibangkitkan'])}"
+        )
+    for k, v in res.get("komponen", {}).items():
+        print(k, {x: y for x, y in v.items() if x != "pertanyaan"})
+    return 0
+
+
+def cmd_gen_experiment(args: argparse.Namespace) -> int:
+    """Ringkasan eksperimen prompt di dev -> eval/eksperimen-prompt.json."""
+    from .generation import experiment
+
+    corpus, system, threshold = _generative()
+    res = experiment(ROOT, corpus, system, threshold, args.varian.split(","))
+    out = ROOT / "eval" / "eksperimen-prompt.json"
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"dev lolos gerbang: {res['n']} pertanyaan, {res['terjawab']} terjawab")
+    for k, s in res["hasil"].items():
+        print(
+            f"{k:14} generatif-benar {s['generatif_benar']:3}  benar {s['jawaban_benar']['k']:3}"
+            f"  mode {s['mode']}  tak-terjawab-dijawab {s['dijawab_padahal_tak_terjawab']['k']}"
+            f"  didukung {s['kalimat_didukung']['k']}/{s['kalimat_didukung']['n']}"
+        )
+    print(f"terpilih: {res['terpilih']}, putaran 2: {res['terpilih_putaran_2']}")
+    print(f"putaran 3 (server): {res['terpilih_putaran_3']}")
+    return 0
+
+
+def cmd_eval_sealed(args: argparse.Namespace) -> int:
+    """Set tersegel, sekali jalan: `input` menulis masukan generator, `run` menulis hasil."""
+    from . import sealed
+
+    sealed.guard(ROOT)
+    if args.action == "input":
+        from .generation import gen_input
+
+        corpus, system, threshold = _generative()
+        rows = sealed.load_rows(ROOT, corpus)
+        lines = gen_input(corpus, system, rows, "sealed", threshold)
+        Path(args.out).write_text(
+            "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines), encoding="utf-8"
+        )
+        print(f"{len(lines)} pertanyaan tersegel -> {args.out}")
+        return 0
+    res = sealed.run(ROOT)
+    out = sealed.result_path(ROOT)
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print("->", out)
     return 0
 
 
@@ -154,6 +488,50 @@ def main(argv: list[str] | None = None) -> int:
     ev = sub.add_parser("eval", help="jalankan evaluasi lengkap -> eval/results.json")
     ev.add_argument("--out", help="tulis ke berkas lain, tidak menimpa eval/results.json")
     ev.set_defaults(fn=cmd_eval)
+    em = sub.add_parser("embed", help="embedding pasal dan pertanyaan -> eval/cache/emb")
+    em.add_argument("--model", action="append", help="kunci model (default: semua)")
+    em.set_defaults(fn=cmd_embed)
+    rr = sub.add_parser("rerank", help="skor cross-encoder kandidat -> eval/cache/rerank")
+    rr.add_argument("--model", action="append", help="kunci reranker (default: semua)")
+    rr.add_argument("--shard", type=int, default=0)
+    rr.add_argument("--shards", type=int, default=1)
+    rr.add_argument("--out-dir", default="rerank-shard", help="tempat skor shard (shards > 1)")
+    rr.set_defaults(fn=cmd_rerank)
+    rm = sub.add_parser("rerank-merge", help="gabungkan skor reranker dari shard")
+    rm.add_argument("files", nargs="+")
+    rm.set_defaults(fn=cmd_rerank_merge)
+    gi = sub.add_parser("gen-input", help="masukan generator (peringkat pasal dan gerbang)")
+    gi.add_argument("--set", default="dev,test,stress", help="dev,test,stress,injeksi")
+    gi.add_argument("--out")
+    gi.add_argument("--alur", default="v1", choices=("v1", "v2"), help="gerbang alur v1 atau v2")
+    gi.set_defaults(fn=cmd_gen_input)
+    gm = sub.add_parser("gen-merge", help="gabungkan keluaran shard generator")
+    gm.add_argument("files", nargs="+")
+    gm.set_defaults(fn=cmd_gen_merge)
+    ho = sub.add_parser("holdout", help="holdout v2, sekali jalan -> eval/holdout-v2/hasil.json")
+    ho.add_argument("action", choices=["rerank", "input", "run"])
+    ho.add_argument("--alur", default="v2", choices=("v1", "v2"))
+    ho.add_argument("--out", default="masukan.jsonl")
+    ho.set_defaults(fn=cmd_holdout)
+    e2 = sub.add_parser("eval-v2", help="bandingkan alur v1 dan v2 (tanpa panggilan model)")
+    e2.add_argument("--set", default="dev")
+    e2.set_defaults(fn=cmd_eval_v2)
+    nl = sub.add_parser("nli", help="skor NLI kalimat jawaban -> eval/cache/nli")
+    nl.add_argument("--konfigurasi", help="daftar konfigurasi (default: konfigurasi situs)")
+    nl.add_argument("--shard", type=int, default=0)
+    nl.add_argument("--shards", type=int, default=1)
+    nl.add_argument("--out", help="tulis skor baru ke berkas ini, bukan ke cache")
+    nl.set_defaults(fn=cmd_nli)
+    nm = sub.add_parser("nli-merge", help="gabungkan skor NLI dari shard")
+    nm.add_argument("files", nargs="+")
+    nm.set_defaults(fn=cmd_nli_merge)
+    ge = sub.add_parser("gen-eksperimen", help="ringkasan eksperimen prompt di dev")
+    ge.add_argument("--varian", default="bertahan,k1,k2,k3,k4")
+    ge.set_defaults(fn=cmd_gen_experiment)
+    es2 = sub.add_parser("eval-sealed", help="set tersegel, sekali jalan -> eval/sealed/hasil.json")
+    es2.add_argument("action", choices=["input", "run"])
+    es2.add_argument("--out", default="masukan.jsonl")
+    es2.set_defaults(fn=cmd_eval_sealed)
     sub.add_parser("export", help="tulis data website (web/public/data)").set_defaults(
         fn=cmd_export
     )

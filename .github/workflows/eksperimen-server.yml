@@ -1,0 +1,140 @@
+name: Eksperimen model server
+
+# Putaran 3: model Cloudflare Workers AI di data DEV saja (pertanyaan yang lolos gerbang), dengan
+# prompt dan pemeriksaan yang sama dengan situs, lalu NLI. Aturan pilih (choose_server di
+# src/evidence/generation.py) ditulis sebelum model server mana pun dijalankan.
+# Model dipanggil lewat Pages Function di deploy Preview (binding AI yang sama dengan situs), bukan
+# REST API, jadi tidak ada secret Cloudflare. Jalur evaluasi fungsi itu hanya menerima token OIDC
+# GitHub Actions dari workflow ini (server/oidc.js).
+# Memakai kuota gratis harian akun Cloudflare (10.000 neuron). Bila kuota habis, keluaran yang sudah
+# ada tetap di-commit dan run berikutnya melanjutkan dari sana.
+on:
+  # Push hanya mendaftarkan workflow; generasi hanya lewat dispatch.
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/eksperimen-server.yml"]
+  workflow_dispatch:
+    inputs:
+      varian:
+        description: "Prompt (dipisah koma): bertahan, k3, polos (polos hanya untuk set injeksi)"
+        default: "bertahan"
+      set:
+        description: "Set evaluasi (dipisah koma): dev, test, stress, injeksi. Set tersegel hanya lewat workflow Tersegel"
+        default: "dev"
+      model:
+        description: "Model: llama-4-scout, mistral-small-3.1, llama-3.3-70b (dipisah koma)"
+        default: "llama-4-scout,mistral-small-3.1,llama-3.3-70b"
+      alur:
+        description: "Alur: v1 (sistem set tersegel lama) atau v2 (gerbang BM25 atau reranker, ringkasan ayat; docs/alur-v2.md)"
+        default: "v1"
+      batas:
+        description: "Batas pertanyaan per model (kosong = semua); untuk uji asap"
+        default: ""
+      endpoint:
+        description: "Pages Function di deploy Preview"
+        default: "https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/api/jawab"
+
+permissions:
+  contents: write
+  id-token: write # token OIDC untuk jalur evaluasi /api/jawab
+
+concurrency:
+  group: eksperimen-server-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  VARIAN: ${{ inputs.varian }}
+  SET: ${{ inputs.set || 'dev' }}
+  MODEL: ${{ inputs.model }}
+  BATAS: ${{ inputs.batas }}
+  ALUR: ${{ inputs.alur || 'v1' }}
+  ENDPOINT: ${{ inputs.endpoint }}
+
+jobs:
+  jalankan:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: pip install -e .
+      - run: evidence gen-input --set "$SET" --alur "$ALUR" --out web/masukan.jsonl && wc -l web/masukan.jsonl
+      - name: Periksa binding AI di Preview
+        run: |
+          # Tunggu sampai deploy Preview memuat versi fungsi yang melaporkan binding (paling lama 10 menit).
+          for i in $(seq 1 20); do
+            j=$(curl -fsS "$ENDPOINT" || true)
+            echo "$j"
+            # Deploy Preview harus sudah memuat fungsi dengan alur yang sama dengan kode ini.
+            if echo "$j" | grep -q '"binding":true' && echo "$j" | grep -q "\"alur\":\"$(node -e 'import("./web/public/js/gen/prompt.js").then((p)=>console.log(p.ALUR))')\""; then exit 0; fi
+            if echo "$j" | grep -q '"binding":false'; then echo "::error::Binding Workers AI (AI) belum terpasang di Preview"; exit 1; fi
+            sleep 30
+          done
+          echo "::error::Endpoint Preview tidak menjawab"; exit 1
+      - name: Bangkitkan lewat Workers AI
+        id: gen
+        working-directory: web
+        run: |
+          kuota=0; gagal=0
+          for v in ${VARIAN//,/ }; do
+            for m in ${MODEL//,/ }; do
+              f="keluaran-$v-$m.jsonl"
+              awal=""; if [ "$ALUR" = v2 ]; then awal="v2-"; fi
+              # Lanjutkan dari keluaran yang sudah di-commit (baris dengan prompt yang sama dilewati).
+              cat ../eval/cache/gen/$awal$v-$m/*.jsonl > "$f" 2>/dev/null || true
+              # Alur v2: prompt yang identik dengan v1 memakai ulang keluaran v1 tanpa panggilan.
+              cat ../eval/cache/gen/$v-$m/*.jsonl > "lama-$v-$m.jsonl" 2>/dev/null || true
+              # Varian polos hanya pembanding pertahanan injeksi.
+              s="$SET"; if [ "$v" = polos ]; then s=injeksi; fi
+              rc=0
+              salin=""; if [ "$ALUR" = v2 ]; then salin="--salin-dari lama-$v-$m.jsonl"; fi
+              node scripts/generate-server.mjs --in masukan.jsonl --out "$f" --varian "$v" --model "$m" --set "$s" \
+                --lolos --alur "$ALUR" $salin ${BATAS:+--batas "$BATAS"} --endpoint "$ENDPOINT" || rc=$?
+              if [ "$rc" = 3 ]; then kuota=1; break 2; fi
+              # Galat lain: hentikan, tetapi keluaran yang sudah ada tetap dinilai dan di-commit.
+              if [ "$rc" != 0 ]; then gagal=1; break 2; fi
+            done
+          done
+          echo "kuota_habis=$kuota" >> "$GITHUB_OUTPUT"
+          echo "gagal=$gagal" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nli-${{ hashFiles('src/evidence/generation.py') }}
+          restore-keys: hf-
+      - name: Gabung, NLI, ringkasan
+        run: |
+          shopt -s nullglob
+          files=(web/keluaran-*.jsonl)
+          if [ ${#files[@]} = 0 ]; then echo "tidak ada keluaran"; exit 0; fi
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[model]"
+          evidence gen-merge "${files[@]}"
+          K=$(python -c "import os;a='v2-' if os.environ['ALUR']=='v2' else '';print(','.join(f'{a}{v}-{m}' for v in os.environ['VARIAN'].split(',') for m in os.environ['MODEL'].split(',')))")
+          evidence nli --konfigurasi "$K"
+          if [ "$ALUR" = v2 ]; then
+            for s in ${SET//,/ }; do evidence eval-v2 --set "$s"; done
+          else
+            evidence gen-eksperimen --varian bertahan,k1,k2,k3,k4
+          fi
+      - name: Commit hasil ke cabang ini
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/cache/gen eval/cache/nli eval/eksperimen-prompt.json eval/analisis
+          if git diff --cached --quiet; then echo "tidak ada perubahan"; exit 0; fi
+          git commit -m "Eksperimen model server (dev): keluaran Workers AI, skor NLI, ringkasan"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Catatan kuota
+        if: steps.gen.outputs.kuota_habis == '1'
+        run: echo "::warning::Kuota harian Workers AI habis; jalankan lagi setelah 00.00 UTC untuk melanjutkan."
+      - name: Gagalkan run bila generasi berhenti karena galat
+        if: steps.gen.outputs.gagal == '1'
+        run: echo "::error::Generasi berhenti karena galat; lihat langkah Bangkitkan"; exit 1

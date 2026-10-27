@@ -1,4 +1,5 @@
-# Header respons Cloudflare Pages. Situs sepenuhnya statis: tanpa skrip atau gaya sebaris, tanpa permintaan pihak ketiga.
+# Header respons Cloudflare Pages. Situs statis tanpa skrip atau gaya sebaris. Permintaan pihak ketiga hanya
+# untuk mode generatif yang diaktifkan pengguna: pustaka dan runtime ONNX (jsDelivr) serta bobot model (Hugging Face).
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -7,7 +8,7 @@
   Strict-Transport-Security: max-age=31536000
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net; worker-src 'self' blob:; style-src 'self'; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
 
 # HTML, CSS, dan JS selalu diperiksa ulang ke server (murah berkat ETag),
 # supaya pengunjung tidak pernah mendapat CSS lama dengan JS baru setelah deploy.
