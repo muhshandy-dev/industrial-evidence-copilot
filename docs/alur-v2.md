@@ -54,7 +54,31 @@ Prompt yang identik memakai ulang keluaran v1. Uji kering mencatat 25 panggilan:
 
 ## 3. Hasil dev
 
-Diisi setelah run dev (`eval/analisis/alur-v2-dev.json`).
+Run dev dijalankan pada 27 Oktober 2026 dengan workflow Eksperimen model server, alur v2. Run itu memakai 25 panggilan model; 44 keluaran disalin dari v1 karena prompt-nya identik. Rinciannya ada di `eval/analisis/alur-v2-dev.json`. Semua angka di bawah memakai penilaian v2. Di dev, penilaian v1 dan v2 memberi angka yang sama.
+
+| Ukuran (dev) | Alur v1 | Alur v2 |
+| --- | --- | --- |
+| Jawaban benar, 65 pertanyaan terjawab | 43 (66%) | **56 (86%)** |
+| Kutipan langsung bawaan pada set yang sama | 42 (65%) | 42 (65%) |
+| Tak terjawab yang dijawab keliru, dari 39 | 0 | 0 |
+| Ditolak gerbang | 51 | 35 |
+| Semua sitasi sah (jawaban generatif atas pertanyaan terjawab) | 41/48 (85%) | 55/62 (89%) |
+| Kalimat didukung NLI | 66/78 (85%) | 84/95 (88%) |
+| Kalimat tanpa sitasi yang ditampilkan | 0 | 0 |
+
+Hasil per komponen, menurut aturan bagian 2:
+
+- **Gerbang: lolos aturan.** 16 pertanyaan baru lolos gerbang. Dari 14 pertanyaan terjawab, 13 kini benar (sebelumnya 0). Dua pertanyaan tak terjawab yang ikut lolos tetap ditolak model, dan kalimatnya didukung NLI 17/17.
+- **Ringkasan ayat: lolos aturan, tetapi netral di dev.** Ada 9 prompt yang berubah. Ketujuh pertanyaan terjawab tetap benar, kedua pertanyaan tak terjawab tetap ditolak, dan kalimatnya didukung NLI 10/11. Dev tidak punya kasus pasal terpotong, jadi manfaat komponen ini belum terukur di dev. Kasus terpotong hanya terlihat di test (q127) dan di set tersegel lama.
+- **Kutipan cadangan berurutan reranker: lolos aturan karena tidak ada kasus.** Tidak ada pertanyaan dev yang berakhir di kutipan cadangan, jadi komponen ini belum teruji pada keluaran model.
+
+Ketiga komponen dipertahankan, dan konfigurasi alur v2 dibekukan pada commit ini.
+
+Batasan:
+
+- **Angka dev optimistis.** Ambang reranker 1,0 dipilih di dev, dan dev sudah dipakai berkali-kali.
+- **Sitasi mendekati ambang.** "Semua sitasi sah" di dev, 89%, masih sedikit di bawah ambang kriteria holdout (90%). Ini risiko yang diketahui sebelum holdout dijalankan.
+- **Generalisasi belum terukur.** Ukurannya adalah holdout v2.
 
 ## 4. Catatan keterbukaan
 
