@@ -1,6 +1,6 @@
 # Hasil holdout v2 (sekali jalan)
 
-**Keputusan: FAIL.** Satu dari lima kriteria lolos yang dibekukan tidak terpenuhi, yaitu sitasi semua sah (62/70 = 88,6%, ambang 90%). Empat kriteria lain terpenuhi. Mode generatif tetap berlabel eksperimental dan Production tidak diaktifkan.
+**Keputusan: FAIL.** Satu dari lima kriteria lolos yang dibekukan tidak terpenuhi, yaitu sitasi semua sah (62/70 = 88,6%, ambang 90%). Empat kriteria lain terpenuhi. Pemilik proyek menerima hasil ini tanpa mengubah standar kelulusan dan menutup tahap eksperimen: proyek berstatus **RAG Research Prototype**, kutipan langsung menjadi satu-satunya mode di domain produksi, dan mode generatif tetap prototipe riset di deploy Preview. Tidak ada holdout baru dan tidak ada penyetelan memakai set ini.
 
 ## Pelaksanaan
 

@@ -14,7 +14,7 @@ Model, prompt sistem, jumlah pasal, dan pemeriksaan sitasi tidak berubah.
 | Gerbang penolakan | Skor BM25 tertinggi ≥ 14,0 | Skor BM25 ≥ 14,0 **atau** skor reranker pasal peringkat 1 ≥ 1,0 |
 | Pasal > 1.800 karakter | Dipotong dari awal | Diringkas menjadi ayat atau butir yang paling relevan dengan pertanyaan, urutan asli dipertahankan, bagian yang dilewati ditandai `[…]` |
 | Kutipan cadangan | Pasal peringkat 1 BM25 | Pasal peringkat 1 setelah reranker |
-| Label situs | "utama" | "eksperimental", kutipan langsung tetap mode utama |
+| Label situs | "utama" | "eksperimental", kutipan langsung tetap mode utama (setelah penutupan 27 Oktober 2026: "prototipe riset", tidak aktif di domain produksi) |
 
 Catatan untuk setiap perubahan:
 

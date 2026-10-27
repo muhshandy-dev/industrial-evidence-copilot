@@ -1,21 +1,38 @@
 # Industrial Evidence Copilot
 
-Tanya jawab atas 15 peraturan keselamatan dan kesehatan kerja (K3) Indonesia dengan RAG generatif. Sistem mencari pasal yang relevan, model bahasa menulis jawaban singkat dari pasal itu, dan setiap kalimat wajib menunjuk pasal sumbernya. Kalimat tanpa sitasi yang sah dibuang sebelum ditampilkan. Bila skor pencarian terlalu rendah atau model menjawab "TIDAK DITEMUKAN", sistem menolak menjawab.
-
-Situs punya tiga mode, dan label di atas setiap jawaban menyebut mode yang dipakai:
+**Status: RAG Research Prototype (ditutup 27 Oktober 2026).** Tanya jawab atas 15 peraturan keselamatan dan kesehatan kerja (K3) Indonesia. Situs publik menjawab dengan **kutipan langsung** dari pasal yang dapat diperiksa. Pipeline **RAG generatif** (BM25, reranker cross-encoder, Llama 3.3 70B di Cloudflare Workers AI, sitasi per kalimat, pemeriksaan sitasi, penilai NLI) sudah dibangun dan dievaluasi lengkap, tetapi tidak dijadikan jawaban publik karena gagal satu kriteria lolos pada evaluasi akhir (holdout v2).
 
 | Mode | Cara kerja | Status |
 | --- | --- | --- |
-| Generatif dengan model server (utama) | BM25 + reranker mMiniLM di peramban, empat pasal teratas ke Llama 3.3 70B Instruct (FP8) di Cloudflare Workers AI lewat Pages Function `/api/jawab` | pilihan pengunjung; butuh unduhan reranker sekitar 510 MB sekali |
-| Generatif dengan model lokal (opsional) | sama, tetapi Qwen2.5 1,5B (WebGPU) atau 0,5B (CPU) berjalan di perangkat pengunjung | tidak lolos batas mutu; ditawarkan sebagai opsi saja |
-| Kutipan langsung (bawaan, cadangan) | BM25, lalu ayat atau butir disalin dari pasal peringkat 1; tidak generatif | dipakai bila mode generatif tidak dipilih, kuota habis, atau model gagal |
+| Kutipan langsung | BM25 dengan stemmer Indonesia dan konteks bab, gerbang skor, lalu ayat atau butir disalin dari pasal peringkat 1; tidak generatif | **aktif di Production**, mode utama |
+| Generatif dengan model server | BM25, reranker mMiniLM di peramban, empat pasal ke Llama 3.3 70B Instruct (FP8) di Workers AI lewat Pages Function `/api/jawab`, kalimat tanpa sitasi sah dibuang | **prototipe riset**: tidak aktif di domain produksi (fungsi menolak dan panel tidak menawarkannya); tetap berjalan di deploy Preview |
+| Generatif dengan model lokal | sama, dengan Qwen2.5 1,5B (WebGPU) atau 0,5B (CPU) di perangkat pengunjung | prototipe riset, tidak lolos batas mutu dev; hanya di deploy Preview |
 
-- Situs: https://industrial-evidence-copilot.pages.dev/ (Production masih versi kutipan langsung; versi generatif menunggu persetujuan di PR #2)
-- Biaya: paket Workers Free ($0). Kuota gratis harian (10.000 neuron) cukup untuk puluhan jawaban server per hari untuk semua pengunjung. Bila habis, Workers AI mengembalikan galat, bukan tagihan, dan situs kembali ke kutipan langsung sampai 07.00 WIB.
+- Production: https://industrial-evidence-copilot.pages.dev/ (kutipan langsung)
+- Deploy riset (Preview cabang pengembangan, mode generatif dapat dipilih): https://claude-project-thread-8fnhl3.industrial-evidence-copilot.pages.dev/
+- Biaya: $0. Workers AI memakai paket Workers Free; bila kuota harian habis, permintaan ditolak, bukan ditagih.
 
-## Hasil (data uji, 96 pertanyaan terjawab dan 21 tanpa dasar)
+## Evaluasi akhir: holdout v2 (keputusan penutupan)
 
-| Ukuran | Generatif server (utama) | Kutipan langsung |
+120 pertanyaan baru (90 terjawab, 30 tanpa dasar) dari penulis terpisah, hash dikunci sebelum run, dijalankan **sekali** pada 27 Oktober 2026 dengan konfigurasi, prompt, model, ambang, dan penilaian yang dibekukan (`eval/holdout-v2/hasil.json`, [docs/holdout-v2-hasil.md](docs/holdout-v2-hasil.md)).
+
+| Kriteria (alur v2) | Syarat | Hasil | Status |
+| --- | --- | --- | --- |
+| Jawaban generatif benar | ≥ 70% | 63 dari 90 (70,0%) | lolos, tepat di ambang |
+| Lebih baik dari kutipan langsung | lebih tinggi | 63 lawan 48 | lolos |
+| Pertanyaan tanpa dasar dijawab keliru | ≤ 10% | 0 dari 30 | lolos |
+| Jawaban yang semua sitasinya tepat | ≥ 90% | 62 dari 70 (88,6%) | **gagal** |
+| Kalimat tanpa sitasi yang ditampilkan | 0 | 0 | lolos |
+
+**Keputusan: FAIL**, jadi mode generatif tetap prototipe riset. Perbandingan pada pertanyaan yang sama: alur v1 benar 56 dari 90, alur v2 63 dari 90, kutipan langsung 48 dari 90 (kutipan langsung juga menjawab 10 dari 30 pertanyaan tanpa dasar). Tanpa 3 pertanyaan yang kebetulan identik dengan set lain, alur v2 benar 62 dari 89 (69,7%) dan sitasi tepat 88,4%. Riwayat yang menuju keputusan ini: [ROOT_CAUSE_ANALYSIS.md](ROOT_CAUSE_ANALYSIS.md) (analisis set tersegel), [docs/penilaian-v2.md](docs/penilaian-v2.md) (penilaian dan kriteria yang dibekukan), [docs/alur-v2.md](docs/alur-v2.md) (perbaikan di dev).
+
+## Riwayat evaluasi sebelumnya
+
+Angka di bawah memakai alur v1 dan penilaian v1. Disimpan apa adanya sebagai jejak.
+
+### Data uji (96 pertanyaan terjawab dan 21 tanpa dasar)
+
+| Ukuran | Generatif server | Kutipan langsung |
 | --- | --- | --- |
 | Jawaban benar (pasal tepat dan fakta kunci ada) | 72 dari 96 (75%) | 56 dari 96 (58%) |
 | Menolak padahal ada jawabannya | 17 dari 96 | 15 dari 96 |
@@ -29,11 +46,11 @@ Pencarian untuk mode generatif (BM25 + reranker mMiniLM): pasal tepat di peringk
 
 Angka ini **optimistis**: 221 pertanyaan ditulis oleh asisten AI pengembang (bukan praktisi K3), data uji sudah dilihat sebelum desain akhir, aturan pemilihan sistem pencarian generatif ditetapkan setelah angka semua sistem terlihat, dan "didukung" dinilai model NLI otomatis. Model server dipilih dari data dev dengan aturan yang ditulis sebelum eksperimen ([docs/eksperimen-prompt.md](docs/eksperimen-prompt.md)). Protokol dan batas: [docs/evaluasi.md](docs/evaluasi.md).
 
-## Hasil set uji tersegel (70 pertanyaan terjawab dan 30 tanpa dasar)
+### Set uji tersegel (70 pertanyaan terjawab dan 30 tanpa dasar)
 
-Ditulis agen AI terpisah yang tidak melihat keluaran sistem, hash dikunci sebelum run, dijalankan sekali pada 26 Oktober 2026 (`eval/sealed/hasil.json`). Tidak ada yang disetel dari set ini. Angka inilah perkiraan yang lebih dapat dipercaya, dan hasilnya lebih rendah daripada data uji.
+Ditulis agen AI terpisah yang tidak melihat keluaran sistem, hash dikunci sebelum run, dijalankan sekali pada 26 Oktober 2026 (`eval/sealed/hasil.json`). Tidak ada yang disetel dari set ini. Hasilnya jauh lebih rendah daripada data uji; analisis penyebabnya ada di ROOT_CAUSE_ANALYSIS.md.
 
-| Ukuran | Generatif server (utama) | Kutipan langsung |
+| Ukuran | Generatif server | Kutipan langsung |
 | --- | --- | --- |
 | Jawaban benar | 36 dari 70 (51%; interval 95%: 40 sampai 63%) | 30 dari 70 (43%) |
 | Menolak padahal ada jawabannya | 20 dari 70 | 17 dari 70 |
@@ -53,7 +70,7 @@ Kode: MIT. Font: lisensi masing-masing di `web/public/fonts/`. Model server: Lla
 
 ## Cara kerja
 
-PDF resmi → teks per pasal → BM25 dengan stemmer Indonesia dan konteks judul/bab → gerbang skor (ambang 14,0 dari dev) → reranker cross-encoder mMiniLM menilai ulang 20 pasal teratas di peramban → empat pasal ke model bahasa dengan prompt yang memperlakukan pasal dan pertanyaan sebagai data → sitasi diperiksa, kalimat tanpa sitasi sah dan tautan luar dibuang. Bila tidak ada kalimat yang tersisa, situs memakai kutipan langsung. Embedding e5 (tiga ukuran), hibrida, dan reranker bge-m3 juga dievaluasi; mMiniLM dipilih karena paling baik dan cukup kecil untuk peramban. Lihat [docs/kartu-metode.md](docs/kartu-metode.md), [docs/arsitektur.md](docs/arsitektur.md), dan [docs/deploy.md](docs/deploy.md) untuk perlindungan `/api/jawab`.
+PDF resmi → teks per pasal → BM25 dengan stemmer Indonesia dan konteks judul/bab → gerbang skor (ambang 14,0 dari dev) → reranker cross-encoder mMiniLM menilai ulang 20 pasal teratas di peramban → empat pasal ke model bahasa dengan prompt yang memperlakukan pasal dan pertanyaan sebagai data → sitasi diperiksa, kalimat tanpa sitasi sah dan tautan luar dibuang. Bila tidak ada kalimat yang tersisa, situs memakai kutipan langsung. Embedding e5 (tiga ukuran), hibrida, dan reranker bge-m3 juga dievaluasi; mMiniLM dipilih karena paling baik dan cukup kecil untuk peramban. Lihat [docs/kartu-model.md](docs/kartu-model.md) (Model Card), [docs/kartu-metode.md](docs/kartu-metode.md), [docs/arsitektur.md](docs/arsitektur.md), dan [docs/deploy.md](docs/deploy.md) untuk perlindungan `/api/jawab`.
 
 ## Menjalankan
 
@@ -81,6 +98,10 @@ src/evidence pipeline Python (ingest, BM25, dense, reranker, jawaban, generatif,
 functions/   Pages Function /api/jawab (Workers AI)
 server/      verifikasi token OIDC untuk jalur evaluasi
 web/public   situs statis (HTML, CSS, JS modul, data)
-docs/        kartu data, kartu metode, evaluasi, audit, arsitektur, reproduksi, deploy
+docs/        kartu data, kartu model, kartu metode, evaluasi, holdout v2, keamanan, audit, arsitektur, reproduksi, deploy
 tools/       fixture paritas, pemeriksa situs terbit
 ```
+
+## Keamanan
+
+Ringkasan pemeriksaan (dependensi, secret, header, endpoint `/api/jawab`): [docs/keamanan.md](docs/keamanan.md).

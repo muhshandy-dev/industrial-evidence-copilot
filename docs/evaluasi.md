@@ -2,11 +2,15 @@
 
 Semua angka berasal dari `eval/results.json` (dihasilkan `evidence eval` dari cache model yang di-commit, deterministik). Bila angka di sini berbeda dari berkas itu, berkasnya yang benar.
 
-## Ringkasan jujur
+## Status akhir: RAG Research Prototype
 
-Mode generatif utama (BM25 + reranker mMiniLM, Llama 3.3 70B di Workers AI, prompt "bertahan") menjawab benar 72 dari 96 pertanyaan uji yang ada jawabannya (75%, interval 65 sampai 83%), 88% kalimatnya didukung pasal yang dikutipnya menurut penilai NLI, dan tidak menjawab satu pun dari 21 pertanyaan tanpa dasar. Mode kutipan langsung (BM25 saja): pasal tepat di peringkat 1 pada 68% pertanyaan, 56 dari 96 benar, dan 23 dari 81 jawabannya mengutip pasal yang salah.
+Evaluasi yang menentukan adalah **holdout v2** (120 pertanyaan baru, dijalankan sekali pada 27 Oktober 2026, penilaian v2 dan kriteria dibekukan lebih dulu). Alur generatif v2 menjawab benar 63 dari 90 (70,0%, kutipan langsung 48 dari 90), tidak menjawab keliru satu pun dari 30 pertanyaan tanpa dasar, tetapi jawaban yang semua sitasinya tepat hanya 62 dari 70 (88,6%, syarat 90%). Keputusan: **FAIL**, jadi Production hanya memakai kutipan langsung dan mode generatif tetap prototipe riset. Rincian: [holdout-v2-hasil.md](holdout-v2-hasil.md). Bagian di bawah adalah riwayat evaluasi alur v1 dengan penilaian v1, disimpan apa adanya.
 
-Angka data uji **optimistis**: pertanyaan ditulis oleh asisten AI pengembang, data uji sudah dilihat sebelum desain akhir dibuat, dan beberapa keputusan dibuat setelah angka terlihat (lihat "Protokol dan pengungkapan"). Set uji tersegel terpisah sudah dijalankan satu kali dan memberi angka yang lebih rendah (jawaban benar mode utama 51%, bukan 75%); lihat bagian "Set uji tersegel".
+## Ringkasan jujur (alur v1)
+
+Mode generatif (BM25 + reranker mMiniLM, Llama 3.3 70B di Workers AI, prompt "bertahan") menjawab benar 72 dari 96 pertanyaan uji yang ada jawabannya (75%, interval 65 sampai 83%), 88% kalimatnya didukung pasal yang dikutipnya menurut penilai NLI, dan tidak menjawab satu pun dari 21 pertanyaan tanpa dasar. Mode kutipan langsung (BM25 saja): pasal tepat di peringkat 1 pada 68% pertanyaan, 56 dari 96 benar, dan 23 dari 81 jawabannya mengutip pasal yang salah.
+
+Angka data uji **optimistis**: pertanyaan ditulis oleh asisten AI pengembang, data uji sudah dilihat sebelum desain akhir dibuat, dan beberapa keputusan dibuat setelah angka terlihat (lihat "Protokol dan pengungkapan"). Set uji tersegel terpisah sudah dijalankan satu kali dan memberi angka yang lebih rendah (jawaban benar mode generatif 51%, bukan 75%); lihat bagian "Set uji tersegel".
 
 ## Set pertanyaan
 
@@ -82,7 +86,7 @@ Cara membaca:
 
 Alur sama dengan situs: gerbang skor BM25 yang sama, reranker, empat pasal teratas, prompt dari `web/public/js/gen/prompt.js`, lalu pemeriksaan sitasi yang sama (`periksa`). Keluaran model server diambil dari `/api/jawab` di deploy Preview oleh workflow `eksperimen-server.yml` (token OIDC, lihat `docs/deploy.md`) dan di-commit di `eval/cache/gen/`. "Didukung" dinilai mDeBERTa-v3-base-xnli-multilingual-nli-2mil7 (ambang entailment 0,5).
 
-| Ukuran | Llama 3.3 70B (utama) | Qwen2.5 1,5B GPU (opsional) | Qwen2.5 0,5B CPU (opsional) | Kutipan langsung |
+| Ukuran | Llama 3.3 70B | Qwen2.5 1,5B GPU (opsional) | Qwen2.5 0,5B CPU (opsional) | Kutipan langsung |
 | --- | --- | --- | --- | --- |
 | Jawaban benar | 72/96 (75%) | 31/96 | 40/96 | 56/96 |
 | Menolak padahal ada jawabannya | 17/96 | 50/96 | 20/96 | 15/96 |
@@ -104,7 +108,7 @@ Alur sama dengan situs: gerbang skor BM25 yang sama, reranker, empat pasal terat
 
 **Status: sudah dijalankan sekali** pada 26 Oktober 2026 pukul 17.34 UTC (commit `4c5c4de`, run "Tersegel" #3). Run sekali jalan hanya memuat 100 pertanyaan; 20 pertanyaan injeksi dari penulis yang sama sudah dievaluasi lebih dulu lewat `eksperimen-server.yml` (lihat "Prompt injection" di atas).
 
-| Ukuran (70 terjawab, 30 tanpa dasar) | Llama 3.3 70B, prompt bertahan (utama) | Kutipan langsung | Qwen2.5-0.5B CPU (opsional) | Qwen2.5-1.5B GPU (opsional) |
+| Ukuran (70 terjawab, 30 tanpa dasar) | Llama 3.3 70B, prompt bertahan | Kutipan langsung | Qwen2.5-0.5B CPU (opsional) | Qwen2.5-1.5B GPU (opsional) |
 | --- | --- | --- | --- | --- |
 | Jawaban benar | 36/70 (51%; 40 sampai 63%) | 30/70 (43%) | 25/70 (36%) | 14/70 (20%) |
 | Menolak padahal ada jawabannya | 20/70 | 17/70 | 19/70 | 49/70 |
@@ -117,7 +121,7 @@ Mode jawaban model utama: 35 ditolak gerbang, 13 "TIDAK DITEMUKAN", 52 jawaban g
 
 Pencarian (n = 70): BM25 + konteks, yang dipakai mode kutipan, mencapai Hit@1 66% dan MRR@10 0,754. BM25 + reranker mMiniLM, yang dipakai mode generatif, mencapai Hit@1 89% dan MRR@10 0,909. Pembanding offline: e5-large dense Hit@1 79%, bge-m3 sebagai reranker Hit@1 94% (tidak dipakai karena terlalu besar untuk peramban).
 
-Dibanding data uji, jawaban benar mode utama turun dari 75% ke 51%, dan kutipan langsung dari 58% ke 43%. Pencarian dengan reranker tetap tinggi (93% ke 89%), jadi selisihnya berasal dari penolakan (gerbang skor 14,0 dan jawaban "TIDAK DITEMUKAN") serta fakta kunci yang tidak tertulis. Ini sesuai dugaan bahwa angka data uji optimistis.
+Dibanding data uji, jawaban benar mode generatif turun dari 75% ke 51%, dan kutipan langsung dari 58% ke 43%. Pencarian dengan reranker tetap tinggi (93% ke 89%), jadi selisihnya berasal dari penolakan (gerbang skor 14,0 dan jawaban "TIDAK DITEMUKAN") serta fakta kunci yang tidak tertulis. Ini sesuai dugaan bahwa angka data uji optimistis.
 
 ## Protokol dan pengungkapan
 

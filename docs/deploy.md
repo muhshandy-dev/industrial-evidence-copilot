@@ -33,6 +33,7 @@ Tidak ada secret dan tidak ada API token Cloudflare. Model yang dipakai situs di
 
 | Jalur | Syarat | Bila gagal |
 | --- | --- | --- |
+| Pengunjung | bukan domain produksi (status RAG Research Prototype, `web/public/js/situs.js`) | `503 prototipe_riset_tidak_aktif_di_produksi`, tanpa memanggil Workers AI |
 | Pengunjung | header `Origin` sama dengan asal situs | `403 asal_ditolak` |
 | Pengunjung | paling banyak 6 permintaan per menit per IP (per isolate, upaya terbaik) | `429 terlalu_sering` |
 | Pengunjung | tidak boleh memilih model atau varian prompt | `403 pilihan_model_butuh_evaluasi` |
@@ -53,26 +54,14 @@ memanggil `/api/jawab` di alamat Preview cabang. Keluaran, jumlah token, dan sid
 di-commit ke `eval/cache/gen/`. Bila kuota habis di tengah jalan, workflow berhenti, menyimpan
 yang sudah selesai, dan dapat dilanjutkan setelah kuota pulih.
 
-### Mengaktifkan Production
+### Production (status akhir)
 
-Production hanya dideploy setelah pemilik proyek menyetujui hasil evaluasi akhir. Langkahnya:
-pastikan binding `AI` terpasang untuk Production, gabungkan PR ke `main`, lalu jalankan
-`tools/verify_published.py` atau workflow "Periksa situs terbit".
+Proyek ditutup sebagai RAG Research Prototype setelah holdout v2 gagal pada kriteria sitasi
+(`docs/holdout-v2-hasil.md`). Production (`main`, domain `industrial-evidence-copilot.pages.dev`)
+hanya menjalankan kutipan langsung: panel tidak menawarkan mode generatif dan `/api/jawab` menolak
+pengunjung dengan 503 tanpa memanggil model, walaupun binding `AI` terpasang. Mode generatif tetap
+berjalan di deploy Preview untuk riset. Mengaktifkannya di Production butuh evaluasi baru pada set
+baru dan persetujuan pemilik proyek, lalu perubahan `generatifDiizinkan` di `situs.js`.
 
-## Header
-
-`web/public/_headers` mengatur CSP ketat (`default-src 'none'`, gaya hanya dari `'self'`, tanpa skrip sebaris). Permintaan ke pihak ketiga hanya terjadi bila pengunjung memilih mode generatif: pustaka transformers.js dari jsDelivr dan bobot reranker atau model lokal dari Hugging Face. Header keamanan lain dan cache: HTML, CSS, dan JS selalu divalidasi ulang; font di-cache 30 hari; data 5 menit.
-
-## Mengapa tanpa idle sleep
-
-Cloudflare Pages menyajikan berkas statis dari jaringan tepi, dan pencarian berjalan di peramban pengunjung. Pages Function dan Workers AI dijalankan per permintaan oleh Cloudflare, tanpa proses yang harus tetap hidup, jadi tidak ada kondisi "tidur" yang perlu dibangunkan.
-
-## Memeriksa setelah deploy
-
-```
-python tools/verify_published.py https://industrial-evidence-copilot.pages.dev/
-```
-
-Atau jalankan workflow manual "Periksa situs terbit" di GitHub Actions. Skrip memeriksa status, header keamanan, dan bahwa tiga berkas data yang disajikan identik dengan repositori. Pemeriksaan tampilan di peramban (ruang kerja, evaluasi, cara kerja, tema terang dan gelap) tetap dilakukan manual oleh pemilik proyek.
-
-> Status saat ini: situs **belum terverifikasi live**. Sesi pengembangan tidak dapat membuka `pages.dev`.
+Setelah deploy, jalankan `tools/verify_published.py` atau workflow "Periksa situs terbit" untuk
+memastikan berkas yang terbit sama dengan repo.

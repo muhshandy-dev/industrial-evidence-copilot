@@ -4,10 +4,10 @@ Apa yang sebenarnya dilakukan sistem, dan apa yang tidak.
 
 ## Ringkasan jujur
 
-Sistem punya dua jenis jawaban, dan situs selalu menyebut mana yang dipakai:
+Status proyek: **RAG Research Prototype**. Sistem punya dua jenis jawaban, dan situs selalu menyebut mana yang dipakai:
 
-- **Generatif (mode utama, pilihan pengunjung).** Model bahasa menulis jawaban singkat dari empat pasal teratas hasil BM25 + reranker. Mode utama memakai Llama 3.3 70B Instruct (FP8) di Cloudflare Workers AI (paket gratis); mode opsional memakai Qwen2.5 kecil di perangkat pengunjung. Setiap kalimat harus menunjuk pasal sumbernya; kalimat tanpa sitasi sah dibuang.
-- **Kutipan langsung (bawaan dan cadangan).** Tidak generatif: ayat atau butir dari pasal peringkat 1 BM25 disalin persis. Dipakai bila mode generatif tidak dipilih, kuota habis, model gagal, atau tidak ada kalimat bersumber yang tersisa.
+- **Kutipan langsung (mode utama, satu-satunya yang aktif di domain produksi).** Tidak generatif: ayat atau butir dari pasal peringkat 1 BM25 disalin persis.
+- **Generatif (prototipe riset).** Model bahasa menulis jawaban singkat dari empat pasal teratas hasil BM25 + reranker. Versi server memakai Llama 3.3 70B Instruct (FP8) di Cloudflare Workers AI (paket gratis); versi lokal memakai Qwen2.5 kecil di perangkat pengunjung. Setiap kalimat harus menunjuk pasal sumbernya; kalimat tanpa sitasi sah dibuang. Pada holdout v2 jawaban benar 70,0% tetapi jawaban yang semua sitasinya tepat 88,6% (syarat 90%), jadi mode ini tidak aktif di domain produksi dan hanya berjalan di deploy Preview (`web/public/js/situs.js`, `docs/holdout-v2-hasil.md`).
 
 Tidak ada API berbayar.
 
@@ -42,7 +42,7 @@ Pada mode generatif, model bisa menulis kalimat yang tidak didukung pasal walau 
 
 Situs statis di Cloudflare Pages ditambah satu Pages Function. Korpus (±0,47 MB) dan indeks (±0,22 MB) diunduh sekali, pencarian dihitung di peramban, dan mode bawaan tidak mengirim pertanyaan ke mana pun.
 
-Mode generatif utama memanggil Workers AI lewat binding `AI` pada paket Workers Free ($0). Kuota gratis harian (10.000 neuron) cukup untuk puluhan jawaban Llama 3.3 70B per hari untuk semua pengunjung; bila habis, fungsi mengembalikan `kuota_habis` dan situs memakai kutipan langsung sampai 07.00 WIB. Tidak ada server yang tidur. Reranker dan model lokal diunduh dari Hugging Face hanya bila pengunjung memilih mode generatif.
+Mode generatif (prototipe riset, hanya di deploy Preview) memanggil Workers AI lewat binding `AI` pada paket Workers Free ($0). Di domain produksi fungsi `/api/jawab` menolak permintaan pengunjung tanpa memanggil model. Kuota gratis harian (10.000 neuron) cukup untuk puluhan jawaban Llama 3.3 70B per hari untuk semua pengunjung; bila habis, fungsi mengembalikan `kuota_habis` dan situs memakai kutipan langsung sampai 07.00 WIB. Tidak ada server yang tidur. Reranker dan model lokal diunduh dari Hugging Face hanya bila pengunjung memilih mode generatif.
 
 ## Penggunaan yang tidak sesuai
 
